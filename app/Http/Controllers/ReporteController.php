@@ -11,8 +11,8 @@ class ReporteController extends Controller
     {
         $query = Reporte::with(['proyecto', 'generadoPor'])->latest();
 
-        if (auth()->user()->esEstudiante()) {
-            $query->whereHas('proyecto', fn ($proyecto) => $proyecto->where('estudiante_id', auth()->id()));
+        if (auth()->user()->esUsuario()) {
+            $query->whereHas('proyecto.estudiante', fn ($estudiante) => $estudiante->where('user_id', auth()->id()));
         }
 
         $reportes = $query->paginate(10);
@@ -22,9 +22,9 @@ class ReporteController extends Controller
 
     public function verArchivo(Reporte $reporte)
     {
-        $reporte->loadMissing('proyecto');
+        $reporte->loadMissing('proyecto.estudiante');
         abort_if(
-            auth()->user()->esEstudiante() && $reporte->proyecto?->estudiante_id !== auth()->id(),
+            auth()->user()->esUsuario() && $reporte->proyecto?->estudiante?->user_id !== auth()->id(),
             403,
             'No tienes permiso para consultar este reporte.'
         );

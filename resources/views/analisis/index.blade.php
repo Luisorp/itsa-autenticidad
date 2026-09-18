@@ -19,7 +19,7 @@
                     <div class="project-picker @error('proyecto_a') is-invalid @enderror" data-project-picker="a"
                          data-selected-id="{{ $proyectoA?->id }}" data-selected-title="{{ $proyectoA?->titulo }}"
                          data-selected-modalidad="{{ $proyectoA?->modalidad }}" data-selected-modalidad-name="{{ $proyectoA?->modalidad_nombre }}"
-                         data-selected-student="{{ $proyectoA?->estudiante?->name }}" data-selected-career="{{ $proyectoA?->carrera?->codigo ?? $proyectoA?->carrera?->nombre }}" data-selected-year="{{ $proyectoA?->anio }}">
+                         data-selected-student="{{ $proyectoA?->estudiante?->nombre }}" data-selected-career="{{ $proyectoA?->carrera?->codigo ?? $proyectoA?->carrera?->nombre }}" data-selected-year="{{ $proyectoA?->anio }}">
                         <input type="hidden" name="proyecto_a" value="{{ $proyectoA?->id }}" data-project-value>
                         <div class="project-search-field"><i class="bi bi-search"></i><input type="search" autocomplete="off" placeholder="Escribe título, estudiante o carrera…" aria-label="Buscar Proyecto A" data-project-search><button type="button" aria-label="Limpiar Proyecto A" data-project-clear><i class="bi bi-x-lg"></i></button></div>
                         <div class="project-search-results" data-project-results role="listbox" hidden></div>
@@ -36,7 +36,7 @@
                     <div class="project-picker @error('proyecto_b') is-invalid @enderror" data-project-picker="b"
                          data-selected-id="{{ $proyectoB?->id }}" data-selected-title="{{ $proyectoB?->titulo }}"
                          data-selected-modalidad="{{ $proyectoB?->modalidad }}" data-selected-modalidad-name="{{ $proyectoB?->modalidad_nombre }}"
-                         data-selected-student="{{ $proyectoB?->estudiante?->name }}" data-selected-career="{{ $proyectoB?->carrera?->codigo ?? $proyectoB?->carrera?->nombre }}" data-selected-year="{{ $proyectoB?->anio }}">
+                         data-selected-student="{{ $proyectoB?->estudiante?->nombre }}" data-selected-career="{{ $proyectoB?->carrera?->codigo ?? $proyectoB?->carrera?->nombre }}" data-selected-year="{{ $proyectoB?->anio }}">
                         <input type="hidden" name="proyecto_b" value="{{ $proyectoB?->id }}" data-project-value>
                         <div class="project-search-field"><i class="bi bi-search"></i><input type="search" autocomplete="off" placeholder="Primero selecciona el Proyecto A" aria-label="Buscar Proyecto B" data-project-search><button type="button" aria-label="Limpiar Proyecto B" data-project-clear><i class="bi bi-x-lg"></i></button></div>
                         <div class="project-search-results" data-project-results role="listbox" hidden></div>

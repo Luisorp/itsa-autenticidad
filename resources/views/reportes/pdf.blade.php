@@ -25,10 +25,10 @@
     <table class="meta">
         <tr><td><strong>Proyecto:</strong></td><td>{{ $proyecto->titulo }}</td></tr>
         <tr><td><strong>Modalidad:</strong></td><td>{{ $proyecto->modalidad_nombre }}</td></tr>
-        <tr><td><strong>Estudiante:</strong></td><td>{{ $proyecto->estudiante->name }}</td></tr>
+        <tr><td><strong>Estudiante:</strong></td><td>{{ $proyecto->estudiante->nombre }}</td></tr>
         <tr><td><strong>Carrera:</strong></td><td>{{ $proyecto->carrera->nombre }}</td></tr>
         <tr><td><strong>Año:</strong></td><td>{{ $proyecto->anio }}</td></tr>
-        <tr><td><strong>Tutor:</strong></td><td>{{ $proyecto->tutor->name ?? 'No asignado' }}</td></tr>
+        <tr><td><strong>Docente tutor:</strong></td><td>{{ $proyecto->tutor->nombre ?? 'No asignado' }}</td></tr>
         <tr><td><strong>Fecha del reporte:</strong></td><td>{{ now()->format('d/m/Y H:i') }}</td></tr>
         <tr><td><strong>Generado por:</strong></td><td>{{ auth()->user()->name }}</td></tr>
     </table>
@@ -54,7 +54,7 @@
                 <tr>
                     <td>{{ $otro->proyecto->titulo }}</td>
                     <td>{{ $otro->proyecto->modalidad_nombre }}</td>
-                    <td>{{ $otro->proyecto->estudiante->name }}</td>
+                    <td>{{ $otro->proyecto->estudiante->nombre }}</td>
                     <td><span class="badge {{ $clase }}">{{ $porcentaje }}%</span></td>
                 </tr>
             @empty

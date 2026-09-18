@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Carrera;
 use App\Models\Comparacion;
+use App\Models\Docente;
 use App\Models\Documento;
+use App\Models\Estudiante;
 use App\Models\ProyectoTitulacion;
 use App\Models\Reporte;
-use App\Models\User;
 use App\Services\SimilitudService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -44,6 +46,10 @@ class ProyectoTitulacionController extends Controller
         $query = ProyectoTitulacion::with(['carrera', 'estudiante', 'documento'])
             ->where('activo', $vista === 'activos');
 
+        if (auth()->user()->esUsuario()) {
+            $query->whereHas('estudiante', fn ($estudiante) => $estudiante->where('user_id', auth()->id()));
+        }
+
         if ($request->filled('carrera_id')) {
             $query->where('carrera_id', $request->carrera_id);
         }
@@ -65,7 +71,7 @@ class ProyectoTitulacionController extends Controller
             $query->where(function ($q) use ($termino) {
                 $q->where('titulo', 'like', "%{$termino}%")
                     ->orWhereHas('estudiante', function ($q2) use ($termino) {
-                        $q2->where('name', 'like', "%{$termino}%");
+                        $q2->where('nombre', 'like', "%{$termino}%");
                     });
             });
         }
@@ -84,14 +90,18 @@ class ProyectoTitulacionController extends Controller
         ));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $carreras = Carrera::where('activo', true)->orderBy('nombre')->get();
-        $estudiantes = User::where('rol', 'estudiante')->where('activo', true)->orderBy('name')->get();
-        $tutores = User::where('rol', 'docente')->where('activo', true)->orderBy('name')->get();
+        $estudianteSeleccionado = $request->old('estudiante_id')
+            ? Estudiante::find($request->old('estudiante_id'))
+            : null;
+        $tutorSeleccionado = $request->old('tutor_id')
+            ? Docente::find($request->old('tutor_id'))
+            : null;
         $modalidades = ProyectoTitulacion::MODALIDADES;
 
-        return view('proyectos.create', compact('carreras', 'estudiantes', 'tutores', 'modalidades'));
+        return view('proyectos.create', compact('carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades'));
     }
 
     public function store(Request $request)
@@ -101,8 +111,10 @@ class ProyectoTitulacionController extends Controller
             'resumen' => 'nullable|string',
             'modalidad' => ['required', Rule::in(array_keys(ProyectoTitulacion::MODALIDADES))],
             'carrera_id' => ['required', Rule::exists('carreras', 'id')->where(fn ($q) => $q->where('activo', true))],
-            'estudiante_id' => ['required', Rule::exists('users', 'id')->where(fn ($q) => $q->where('rol', 'estudiante')->where('activo', true))],
-            'tutor_id' => ['nullable', Rule::exists('users', 'id')->where(fn ($q) => $q->where('rol', 'docente')->where('activo', true))],
+            'estudiante_id' => ['required', Rule::exists('estudiantes', 'id')->where(fn ($q) => $q
+                ->where('activo', true)
+                ->where('carrera_id', $request->integer('carrera_id')))],
+            'tutor_id' => ['nullable', $this->reglaTutorParaCarrera($request->integer('carrera_id'))],
             'anio' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'documento' => 'required|file|mimes:pdf|max:30720',
         ]);
@@ -146,20 +158,18 @@ class ProyectoTitulacionController extends Controller
         return redirect()->route('proyectos.index')->with('success', 'Proyecto registrado correctamente.');
     }
 
-    public function edit(ProyectoTitulacion $proyecto)
+    public function edit(Request $request, ProyectoTitulacion $proyecto)
     {
         $carreras = Carrera::where(function ($query) use ($proyecto) {
             $query->where('activo', true)->orWhere('id', $proyecto->carrera_id);
         })->orderBy('nombre')->get();
-        $estudiantes = User::where('rol', 'estudiante')->where(function ($query) use ($proyecto) {
-            $query->where('activo', true)->orWhere('id', $proyecto->estudiante_id);
-        })->orderBy('name')->get();
-        $tutores = User::where('rol', 'docente')->where(function ($query) use ($proyecto) {
-            $query->where('activo', true)->orWhere('id', $proyecto->tutor_id);
-        })->orderBy('name')->get();
+        $estudianteSeleccionado = Estudiante::find($request->old('estudiante_id', $proyecto->estudiante_id));
+        $tutorSeleccionado = $request->old('tutor_id', $proyecto->tutor_id)
+            ? Docente::find($request->old('tutor_id', $proyecto->tutor_id))
+            : null;
         $modalidades = ProyectoTitulacion::MODALIDADES;
 
-        return view('proyectos.edit', compact('proyecto', 'carreras', 'estudiantes', 'tutores', 'modalidades'));
+        return view('proyectos.edit', compact('proyecto', 'carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades'));
     }
 
     public function update(Request $request, ProyectoTitulacion $proyecto)
@@ -169,8 +179,10 @@ class ProyectoTitulacionController extends Controller
             'resumen' => 'nullable|string',
             'modalidad' => ['required', Rule::in(array_keys(ProyectoTitulacion::MODALIDADES))],
             'carrera_id' => 'required|exists:carreras,id',
-            'estudiante_id' => ['required', Rule::exists('users', 'id')->where(fn ($q) => $q->where('rol', 'estudiante'))],
-            'tutor_id' => ['nullable', Rule::exists('users', 'id')->where(fn ($q) => $q->where('rol', 'docente'))],
+            'estudiante_id' => ['required', Rule::exists('estudiantes', 'id')->where(fn ($q) => $q
+                ->where('carrera_id', $request->integer('carrera_id'))
+                ->where(fn ($estado) => $estado->where('activo', true)->orWhere('id', $proyecto->estudiante_id)))],
+            'tutor_id' => ['nullable', $this->reglaTutorParaCarrera($request->integer('carrera_id'), $proyecto)],
             'anio' => 'required|integer|min:2000|max:'.(date('Y') + 1),
             'documento' => 'nullable|file|mimes:pdf|max:30720',
         ]);
@@ -297,6 +309,7 @@ class ProyectoTitulacionController extends Controller
 
     public function resultados(Request $request, ProyectoTitulacion $proyecto)
     {
+        $this->autorizarConsulta($proyecto);
         $documento = $proyecto->documento;
 
         if (! $documento) {
@@ -326,6 +339,7 @@ class ProyectoTitulacionController extends Controller
 
     public function verDocumento(ProyectoTitulacion $proyecto)
     {
+        $this->autorizarConsulta($proyecto);
         $documento = $proyecto->documento;
 
         abort_if(! $documento, 404, 'El proyecto no tiene un documento asociado.');
@@ -342,11 +356,7 @@ class ProyectoTitulacionController extends Controller
     // metodo reportes pdf
     public function reporte(ProyectoTitulacion $proyecto)
     {
-        abort_if(
-            auth()->user()->esEstudiante() && $proyecto->estudiante_id !== auth()->id(),
-            403,
-            'No tienes permiso para generar el reporte de este proyecto.'
-        );
+        $this->autorizarConsulta($proyecto);
 
         $documento = $proyecto->documento;
 
@@ -387,5 +397,84 @@ class ProyectoTitulacionController extends Controller
                     ->whereHas('documentoA.proyecto', fn ($proyecto) => $proyecto->where('modalidad', $modalidad));
             });
         });
+    }
+
+    private function autorizarConsulta(ProyectoTitulacion $proyecto): void
+    {
+        $proyecto->loadMissing('estudiante');
+        abort_if(
+            auth()->user()->esUsuario() && $proyecto->estudiante?->user_id !== auth()->id(),
+            403,
+            'No tienes permiso para consultar este proyecto.'
+        );
+    }
+
+    public function buscarEstudiantes(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+            'carrera_id' => ['required', 'integer', 'exists:carreras,id'],
+        ]);
+        $termino = trim($validated['q'] ?? '');
+
+        $estudiantes = Estudiante::where('activo', true)
+            ->where('carrera_id', $validated['carrera_id'])
+            ->when($termino !== '', fn ($query) => $query->where(function ($filtro) use ($termino) {
+                $filtro->where('nombre', 'like', "%{$termino}%")
+                    ->orWhere('codigo', 'like', "%{$termino}%")
+                    ->orWhere('email', 'like', "%{$termino}%");
+            }))
+            ->orderBy('nombre')->limit(15)->get()
+            ->map(fn ($estudiante) => [
+                'id' => $estudiante->id,
+                'label' => $estudiante->nombre,
+                'meta' => collect([$estudiante->codigo, $estudiante->email])->filter()->join(' · '),
+            ]);
+
+        return response()->json(['data' => $estudiantes]);
+    }
+
+    public function buscarDocentes(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+            'carrera_id' => ['required', 'integer', 'exists:carreras,id'],
+        ]);
+        $termino = trim($validated['q'] ?? '');
+
+        $docentes = Docente::where('activo', true)
+            ->whereHas('carreras', fn ($carrera) => $carrera->where('carreras.id', $validated['carrera_id']))
+            ->when($termino !== '', fn ($query) => $query->where(function ($filtro) use ($termino) {
+                $filtro->where('nombre', 'like', "%{$termino}%")
+                    ->orWhere('codigo', 'like', "%{$termino}%")
+                    ->orWhere('especialidad', 'like', "%{$termino}%");
+            }))
+            ->orderBy('nombre')->limit(15)->get()
+            ->map(fn ($docente) => [
+                'id' => $docente->id,
+                'label' => $docente->nombre,
+                'meta' => collect([$docente->codigo, $docente->especialidad])->filter()->join(' · '),
+            ]);
+
+        return response()->json(['data' => $docentes]);
+    }
+
+    private function reglaTutorParaCarrera(int $carreraId, ?ProyectoTitulacion $proyecto = null): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail) use ($carreraId, $proyecto) {
+            if ($value === null || $value === '') {
+                return;
+            }
+
+            $esValido = Docente::whereKey($value)
+                ->whereHas('carreras', fn ($carrera) => $carrera->where('carreras.id', $carreraId))
+                ->where(fn ($estado) => $estado->where('activo', true)
+                    ->when($proyecto?->tutor_id, fn ($query, $tutorId) => $query->orWhere('id', $tutorId)))
+                ->exists();
+
+            if (! $esValido) {
+                $fail('El docente tutor no está asignado a la carrera seleccionada.');
+            }
+        };
     }
 }

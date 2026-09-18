@@ -1,0 +1,12 @@
+<x-app-layout>
+    <x-slot name="header"><div class="page-title"><h2>Docentes tutores</h2><span>Directorio académico para la asignación de proyectos</span></div></x-slot>
+    <div class="container py-4">
+        @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+        <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-3"><div><h3 class="user-section-title">Directorio docente</h3><p class="user-section-copy">Un docente tutor no necesita tener una cuenta de acceso.</p></div><a href="{{ route('docentes.create') }}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i> Nuevo docente</a></div>
+        <form method="GET" class="d-flex gap-2 mb-3"><input type="search" name="buscar" value="{{ request('buscar') }}" class="form-control" placeholder="Buscar por nombre, código, correo o especialidad"><button class="btn btn-primary">Buscar</button><a href="{{ route('docentes.index') }}" class="btn btn-outline-secondary">Limpiar</a></form>
+        <div class="table-responsive"><table class="table table-striped table-bordered align-middle"><thead><tr><th>Código</th><th>Nombre</th><th>Especialidad</th><th>Carreras</th><th>Cuenta</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+            @forelse($docentes as $docente)<tr class="{{ $docente->activo ? '' : 'inactive-record' }}"><td>{{ $docente->codigo ?: '—' }}</td><td><strong>{{ $docente->nombre }}</strong><small class="d-block text-muted">{{ $docente->email ?: 'Sin correo' }}</small></td><td>{{ $docente->especialidad ?: '—' }}</td><td>@forelse($docente->carreras as $carrera)<span class="badge bg-light text-dark border me-1 mb-1">{{ $carrera->codigo }}</span>@empty<span class="text-muted">Sin asignar</span>@endforelse</td><td>{{ $docente->user_id ? 'Vinculada' : 'No requerida' }}</td><td><span class="badge {{ $docente->activo ? 'bg-success' : 'bg-secondary' }}">{{ $docente->activo ? 'Activo' : 'Inactivo' }}</span></td><td><a href="{{ route('docentes.edit', $docente) }}" class="btn btn-sm btn-warning">Editar</a> <form action="{{ route('docentes.toggle-activo', $docente) }}" method="POST" class="d-inline">@csrf @method('PATCH')<button class="btn btn-sm {{ $docente->activo ? 'btn-secondary' : 'btn-success' }}">{{ $docente->activo ? 'Desactivar' : 'Activar' }}</button></form></td></tr>
+            @empty<tr><td colspan="7" class="text-center py-4">No hay docentes registrados.</td></tr>@endforelse
+        </tbody></table></div>{{ $docentes->links() }}
+    </div>
+</x-app-layout>

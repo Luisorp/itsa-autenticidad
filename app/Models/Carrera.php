@@ -22,4 +22,14 @@ class Carrera extends Model
     {
         return $this->hasMany(ProyectoTitulacion::class);
     }
+
+    public function estudiantes()
+    {
+        return $this->hasMany(Estudiante::class);
+    }
+
+    public function docentes()
+    {
+        return $this->belongsToMany(Docente::class, 'carrera_docente');
+    }
 }

@@ -4,8 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\Carrera;
 use App\Models\Documento;
+use App\Models\Estudiante;
 use App\Models\ProyectoTitulacion;
 use App\Models\User;
+use App\Services\CrossrefService;
+use App\Services\OpenAlexService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -36,28 +39,32 @@ class CrossrefSearchTest extends TestCase
             ]),
         ]);
 
-        $respuesta = $this->actingAs(User::factory()->create())->get('/crossref?tipo=titulo&consulta=publicacion');
+        $resultados = app(CrossrefService::class)->buscar('titulo', 'publicacion');
 
-        $respuesta->assertOk()
-            ->assertSee('Una publicación de prueba')
-            ->assertSee('Ana Pérez')
-            ->assertSee('10.1234/prueba');
+        $this->assertSame('Una publicación de prueba', $resultados[0]['titulo']);
+        $this->assertSame(['Ana Pérez'], $resultados[0]['autores']);
+        $this->assertSame('10.1234/prueba', $resultados[0]['doi']);
 
         Http::assertSent(fn ($peticion) => $peticion->url() === 'https://api.crossref.org/works?query.bibliographic=publicacion&rows=10&select=DOI%2Ctitle%2Cauthor%2Cpublished%2Ccontainer-title%2Ctype%2CURL%2Cabstract'
         );
     }
 
-    public function test_informa_cuando_un_doi_no_existe(): void
+    public function test_la_busqueda_muestra_el_selector_y_exige_un_proyecto(): void
     {
-        Cache::flush();
-        Http::fake(['api.crossref.org/works/*' => Http::response([], 404)]);
+        $gestor = User::factory()->create(['rol' => 'gestor']);
 
-        $respuesta = $this->actingAs(User::factory()->create())
-            ->from('/crossref')
-            ->get('/crossref?tipo=doi&consulta=10.0000/no-existe');
+        $this->actingAs($gestor)
+            ->get(route('crossref.index'))
+            ->assertOk()
+            ->assertSee('Proyecto que se comparará')
+            ->assertSee('Crossref')
+            ->assertSee('OpenAlex');
 
-        $respuesta->assertRedirect('/crossref')
-            ->assertSessionHas('error', 'Crossref no encontró un registro para ese DOI.');
+        $this->actingAs($gestor)
+            ->from(route('crossref.index'))
+            ->post(route('crossref.comparar'))
+            ->assertRedirect(route('crossref.index'))
+            ->assertSessionHasErrors('proyecto_id');
     }
 
     public function test_busca_y_normaliza_una_publicacion_en_openalex(): void
@@ -80,14 +87,12 @@ class CrossrefSearchTest extends TestCase
             ]),
         ]);
 
-        $respuesta = $this->actingAs(User::factory()->create())->get('/crossref?fuente=openalex&tipo=titulo&consulta=investigacion');
+        $resultados = app(OpenAlexService::class)->buscar('titulo', 'investigacion');
 
-        $respuesta->assertOk()
-            ->assertSee('Investigación registrada en OpenAlex')
-            ->assertSee('María Quispe')
-            ->assertSee('Citado por:')
-            ->assertSee('14')
-            ->assertSee('Acceso abierto');
+        $this->assertSame('Investigación registrada en OpenAlex', $resultados[0]['titulo']);
+        $this->assertSame(['María Quispe'], $resultados[0]['autores']);
+        $this->assertSame(14, $resultados[0]['citas']);
+        $this->assertTrue($resultados[0]['acceso_abierto']);
 
         Http::assertSent(function ($peticion) {
             parse_str((string) parse_url($peticion->url(), PHP_URL_QUERY), $consulta);
@@ -127,7 +132,14 @@ class CrossrefSearchTest extends TestCase
 
         $carrera = Carrera::create(['nombre' => 'Sistemas', 'codigo' => 'SIS', 'activo' => true]);
         $administrador = User::factory()->create(['rol' => 'administrador', 'activo' => true]);
-        $estudiante = User::factory()->create(['rol' => 'estudiante', 'carrera_id' => $carrera->id, 'activo' => true]);
+        $usuario = User::factory()->create(['rol' => 'usuario', 'carrera_id' => $carrera->id, 'activo' => true]);
+        $estudiante = Estudiante::create([
+            'nombre' => $usuario->name,
+            'email' => $usuario->email,
+            'carrera_id' => $carrera->id,
+            'user_id' => $usuario->id,
+            'activo' => true,
+        ]);
         $proyecto = ProyectoTitulacion::create([
             'titulo' => 'Sistema inteligente para procesos educativos',
             'modalidad' => 'proyecto_grado',
@@ -146,11 +158,20 @@ class CrossrefSearchTest extends TestCase
         ]);
 
         $this->actingAs($administrador)
-            ->post(route('proyectos.analisis-externo.analizar', $proyecto))
+            ->get(route('crossref.index', ['proyecto_id' => $proyecto->id]))
+            ->assertOk()
+            ->assertSee($proyecto->titulo);
+
+        $this->actingAs($administrador)
+            ->post(route('crossref.comparar'), ['proyecto_id' => $proyecto->id])
             ->assertOk()
             ->assertSee('Sistema inteligente para mejorar procesos educativos')
             ->assertSee('Tecnología adaptativa en educación')
             ->assertSee('Crossref')
             ->assertSee('OpenAlex');
+
+        $this->actingAs($administrador)
+            ->get(route('proyectos.analisis-externo', $proyecto))
+            ->assertRedirect(route('crossref.index', ['proyecto_id' => $proyecto->id]));
     }
 }

@@ -33,8 +33,8 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Rol</label>
                     <select name="rol" class="form-select @error('rol') is-invalid @enderror">
-                        <option value="estudiante" @selected(old('rol') == 'estudiante')>Estudiante</option>
-                        <option value="docente" @selected(old('rol') == 'docente')>Docente</option>
+                        <option value="usuario" @selected(old('rol', 'usuario') == 'usuario')>Usuario</option>
+                        <option value="gestor" @selected(old('rol') == 'gestor')>Gestor</option>
                         <option value="administrador" @selected(old('rol') == 'administrador')>Administrador</option>
                     </select>
                     @error('rol')<div class="invalid-feedback">{{ $message }}</div>@enderror

@@ -22,16 +22,29 @@
                 <i class="bi bi-folder"></i><span class="sidebar-link-text">Proyectos</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('analisis.*') ? 'active' : '' }}" href="{{ route('analisis.index') }}">
-                <i class="bi bi-intersect"></i><span class="sidebar-link-text">Comparar</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('crossref.*') ? 'active' : '' }}" href="{{ route('crossref.index') }}">
-                <i class="bi bi-search"></i><span class="sidebar-link-text">Búsqueda</span>
-            </a>
-        </li>
+        @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('analisis.*') ? 'active' : '' }}" href="{{ route('analisis.index') }}">
+                    <i class="bi bi-intersect"></i><span class="sidebar-link-text">Comparar</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('crossref.*') ? 'active' : '' }}" href="{{ route('crossref.index') }}">
+                    <i class="bi bi-search"></i><span class="sidebar-link-text">Búsqueda</span>
+                </a>
+            </li>
+            <li class="sidebar-section-label"><span>Registro académico</span></li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('estudiantes.*') ? 'active' : '' }}" href="{{ route('estudiantes.index') }}">
+                    <i class="bi bi-mortarboard"></i><span class="sidebar-link-text">Estudiantes</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('docentes.*') ? 'active' : '' }}" href="{{ route('docentes.index') }}">
+                    <i class="bi bi-person-video3"></i><span class="sidebar-link-text">Docentes tutores</span>
+                </a>
+            </li>
+        @endif
         @if(Auth::user()->esAdministrador())
             <li class="sidebar-section-label"><span>Administración</span></li>
             <li class="nav-item">

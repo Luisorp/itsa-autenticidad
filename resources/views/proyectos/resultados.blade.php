@@ -45,7 +45,7 @@
                     <tr>
                         <td>{{ $otro->proyecto->titulo }}</td>
                         <td><span class="modality-badge">{{ $otro->proyecto->modalidad_nombre }}</span></td>
-                        <td>{{ $otro->proyecto->estudiante->name }}</td>
+                        <td>{{ $otro->proyecto->estudiante->nombre }}</td>
                         <td><span class="badge {{ $clase }}">{{ $porcentaje }}%</span></td>
                     </tr>
                 @empty

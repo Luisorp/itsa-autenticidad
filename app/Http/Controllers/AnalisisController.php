@@ -35,12 +35,12 @@ class AnalisisController extends Controller
             ->select(['id', 'titulo', 'modalidad', 'carrera_id', 'estudiante_id', 'anio'])
             ->where('activo', true)
             ->whereHas('documento', fn ($q) => $q->whereNotNull('contenido_extraido')->where('contenido_extraido', '!=', ''))
-            ->with(['estudiante:id,name', 'carrera:id,nombre,codigo']);
+            ->with(['estudiante:id,nombre', 'carrera:id,nombre,codigo']);
 
         if ($termino !== '') {
             $query->where(function ($q) use ($termino) {
                 $q->where('titulo', 'like', "%{$termino}%")
-                    ->orWhereHas('estudiante', fn ($estudiante) => $estudiante->where('name', 'like', "%{$termino}%"))
+                    ->orWhereHas('estudiante', fn ($estudiante) => $estudiante->where('nombre', 'like', "%{$termino}%"))
                     ->orWhereHas('carrera', function ($carrera) use ($termino) {
                         $carrera->where('nombre', 'like', "%{$termino}%")
                             ->orWhere('codigo', 'like', "%{$termino}%");
@@ -61,7 +61,7 @@ class AnalisisController extends Controller
             'titulo' => $proyecto->titulo,
             'modalidad' => $proyecto->modalidad,
             'modalidad_nombre' => $proyecto->modalidad_nombre,
-            'estudiante' => $proyecto->estudiante?->name ?? 'Sin estudiante',
+            'estudiante' => $proyecto->estudiante?->nombre ?? 'Sin estudiante',
             'carrera' => $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? 'Sin carrera',
             'anio' => $proyecto->anio,
         ]);

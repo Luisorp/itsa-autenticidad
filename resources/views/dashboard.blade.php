@@ -22,7 +22,7 @@
             <article class="metric-card metric-mint"><span class="metric-icon"><i class="bi bi-percent"></i></span><div><strong>{{ $similitudPromedio }}%</strong><span>Similitud promedio</span><small><i class="bi bi-graph-up"></i> Comparaciones activas</small></div></article>
         </section>
 
-        @if(Auth::user()->esAdministrador() || Auth::user()->esDocente())
+        @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
             <section class="dashboard-actions" aria-label="Acciones rápidas">
                 <a class="primary" href="{{ route('proyectos.create') }}"><i class="bi bi-plus-lg"></i> Nuevo proyecto</a>
                 <a href="{{ route('analisis.index') }}"><i class="bi bi-intersect"></i> Comparar proyectos</a>
@@ -74,9 +74,15 @@
                 <header><div><span class="section-kicker">Navegación</span><h3>Atajos útiles</h3></div></header>
                 <div class="shortcut-grid">
                     <a href="{{ route('proyectos.index') }}"><i class="bi bi-folder2-open"></i><span>Explorar proyectos</span></a>
-                    <a href="{{ route('analisis.index') }}"><i class="bi bi-intersect"></i><span>Comparar proyectos</span></a>
+                    @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
+                        <a href="{{ route('analisis.index') }}"><i class="bi bi-intersect"></i><span>Comparar proyectos</span></a>
+                    @else
+                        <a href="{{ route('reportes.index') }}"><i class="bi bi-file-earmark-bar-graph"></i><span>Mis reportes</span></a>
+                    @endif
                     @if(Auth::user()->esAdministrador())<a href="{{ route('usuarios.index') }}"><i class="bi bi-people"></i><span>Gestionar usuarios</span></a>@endif
-                    <a href="{{ route('crossref.index') }}"><i class="bi bi-search"></i><span>Búsqueda académica</span></a>
+                    @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
+                        <a href="{{ route('crossref.index') }}"><i class="bi bi-search"></i><span>Búsqueda académica</span></a>
+                    @endif
                 </div>
             </section>
         </div>

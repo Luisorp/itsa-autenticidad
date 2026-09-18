@@ -14,6 +14,12 @@ use Illuminate\Notifications\Notifiable;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    public const ROLES = [
+        'administrador' => 'Administrador',
+        'gestor' => 'Gestor',
+        'usuario' => 'Usuario',
+    ];
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
@@ -35,14 +41,14 @@ class User extends Authenticatable
         return $this->belongsTo(Carrera::class);
     }
 
-    public function proyectosComoEstudiante()
+    public function estudiante()
     {
-        return $this->hasMany(ProyectoTitulacion::class, 'estudiante_id');
+        return $this->hasOne(Estudiante::class);
     }
 
-    public function proyectosComoTutor()
+    public function docente()
     {
-        return $this->hasMany(ProyectoTitulacion::class, 'tutor_id');
+        return $this->hasOne(Docente::class);
     }
 
     public function reportesGenerados()
@@ -55,14 +61,13 @@ class User extends Authenticatable
         return $this->rol === 'administrador';
     }
 
-    public function esDocente(): bool
+    public function esGestor(): bool
     {
-        return $this->rol === 'docente';
+        return $this->rol === 'gestor';
     }
 
-    public function esEstudiante(): bool
+    public function esUsuario(): bool
     {
-        return $this->rol === 'estudiante';
+        return $this->rol === 'usuario';
     }
-
 }

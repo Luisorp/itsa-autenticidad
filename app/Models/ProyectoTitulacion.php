@@ -44,12 +44,12 @@ class ProyectoTitulacion extends Model
 
     public function estudiante()
     {
-        return $this->belongsTo(User::class, 'estudiante_id');
+        return $this->belongsTo(Estudiante::class, 'estudiante_id');
     }
 
     public function tutor()
     {
-        return $this->belongsTo(User::class, 'tutor_id');
+        return $this->belongsTo(Docente::class, 'tutor_id');
     }
 
     public function documento()

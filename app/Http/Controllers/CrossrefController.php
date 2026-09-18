@@ -2,47 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CrossrefService;
-use App\Services\OpenAlexService;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\RequestException;
+use App\Models\ProyectoTitulacion;
+use App\Services\AnalisisExternoService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class CrossrefController extends Controller
 {
-    public function index(Request $request, CrossrefService $crossref, OpenAlexService $openAlex)
+    public function index(Request $request)
     {
-        $resultados = null;
-        $datos = null;
+        $proyecto = $this->proyectoSeleccionable($request->old('proyecto_id', $request->input('proyecto_id')));
 
-        if ($request->filled('consulta')) {
-            $request->merge(['fuente' => $request->input('fuente', 'crossref')]);
-            $datos = $request->validate([
-                'fuente' => ['required', 'in:crossref,openalex'],
-                'tipo' => ['required', 'in:titulo,doi'],
-                'consulta' => ['required', 'string', 'max:500'],
-            ]);
-
-            try {
-                $servicio = $datos['fuente'] === 'openalex' ? $openAlex : $crossref;
-                $resultados = $servicio->buscar($datos['tipo'], $datos['consulta']);
-            } catch (ConnectionException) {
-                return back()->withInput()->with('error', 'No se pudo conectar con '.$this->nombreFuente($datos['fuente']).'. Inténtalo nuevamente en unos momentos.');
-            } catch (RequestException $e) {
-                $fuente = $this->nombreFuente($datos['fuente']);
-                $mensaje = $e->response?->status() === 404
-                    ? $fuente.' no encontró un registro para ese DOI.'
-                    : $fuente.' no pudo procesar la consulta en este momento.';
-
-                return back()->withInput()->with('error', $mensaje);
-            }
-        }
-
-        return view('crossref.index', compact('resultados', 'datos'));
+        return view('crossref.index', compact('proyecto'));
     }
 
-    private function nombreFuente(string $fuente): string
+    public function comparar(Request $request, AnalisisExternoService $analisis)
     {
-        return $fuente === 'openalex' ? 'OpenAlex' : 'Crossref';
+        $validated = $request->validate([
+            'proyecto_id' => ['required', 'integer', 'exists:proyectos_titulacion,id'],
+        ]);
+        $proyecto = ProyectoTitulacion::with(['documento', 'estudiante', 'carrera'])
+            ->where('activo', true)
+            ->findOrFail($validated['proyecto_id']);
+        $this->validarTexto($proyecto);
+
+        ['resultados' => $resultados, 'fuentesNoDisponibles' => $fuentesNoDisponibles] = $analisis->comparar($proyecto);
+
+        return view('crossref.index', compact('proyecto', 'resultados', 'fuentesNoDisponibles'));
+    }
+
+    private function proyectoSeleccionable(mixed $id): ?ProyectoTitulacion
+    {
+        if (! is_numeric($id)) {
+            return null;
+        }
+
+        return ProyectoTitulacion::with(['documento', 'estudiante', 'carrera'])
+            ->where('activo', true)
+            ->whereHas('documento', fn ($documento) => $documento->whereNotNull('contenido_extraido')->where('contenido_extraido', '!=', ''))
+            ->find((int) $id);
+    }
+
+    private function validarTexto(ProyectoTitulacion $proyecto): void
+    {
+        if (! $proyecto->documento || trim((string) $proyecto->documento->contenido_extraido) === '') {
+            throw ValidationException::withMessages([
+                'proyecto_id' => 'El proyecto seleccionado no tiene texto extraído disponible para comparar.',
+            ]);
+        }
     }
 }

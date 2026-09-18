@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="header"><div class="page-title"><h2>Reportes generados</h2><span>{{ Auth::user()->esEstudiante() ? 'Resultados de tus proyectos' : 'Historial institucional de reportes' }}</span></div></x-slot>
+    <x-slot name="header"><div class="page-title"><h2>Reportes generados</h2><span>{{ Auth::user()->esUsuario() ? 'Resultados de tus proyectos' : 'Historial institucional de reportes' }}</span></div></x-slot>
 
     <div class="container-fluid">
         <table class="table table-bordered">

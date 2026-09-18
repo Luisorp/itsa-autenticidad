@@ -7,7 +7,7 @@
             <div>
                 <span class="section-kicker">Proyecto seleccionado</span>
                 <h3>{{ $proyecto->titulo }}</h3>
-                <p>{{ $proyecto->modalidad_nombre }} · {{ $proyecto->estudiante?->name }} · {{ $proyecto->carrera?->nombre }}</p>
+                <p>{{ $proyecto->modalidad_nombre }} · {{ $proyecto->estudiante?->nombre }} · {{ $proyecto->carrera?->nombre }}</p>
             </div>
         </section>
 

@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Carrera</label>
-                    <select name="carrera_id" class="form-select @error('carrera_id') is-invalid @enderror">
+                    <select name="carrera_id" data-project-career class="form-select @error('carrera_id') is-invalid @enderror">
                         <option value="">Seleccione…</option>
                         @foreach($carreras as $carrera)
                             <option value="{{ $carrera->id }}" @selected(old('carrera_id') == $carrera->id)>{{ $carrera->nombre }}</option>
@@ -48,24 +48,24 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Estudiante</label>
-                    <select name="estudiante_id" class="form-select @error('estudiante_id') is-invalid @enderror">
-                        <option value="">Seleccione…</option>
-                        @foreach($estudiantes as $estudiante)
-                            <option value="{{ $estudiante->id }}" @selected(old('estudiante_id') == $estudiante->id)>{{ $estudiante->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="project-picker @error('estudiante_id') is-invalid @enderror" data-academic-picker data-search-url="{{ route('proyectos.estudiantes.buscar') }}" data-selected-id="{{ old('estudiante_id', $estudianteSeleccionado?->id) }}" data-selected-label="{{ $estudianteSeleccionado?->nombre }}">
+                        <input type="hidden" name="estudiante_id" value="{{ old('estudiante_id', $estudianteSeleccionado?->id) }}" data-academic-value>
+                        <div class="project-search-field"><i class="bi bi-search"></i><input type="search" autocomplete="off" placeholder="Primero selecciona una carrera" aria-label="Buscar estudiante" data-academic-search><button type="button" aria-label="Limpiar estudiante" data-academic-clear hidden><i class="bi bi-x-lg"></i></button></div>
+                        <div class="project-search-results" data-academic-results role="listbox" hidden></div>
+                    </div>
                     @error('estudiante_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    <div class="form-text"><a href="{{ route('estudiantes.create') }}">Registrar un estudiante nuevo</a></div>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Tutor</label>
-                    <select name="tutor_id" class="form-select @error('tutor_id') is-invalid @enderror">
-                        <option value="">Sin asignar</option>
-                        @foreach($tutores as $tutor)
-                            <option value="{{ $tutor->id }}" @selected(old('tutor_id') == $tutor->id)>{{ $tutor->name }}</option>
-                        @endforeach
-                    </select>
+                    <label class="form-label">Docente tutor</label>
+                    <div class="project-picker @error('tutor_id') is-invalid @enderror" data-academic-picker data-optional="true" data-search-url="{{ route('proyectos.docentes.buscar') }}" data-selected-id="{{ old('tutor_id', $tutorSeleccionado?->id) }}" data-selected-label="{{ $tutorSeleccionado?->nombre }}">
+                        <input type="hidden" name="tutor_id" value="{{ old('tutor_id', $tutorSeleccionado?->id) }}" data-academic-value>
+                        <div class="project-search-field"><i class="bi bi-search"></i><input type="search" autocomplete="off" placeholder="Primero selecciona una carrera" aria-label="Buscar docente tutor" data-academic-search><button type="button" aria-label="Limpiar docente tutor" data-academic-clear hidden><i class="bi bi-x-lg"></i></button></div>
+                        <div class="project-search-results" data-academic-results role="listbox" hidden></div>
+                    </div>
                     @error('tutor_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    <div class="form-text"><a href="{{ route('docentes.create') }}">Registrar un docente tutor nuevo</a></div>
                 </div>
             </div>
 

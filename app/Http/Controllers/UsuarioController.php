@@ -15,12 +15,12 @@ class UsuarioController extends Controller
     {
         $roles = [
             'administrador' => 'Administradores',
-            'docente' => 'Docentes',
-            'estudiante' => 'Estudiantes',
+            'gestor' => 'Gestores',
+            'usuario' => 'Usuarios',
         ];
         $rolActual = array_key_exists($request->string('rol')->toString(), $roles)
             ? $request->string('rol')->toString()
-            : 'estudiante';
+            : 'usuario';
         $conteos = User::selectRaw('rol, COUNT(*) as total')->groupBy('rol')->pluck('total', 'rol');
         $usuarios = User::with('carrera')
             ->where('rol', $rolActual)
@@ -44,7 +44,7 @@ class UsuarioController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => ['required', 'confirmed', Password::defaults()],
-            'rol' => 'required|in:administrador,docente,estudiante',
+            'rol' => ['required', Rule::in(array_keys(User::ROLES))],
             'carrera_id' => ['nullable', Rule::exists('carreras', 'id')->where(fn ($query) => $query->where('activo', true))],
         ]);
 
@@ -73,7 +73,7 @@ class UsuarioController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$usuario->id,
-            'rol' => 'required|in:administrador,docente,estudiante',
+            'rol' => ['required', Rule::in(array_keys(User::ROLES))],
             'carrera_id' => 'nullable|exists:carreras,id',
         ]);
 

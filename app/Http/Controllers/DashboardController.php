@@ -11,12 +11,23 @@ class DashboardController extends Controller
     public function index()
     {
         $totalCarreras = Carrera::where('activo', true)->count();
-        $totalProyectos = ProyectoTitulacion::where('activo', true)->count();
-        $totalAnalizados = ProyectoTitulacion::where('activo', true)->where('estado', 'analizado')->count();
-        $totalPendientes = ProyectoTitulacion::where('activo', true)->where('estado', 'pendiente_analisis')->count();
+        $proyectosVisibles = ProyectoTitulacion::where('activo', true);
+        if (auth()->user()->esUsuario()) {
+            $proyectosVisibles->whereHas('estudiante', fn ($estudiante) => $estudiante->where('user_id', auth()->id()));
+        }
+
+        $totalProyectos = (clone $proyectosVisibles)->count();
+        $totalAnalizados = (clone $proyectosVisibles)->where('estado', 'analizado')->count();
+        $totalPendientes = (clone $proyectosVisibles)->where('estado', 'pendiente_analisis')->count();
 
         $comparacionesActivas = Comparacion::whereHas('documentoA.proyecto', fn ($query) => $query->where('activo', true))
             ->whereHas('documentoB.proyecto', fn ($query) => $query->where('activo', true));
+        if (auth()->user()->esUsuario()) {
+            $comparacionesActivas->where(function ($query) {
+                $query->whereHas('documentoA.proyecto.estudiante', fn ($estudiante) => $estudiante->where('user_id', auth()->id()))
+                    ->orWhereHas('documentoB.proyecto.estudiante', fn ($estudiante) => $estudiante->where('user_id', auth()->id()));
+            });
+        }
         $similitudPromedio = round((clone $comparacionesActivas)->avg('porcentaje_similitud') ?? 0);
         $porcentajes = (clone $comparacionesActivas)->pluck('porcentaje_similitud');
         $rangosSimilitud = [
@@ -25,7 +36,7 @@ class DashboardController extends Controller
             'alta' => $porcentajes->filter(fn ($valor) => $valor > 75)->count(),
         ];
 
-        $proyectosRecientes = ProyectoTitulacion::where('activo', true)->with('documento')
+        $proyectosRecientes = (clone $proyectosVisibles)->with('documento')
             ->latest()
             ->take(5)
             ->get()

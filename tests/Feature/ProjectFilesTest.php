@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Carrera;
 use App\Models\Documento;
+use App\Models\Estudiante;
 use App\Models\ProyectoTitulacion;
 use App\Models\Reporte;
 use App\Models\User;
@@ -122,15 +123,55 @@ class ProjectFilesTest extends TestCase
         $this->assertDatabaseHas('proyectos_titulacion', ['id' => $proyecto->id, 'activo' => true]);
     }
 
-    public function test_teacher_cannot_archive_a_project(): void
+    public function test_manager_cannot_archive_a_project(): void
     {
         [, $proyecto] = $this->projectFixture();
-        $docente = User::factory()->create(['rol' => 'docente', 'activo' => true]);
+        $gestor = User::factory()->create(['rol' => 'gestor', 'activo' => true]);
 
-        $this->actingAs($docente)
+        $this->actingAs($gestor)
             ->patch(route('proyectos.archivo', $proyecto))
             ->assertForbidden();
         $this->assertTrue($proyecto->fresh()->activo);
+    }
+
+    public function test_manager_can_edit_projects_but_regular_user_cannot(): void
+    {
+        [, $proyecto] = $this->projectFixture();
+        $gestor = User::factory()->create(['rol' => 'gestor', 'activo' => true]);
+
+        $this->actingAs($gestor)
+            ->get(route('proyectos.edit', $proyecto))
+            ->assertOk();
+
+        $this->actingAs($proyecto->estudiante->cuenta)
+            ->get(route('proyectos.edit', $proyecto))
+            ->assertForbidden();
+    }
+
+    public function test_each_project_shows_direct_compare_and_report_actions_according_to_permissions(): void
+    {
+        [$administrador, $proyecto] = $this->projectFixture();
+        Documento::create([
+            'proyecto_id' => $proyecto->id,
+            'nombre_archivo' => 'acciones.pdf',
+            'ruta_archivo' => 'documentos/acciones.pdf',
+            'tipo_archivo' => 'pdf',
+        ]);
+
+        $compareUrl = route('analisis.index', ['proyecto_a' => $proyecto->id]);
+        $reportUrl = route('proyectos.reporte', $proyecto);
+
+        $this->actingAs($administrador)->get(route('proyectos.index'))
+            ->assertOk()
+            ->assertSee('Comparar')
+            ->assertSee('Reporte')
+            ->assertSee($compareUrl, false)
+            ->assertSee($reportUrl, false);
+
+        $this->actingAs($proyecto->estudiante->cuenta)->get(route('proyectos.index'))
+            ->assertOk()
+            ->assertDontSee($compareUrl, false)
+            ->assertSee($reportUrl, false);
     }
 
     public function test_project_search_only_returns_active_compatible_projects_with_text(): void
@@ -163,14 +204,35 @@ class ProjectFilesTest extends TestCase
             ->assertJsonCount(0, 'data');
     }
 
-    public function test_student_only_sees_and_opens_reports_from_their_own_projects(): void
+    public function test_project_catalog_can_filter_by_partial_title_or_student_name(): void
+    {
+        [$administrador, $proyecto] = $this->projectFixture();
+
+        $this->actingAs($administrador)
+            ->get(route('proyectos.index', ['buscar' => 'proyecto de pru']))
+            ->assertOk()
+            ->assertSee($proyecto->titulo);
+
+        $this->actingAs($administrador)
+            ->get(route('proyectos.index', ['buscar' => $proyecto->estudiante->nombre]))
+            ->assertOk()
+            ->assertSee($proyecto->titulo);
+    }
+
+    public function test_user_only_sees_and_opens_reports_from_their_own_projects(): void
     {
         Storage::fake('public');
         [$administrador, $proyectoPropio] = $this->projectFixture();
-        $estudiante = $proyectoPropio->estudiante;
-        $otroEstudiante = User::factory()->create(['rol' => 'estudiante', 'activo' => true]);
+        $usuario = $proyectoPropio->estudiante->cuenta;
+        $otroUsuario = User::factory()->create(['rol' => 'usuario', 'activo' => true]);
+        $otroEstudiante = Estudiante::create([
+            'nombre' => 'Otro estudiante',
+            'carrera_id' => $proyectoPropio->carrera_id,
+            'user_id' => $otroUsuario->id,
+            'activo' => true,
+        ]);
         $otroProyecto = ProyectoTitulacion::create([
-            'titulo' => 'Proyecto confidencial de otro estudiante',
+            'titulo' => 'Proyecto confidencial de otro usuario',
             'modalidad' => 'proyecto_grado',
             'carrera_id' => $proyectoPropio->carrera_id,
             'estudiante_id' => $otroEstudiante->id,
@@ -184,19 +246,26 @@ class ProjectFilesTest extends TestCase
         $reportePropio = Reporte::create(['proyecto_id' => $proyectoPropio->id, 'generado_por' => $administrador->id, 'ruta_pdf' => 'reportes/propio.pdf']);
         $reporteAjeno = Reporte::create(['proyecto_id' => $otroProyecto->id, 'generado_por' => $administrador->id, 'ruta_pdf' => 'reportes/ajeno.pdf']);
 
-        $this->actingAs($estudiante)->get(route('reportes.index'))
+        $this->actingAs($usuario)->get(route('reportes.index'))
             ->assertOk()
             ->assertSee($proyectoPropio->titulo)
             ->assertDontSee($otroProyecto->titulo);
-        $this->actingAs($estudiante)->get(route('reportes.archivo', $reportePropio))->assertOk();
-        $this->actingAs($estudiante)->get(route('reportes.archivo', $reporteAjeno))->assertForbidden();
+        $this->actingAs($usuario)->get(route('reportes.archivo', $reportePropio))->assertOk();
+        $this->actingAs($usuario)->get(route('reportes.archivo', $reporteAjeno))->assertForbidden();
     }
 
     private function projectFixture(): array
     {
         $carrera = Carrera::create(['nombre' => 'Sistemas', 'codigo' => 'SIS', 'activo' => true]);
         $administrador = User::factory()->create(['rol' => 'administrador', 'activo' => true]);
-        $estudiante = User::factory()->create(['rol' => 'estudiante', 'carrera_id' => $carrera->id, 'activo' => true]);
+        $usuario = User::factory()->create(['rol' => 'usuario', 'carrera_id' => $carrera->id, 'activo' => true]);
+        $estudiante = Estudiante::create([
+            'nombre' => $usuario->name,
+            'email' => $usuario->email,
+            'carrera_id' => $carrera->id,
+            'user_id' => $usuario->id,
+            'activo' => true,
+        ]);
         $proyecto = ProyectoTitulacion::create([
             'titulo' => 'Proyecto de prueba',
             'modalidad' => 'proyecto_grado',

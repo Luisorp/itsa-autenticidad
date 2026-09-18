@@ -21,7 +21,7 @@
             @foreach($roles as $valor => $nombre)
                 <a href="{{ route('usuarios.index', ['rol' => $valor]) }}" class="user-role-tab {{ $rolActual === $valor ? 'active' : '' }}" @if($rolActual === $valor) aria-current="page" @endif>
                     <span class="user-role-icon">
-                        <i class="bi {{ match($valor) { 'administrador' => 'bi-shield-lock', 'docente' => 'bi-person-workspace', default => 'bi-mortarboard' } }}"></i>
+                        <i class="bi {{ match($valor) { 'administrador' => 'bi-shield-lock', 'gestor' => 'bi-person-workspace', default => 'bi-person' } }}"></i>
                     </span>
                     <span><strong>{{ $nombre }}</strong><small>{{ $conteos[$valor] ?? 0 }} registrados</small></span>
                     <span class="user-role-count">{{ $conteos[$valor] ?? 0 }}</span>

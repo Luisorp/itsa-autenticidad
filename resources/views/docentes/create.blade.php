@@ -1,0 +1,1 @@
+<x-app-layout><x-slot name="header"><h2>Registrar docente tutor</h2></x-slot><div class="container py-4"><form method="POST" action="{{ route('docentes.store') }}">@csrf @include('docentes._form', ['textoBoton' => 'Guardar docente'])</form></div></x-app-layout>
