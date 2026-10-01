@@ -70,6 +70,42 @@
         </li>
     </ul>
 
+    <div class="mobile-navigation" aria-label="Navegación móvil">
+        <a class="mobile-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+            <i class="bi bi-speedometer2"></i><span>Inicio</span>
+        </a>
+        <a class="mobile-nav-link {{ request()->routeIs('proyectos.*') ? 'active' : '' }}" href="{{ route('proyectos.index') }}">
+            <i class="bi bi-folder"></i><span>Proyectos</span>
+        </a>
+        @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
+            <a class="mobile-nav-link mobile-nav-analyze {{ request()->routeIs('analisis.*') ? 'active' : '' }}" href="{{ route('analisis.index') }}">
+                <i class="bi bi-intersect"></i><span>Comparar</span>
+            </a>
+        @endif
+        <div class="dropdown">
+            <button class="mobile-nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-grid-3x3-gap"></i><span>Más</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end mobile-more-menu">
+                @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
+                    <li><a class="dropdown-item" href="{{ route('crossref.index') }}"><i class="bi bi-search"></i>Búsqueda</a></li>
+                    <li><a class="dropdown-item" href="{{ route('estudiantes.index') }}"><i class="bi bi-mortarboard"></i>Estudiantes</a></li>
+                    <li><a class="dropdown-item" href="{{ route('docentes.index') }}"><i class="bi bi-person-video3"></i>Docentes tutores</a></li>
+                @endif
+                @if(Auth::user()->esAdministrador())
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ route('usuarios.index') }}"><i class="bi bi-people"></i>Usuarios</a></li>
+                    <li><a class="dropdown-item" href="{{ route('carreras.index') }}"><i class="bi bi-mortarboard"></i>Carreras</a></li>
+                    <li><a class="dropdown-item" href="{{ route('respaldos.index') }}"><i class="bi bi-cloud-arrow-down"></i>Respaldos</a></li>
+                @endif
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ route('reportes.index') }}"><i class="bi bi-file-earmark-bar-graph"></i>Reportes</a></li>
+                <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-gear"></i>Mi perfil</a></li>
+                <li><form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i>Cerrar sesión</button></form></li>
+            </ul>
+        </div>
+    </div>
+
     <div class="sidebar-footer dropdown">
         <a href="#" class="d-flex align-items-center dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Cuenta: {{ Auth::user()->name }}">
             <i class="bi bi-person-circle"></i><span class="sidebar-user-name">{{ Auth::user()->name }}</span>

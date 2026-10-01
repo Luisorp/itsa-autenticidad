@@ -7,6 +7,22 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="guest-body">
+    @if(request()->routeIs('login'))
+        <main class="institutional-login">
+            <section class="institutional-login-art" aria-label="Plataforma académica Sello ITSa">
+                <img src="{{ asset('images/documentos-login.png') }}" alt="Documentos y proyectos de titulación en carpetas verdes" class="institutional-login-image">
+                <span class="institutional-login-tag">Plataforma académica</span>
+                <p class="institutional-login-caption">Consulta y gestión de proyectos de titulación.</p>
+                <footer>Instituto Tecnológico Sacaba · Bolivia</footer>
+            </section>
+            <section class="institutional-login-panel" aria-label="Inicio de sesión">
+                <div class="institutional-login-form">{{ $slot }}
+                    <p class="institutional-login-security"><i class="bi bi-lock" aria-hidden="true"></i><span>Acceso al sistema institucional</span></p>
+                </div>
+                <small class="institutional-login-copyright">© {{ now()->year }}</small>
+            </section>
+        </main>
+    @else
     <main class="guest-shell">
         <section class="guest-identity" aria-label="Sello ITSa" style="--guest-building-url: url('{{ asset('images/edificio-itsa.png') }}')">
             <div class="guest-identity-brand">
@@ -31,5 +47,6 @@
             <p class="guest-form-footer"><i class="bi bi-lock"></i> Acceso seguro al sistema institucional</p>
         </section>
     </main>
+    @endif
 </body>
 </html>

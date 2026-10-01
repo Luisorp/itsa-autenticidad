@@ -182,7 +182,7 @@ class ProjectFilesTest extends TestCase
             'nombre_archivo' => 'principal.pdf',
             'ruta_archivo' => 'documentos/principal.pdf',
             'tipo_archivo' => 'pdf',
-            'contenido_extraido' => 'Contenido de prueba disponible.',
+            'contenido_extraido' => "Resumen\nContenido de prueba disponible para la búsqueda de proyectos y análisis académico.",
         ]);
 
         $response = $this->actingAs($administrador)->getJson(route('analisis.proyectos.buscar', [

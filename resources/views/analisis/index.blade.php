@@ -6,7 +6,7 @@
             <div class="analysis-intro-icon"><i class="bi bi-intersect"></i></div>
             <div>
                 <h3>Comparación guiada</h3>
-                <p>Selecciona dos proyectos de la misma modalidad. El sistema medirá la similitud general y localizará los fragmentos que requieren revisión.</p>
+                <p>Selecciona dos proyectos de la misma modalidad. El sistema compara únicamente Resumen, Introducción, Marco teórico, Desarrollo/Propuesta y Conclusiones.</p>
             </div>
         </div>
 

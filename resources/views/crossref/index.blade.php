@@ -7,7 +7,7 @@
             <div>
                 <span class="section-kicker">Comparación externa</span>
                 <h3>Selecciona un proyecto para buscar coincidencias</h3>
-                <p>El sistema consultará las dos fuentes y comparará el texto del proyecto con los títulos y resúmenes disponibles.</p>
+                <p>El sistema consultará las dos fuentes y comparará Resumen, Introducción, Marco teórico, Desarrollo/Propuesta y Conclusiones con los títulos y resúmenes disponibles.</p>
             </div>
         </section>
 

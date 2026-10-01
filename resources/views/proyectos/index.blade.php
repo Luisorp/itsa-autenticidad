@@ -85,7 +85,6 @@
                                         <li><a class="dropdown-item" href="{{ route('crossref.index', ['proyecto_id' => $proyecto->id]) }}"><i class="bi bi-globe2"></i> Comparar con publicaciones</a></li>
                                     @endif
                                     <li><a class="dropdown-item" href="{{ route('proyectos.resultados', $proyecto) }}"><i class="bi bi-bar-chart"></i> Ver resultados</a></li>
-                                    @if($proyecto->documento)<li><a class="dropdown-item" target="_blank" rel="noopener" href="{{ route('proyectos.documento', $proyecto) }}"><i class="bi bi-file-earmark-pdf"></i> Abrir documento</a></li>@endif
                                     @if(in_array(auth()->user()->rol, ['administrador', 'gestor']))<li><a class="dropdown-item" href="{{ route('proyectos.edit', $proyecto) }}"><i class="bi bi-pencil"></i> Editar datos</a></li>@endif
                                     @if(auth()->user()->rol === 'administrador')
                                         <li><hr class="dropdown-divider"></li>
@@ -101,6 +100,40 @@
                     @endforelse
                 </tbody>
             </table></div>
+            <div class="project-mobile-list">
+                @forelse($proyectos as $proyecto)
+                    <article class="project-mobile-card {{ $proyecto->activo ? '' : 'inactive-record' }}">
+                        <div class="project-mobile-card-head">
+                            <div><strong>{{ $proyecto->titulo }}</strong><span><i class="bi bi-person"></i> {{ $proyecto->estudiante?->nombre ?? 'Sin estudiante asignado' }}</span></div>
+                            @if($proyecto->estado === 'analizado')<span class="badge bg-success-subtle text-success-emphasis">Analizado</span>@else<span class="badge bg-warning-subtle text-warning-emphasis">Pendiente</span>@endif
+                        </div>
+                        <div class="project-mobile-meta"><span>{{ $proyecto->modalidad_nombre }}</span><span>{{ $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? '—' }} · {{ $proyecto->anio }}</span></div>
+                        <div class="project-mobile-actions">
+                            @if($proyecto->activo && in_array(auth()->user()->rol, ['administrador', 'gestor']))
+                                <form action="{{ route('proyectos.analizar', $proyecto) }}" method="POST">@csrf<button class="btn btn-primary" type="submit"><i class="bi bi-folder-check"></i> Analizar</button></form>
+                            @endif
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Opciones</button>
+                                <ul class="dropdown-menu dropdown-menu-end project-actions">
+                                    @if($proyecto->activo && in_array(auth()->user()->rol, ['administrador', 'gestor']))
+                                        <li><a class="dropdown-item" href="{{ route('analisis.index', ['proyecto_a' => $proyecto->id]) }}"><i class="bi bi-intersect"></i> Comparar proyecto</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('crossref.index', ['proyecto_id' => $proyecto->id]) }}"><i class="bi bi-globe2"></i> Buscar publicaciones</a></li>
+                                    @endif
+                                    <li><a class="dropdown-item" href="{{ route('proyectos.resultados', $proyecto) }}"><i class="bi bi-bar-chart"></i> Ver resultados</a></li>
+                                    @if($proyecto->documento)<li><a class="dropdown-item" href="{{ route('proyectos.reporte', $proyecto) }}"><i class="bi bi-file-earmark-arrow-down"></i> Descargar reporte</a></li><li><a class="dropdown-item" target="_blank" rel="noopener" href="{{ route('proyectos.documento', $proyecto) }}"><i class="bi bi-file-earmark-pdf"></i> Ver PDF</a></li>@endif
+                                    @if(in_array(auth()->user()->rol, ['administrador', 'gestor']))<li><a class="dropdown-item" href="{{ route('proyectos.edit', $proyecto) }}"><i class="bi bi-pencil"></i> Editar datos</a></li>@endif
+                                    @if(auth()->user()->rol === 'administrador')
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><form action="{{ route('proyectos.archivo', $proyecto) }}" method="POST" onsubmit="return confirm('{{ $proyecto->activo ? '¿Archivar este proyecto? Dejará de participar en los análisis.' : '¿Restaurar este proyecto al catálogo activo?' }}')">@csrf @method('PATCH')<button class="dropdown-item {{ $proyecto->activo ? 'text-warning-emphasis' : 'text-success' }}" type="submit"><i class="bi {{ $proyecto->activo ? 'bi-archive' : 'bi-arrow-counterclockwise' }}"></i> {{ $proyecto->activo ? 'Archivar proyecto' : 'Restaurar proyecto' }}</button></form></li>
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+                @empty
+                    <div class="catalog-empty"><i class="bi bi-folder2-open"></i><strong>No hay proyectos en esta vista</strong><span>Prueba cambiando o limpiando los filtros.</span></div>
+                @endforelse
+            </div>
             {{ $proyectos->links() }}
         </div></div>
     </div>

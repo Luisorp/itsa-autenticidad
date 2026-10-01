@@ -9,6 +9,7 @@ use App\Models\Documento;
 use App\Models\Estudiante;
 use App\Models\ProyectoTitulacion;
 use App\Models\Reporte;
+use App\Services\SeccionesDocumentoService;
 use App\Services\SimilitudService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
@@ -253,7 +254,7 @@ class ProyectoTitulacionController extends Controller
 
     // analizis-----------------
 
-    public function analizar(ProyectoTitulacion $proyecto)
+    public function analizar(ProyectoTitulacion $proyecto, SeccionesDocumentoService $secciones)
     {
         if (! $proyecto->activo) {
             return redirect()->route('proyectos.index')->with('error', 'No se puede analizar un proyecto archivado. Restáuralo primero.');
@@ -261,8 +262,9 @@ class ProyectoTitulacionController extends Controller
 
         $documento = $proyecto->documento;
 
-        if (! $documento || trim((string) $documento->contenido_extraido) === '') {
-            return redirect()->route('proyectos.index')->with('error', 'Este proyecto no tiene un documento con texto extraído.');
+        $contenidoPrincipal = $documento ? $secciones->extraer((string) $documento->contenido_extraido) : null;
+        if (! $contenidoPrincipal || $contenidoPrincipal['texto'] === '') {
+            return redirect()->route('proyectos.index')->with('error', 'Este proyecto no contiene secciones analizables (Resumen, Introducción, Marco teórico, Desarrollo/Propuesta o Conclusiones).');
         }
 
         $otrosDocumentos = Documento::where('id', '!=', $documento->id)
@@ -275,22 +277,27 @@ class ProyectoTitulacionController extends Controller
             })
             ->get();
 
-        if ($otrosDocumentos->isEmpty()) {
+        $textosComparables = $otrosDocumentos->mapWithKeys(fn (Documento $otro) => [
+            $otro->id => $secciones->extraer((string) $otro->contenido_extraido)['texto'],
+        ])->filter();
+
+        if ($textosComparables->isEmpty()) {
             $proyecto->update(['estado' => 'analizado']);
 
-            return redirect()->route('proyectos.resultados', $proyecto)->with('success', 'Análisis completado (todavía no hay otros proyectos de la misma carrera y modalidad con los cuales comparar).');
+            return redirect()->route('proyectos.resultados', $proyecto)->with('success', 'Análisis completado (todavía no hay otros proyectos con secciones autorizadas para comparar).');
         }
 
         $servicio = new SimilitudService;
 
-        $corpus = [$documento->id => $documento->contenido_extraido];
-        foreach ($otrosDocumentos as $otro) {
-            $corpus[$otro->id] = $otro->contenido_extraido;
-        }
+        $corpus = [$documento->id => $contenidoPrincipal['texto']] + $textosComparables->all();
 
         $vectores = $servicio->calcularVectoresTfIdf($corpus);
 
-        foreach ($otrosDocumentos as $otro) {
+        Comparacion::where('documento_a_id', $documento->id)
+            ->orWhere('documento_b_id', $documento->id)
+            ->delete();
+
+        foreach ($otrosDocumentos->whereIn('id', $textosComparables->keys()) as $otro) {
             $porcentaje = $servicio->similitudCoseno($vectores[$documento->id], $vectores[$otro->id]);
 
             $idA = min($documento->id, $otro->id);

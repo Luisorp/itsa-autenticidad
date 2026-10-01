@@ -11,6 +11,8 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+        <div class="similarity-notice"><i class="bi bi-info-circle"></i><span>La similitud se calcula solo con Resumen, Introducción, Marco teórico, Desarrollo/Propuesta y Conclusiones. Se excluyen portada, índice, bibliografía y anexos.</span></div>
+
         <form method="GET" class="row g-2 mb-3 align-items-end" style="max-width: 500px;">
             <div class="col-auto">
                 <label class="form-label">Mínimo %</label>
