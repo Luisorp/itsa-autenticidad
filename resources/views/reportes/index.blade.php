@@ -2,22 +2,22 @@
     <x-slot name="header"><div class="page-title"><h2>Reportes generados</h2><span>{{ Auth::user()->esUsuario() ? 'Resultados de tus proyectos' : 'Historial institucional de reportes' }}</span></div></x-slot>
 
     <div class="container-fluid">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Proyecto</th>
-                    <th>Generado por</th>
-                    <th>Fecha</th>
-                    <th>Descarga</th>
+        <table role="table" class="table mobile-record-table table-bordered">
+            <thead role="rowgroup">
+                <tr role="row">
+                    <th scope="col" role="columnheader">Proyecto</th>
+                    <th scope="col" role="columnheader">Generado por</th>
+                    <th scope="col" role="columnheader">Fecha</th>
+                    <th scope="col" role="columnheader">Descarga</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup">
                 @forelse($reportes as $reporte)
-                    <tr>
-                        <td>{{ $reporte->proyecto->titulo }}</td>
-                        <td>{{ $reporte->generadoPor->name }}</td>
-                        <td>{{ $reporte->updated_at->format('d/m/Y H:i') }}</td>
-                        <td>
+                    <tr role="row">
+                        <td role="cell" data-label="Proyecto">{{ $reporte->proyecto->titulo }}</td>
+                        <td role="cell" data-label="Generado por">{{ $reporte->generadoPor->name }}</td>
+                        <td role="cell" data-label="Fecha">{{ $reporte->updated_at->format('d/m/Y H:i') }}</td>
+                        <td role="cell" data-label="Descarga">
                             @if($reporte->archivo_disponible)
                                 <a href="{{ route('reportes.archivo', $reporte) }}" target="_blank" rel="noopener"><i class="bi bi-file-earmark-pdf me-1"></i>Ver PDF</a>
                             @else
@@ -26,7 +26,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="text-center">Todavía no se ha generado ningún reporte.</td></tr>
+                    <tr role="row"><td role="cell" colspan="4" class="text-center">Todavía no se ha generado ningún reporte.</td></tr>
                 @endforelse
             </tbody>
         </table>

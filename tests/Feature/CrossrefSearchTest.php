@@ -154,7 +154,7 @@ class CrossrefSearchTest extends TestCase
             'nombre_archivo' => 'proyecto.pdf',
             'ruta_archivo' => 'documentos/proyecto.pdf',
             'tipo_archivo' => 'pdf',
-            'contenido_extraido' => "Resumen\nEl sistema inteligente permite mejorar los procesos educativos mediante tecnología adaptativa moderna.",
+            'contenido_extraido' => 'El sistema inteligente permite mejorar los procesos educativos mediante tecnología adaptativa moderna.',
         ]);
 
         $this->actingAs($administrador)

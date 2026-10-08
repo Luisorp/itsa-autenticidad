@@ -8,12 +8,13 @@
 
     <div class="container py-4">
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <x-flash-success :message="session('success')" />
         @endif
 
-        <div class="similarity-notice"><i class="bi bi-info-circle"></i><span>La similitud se calcula solo con Resumen, Introducción, Marco teórico, Desarrollo/Propuesta y Conclusiones. Se excluyen portada, índice, bibliografía y anexos.</span></div>
+        <div class="similarity-notice"><i class="bi bi-info-circle"></i><span>Los nuevos análisis usan todo el texto extraído del PDF. Si este resultado se obtuvo por secciones, vuelve a analizar el proyecto para actualizarlo.</span></div>
 
         <form method="GET" class="row g-2 mb-3 align-items-end" style="max-width: 500px;">
+            @if($mostrarTodos)<input type="hidden" name="todos" value="1">@endif
             <div class="col-auto">
                 <label class="form-label">Mínimo %</label>
                 <input type="number" name="min" class="form-control" min="0" max="100" step="0.01" value="{{ request('min') }}">
@@ -28,30 +29,38 @@
             </div>
         </form>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Proyecto comparado</th>
-                    <th>Modalidad</th>
-                    <th>Estudiante</th>
-                    <th>% Similitud</th>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <p class="mb-0">Mostrando {{ $comparaciones->count() }} de {{ $totalComparaciones }} resultados, de mayor a menor similitud.</p>
+            @if($totalComparaciones > 10 || $mostrarTodos)
+                <a class="btn btn-outline-primary" href="{{ route('proyectos.resultados', array_merge(['proyecto' => $proyecto->id], request()->only(['min', 'max']), ['todos' => $mostrarTodos ? 0 : 1])) }}">
+                    {{ $mostrarTodos ? 'Ver solo los 10 más altos' : 'Ver todos' }}
+                </a>
+            @endif
+        </div>
+        <table role="table" class="table mobile-record-table table-bordered">
+            <thead role="rowgroup">
+                <tr role="row">
+                    <th scope="col" role="columnheader">Proyecto comparado</th>
+                    <th scope="col" role="columnheader">Modalidad</th>
+                    <th scope="col" role="columnheader">Estudiante</th>
+                    <th scope="col" role="columnheader">% Similitud</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup">
                 @forelse($comparaciones as $comp)
                     @php
                         $otro = $comp->documento_a_id === $documento->id ? $comp->documentoB : $comp->documentoA;
                         $porcentaje = $comp->porcentaje_similitud;
                         $clase = $porcentaje >= 70 ? 'bg-danger' : ($porcentaje >= 40 ? 'bg-warning text-dark' : 'bg-secondary');
                     @endphp
-                    <tr>
-                        <td>{{ $otro->proyecto->titulo }}</td>
-                        <td><span class="modality-badge">{{ $otro->proyecto->modalidad_nombre }}</span></td>
-                        <td>{{ $otro->proyecto->estudiante->nombre }}</td>
-                        <td><span class="badge {{ $clase }}">{{ $porcentaje }}%</span></td>
+                    <tr role="row">
+                        <td role="cell" data-label="Proyecto comparado">{{ $otro->proyecto->titulo }}</td>
+                        <td role="cell" data-label="Modalidad"><span class="modality-badge">{{ $otro->proyecto->modalidad_nombre }}</span></td>
+                        <td role="cell" data-label="Estudiante">{{ $otro->proyecto->estudiante->nombre }}</td>
+                        <td role="cell" data-label="% Similitud"><span class="badge {{ $clase }}">{{ $porcentaje }}%</span></td>
                     </tr>
                 @empty
-                    <tr><td colspan="4" class="text-center">No hay otros documentos con los cuales comparar todavía.</td></tr>
+                    <tr role="row"><td role="cell" colspan="4" class="text-center">No hay otros documentos con los cuales comparar todavía.</td></tr>
                 @endforelse
             </tbody>
         </table>

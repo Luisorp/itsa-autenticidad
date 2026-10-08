@@ -18,8 +18,7 @@ class DocenteController extends Controller
             $termino = $request->string('buscar')->toString();
             $query->where(fn ($q) => $q->where('nombre', 'like', "%{$termino}%")
                 ->orWhere('codigo', 'like', "%{$termino}%")
-                ->orWhere('email', 'like', "%{$termino}%")
-                ->orWhere('especialidad', 'like', "%{$termino}%"));
+                ->orWhere('email', 'like', "%{$termino}%"));
         }
 
         $docentes = $query->paginate(15)->withQueryString();

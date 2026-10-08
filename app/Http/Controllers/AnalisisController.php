@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Documento;
 use App\Models\ProyectoTitulacion;
-use App\Services\SeccionesDocumentoService;
 use App\Services\SimilitudService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,15 +14,15 @@ use Illuminate\Validation\ValidationException;
 
 class AnalisisController extends Controller
 {
-    public function index(Request $request, SeccionesDocumentoService $secciones)
+    public function index(Request $request)
     {
-        $proyectoA = $this->proyectoSeleccionable($request->old('proyecto_a', $request->input('proyecto_a')), $secciones);
-        $proyectoB = $this->proyectoSeleccionable($request->old('proyecto_b'), $secciones);
+        $proyectoA = $this->proyectoSeleccionable($request->old('proyecto_a', $request->input('proyecto_a')));
+        $proyectoB = $this->proyectoSeleccionable($request->old('proyecto_b'));
 
         return view('analisis.index', compact('proyectoA', 'proyectoB'));
     }
 
-    public function buscarProyectos(Request $request, SeccionesDocumentoService $secciones): JsonResponse
+    public function buscarProyectos(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'q' => ['nullable', 'string', 'max:100'],
@@ -36,7 +35,7 @@ class AnalisisController extends Controller
             ->select(['id', 'titulo', 'modalidad', 'carrera_id', 'estudiante_id', 'anio'])
             ->where('activo', true)
             ->whereHas('documento', fn ($q) => $q->whereNotNull('contenido_extraido')->where('contenido_extraido', '!=', ''))
-            ->with(['estudiante:id,nombre', 'carrera:id,nombre,codigo', 'documento:id,proyecto_id,contenido_extraido']);
+            ->with(['estudiante:id,nombre', 'carrera:id,nombre,codigo']);
 
         if ($termino !== '') {
             $query->where(function ($q) use ($termino) {
@@ -57,22 +56,20 @@ class AnalisisController extends Controller
             $query->where('id', '!=', $validated['excluir']);
         }
 
-        $proyectos = $query->orderBy('titulo')->limit(30)->get()
-            ->filter(fn ($proyecto) => $secciones->tieneContenidoAnalizable((string) $proyecto->documento?->contenido_extraido))
-            ->take(15)->values()->map(fn ($proyecto) => [
-                'id' => $proyecto->id,
-                'titulo' => $proyecto->titulo,
-                'modalidad' => $proyecto->modalidad,
-                'modalidad_nombre' => $proyecto->modalidad_nombre,
-                'estudiante' => $proyecto->estudiante?->nombre ?? 'Sin estudiante',
-                'carrera' => $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? 'Sin carrera',
-                'anio' => $proyecto->anio,
-            ]);
+        $proyectos = $query->orderBy('titulo')->limit(15)->get()->map(fn ($proyecto) => [
+            'id' => $proyecto->id,
+            'titulo' => $proyecto->titulo,
+            'modalidad' => $proyecto->modalidad,
+            'modalidad_nombre' => $proyecto->modalidad_nombre,
+            'estudiante' => $proyecto->estudiante?->nombre ?? 'Sin estudiante',
+            'carrera' => $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? 'Sin carrera',
+            'anio' => $proyecto->anio,
+        ]);
 
         return response()->json(['data' => $proyectos]);
     }
 
-    public function comparar(Request $request, SeccionesDocumentoService $secciones)
+    public function comparar(Request $request)
     {
         $validated = $request->validate([
             'proyecto_a' => 'required|exists:proyectos_titulacion,id|different:proyecto_b',
@@ -83,13 +80,13 @@ class AnalisisController extends Controller
         $proyectoB = ProyectoTitulacion::where('activo', true)->with('documento')->findOrFail($validated['proyecto_b']);
 
         $errores = [];
-        $contenidoA = $proyectoA->documento ? $secciones->extraer((string) $proyectoA->documento->contenido_extraido) : null;
-        $contenidoB = $proyectoB->documento ? $secciones->extraer((string) $proyectoB->documento->contenido_extraido) : null;
-        if (! $contenidoA || $contenidoA['texto'] === '') {
-            $errores['proyecto_a'] = 'El Proyecto A no contiene secciones analizables (Resumen, Introducción, Marco teórico, Desarrollo/Propuesta o Conclusiones).';
+        $contenidoA = (string) $proyectoA->documento?->contenido_extraido;
+        $contenidoB = (string) $proyectoB->documento?->contenido_extraido;
+        if (trim($contenidoA) === '') {
+            $errores['proyecto_a'] = 'El Proyecto A no tiene texto extraído disponible para comparar.';
         }
-        if (! $contenidoB || $contenidoB['texto'] === '') {
-            $errores['proyecto_b'] = 'El Proyecto B no contiene secciones analizables (Resumen, Introducción, Marco teórico, Desarrollo/Propuesta o Conclusiones).';
+        if (trim($contenidoB) === '') {
+            $errores['proyecto_b'] = 'El Proyecto B no tiene texto extraído disponible para comparar.';
         }
         if ($proyectoA->modalidad !== $proyectoB->modalidad) {
             $errores['proyecto_b'] = 'Solo se pueden comparar proyectos de la misma modalidad de graduación.';
@@ -100,9 +97,8 @@ class AnalisisController extends Controller
 
         $corpus = Documento::whereNotNull('contenido_extraido')
             ->whereHas('proyecto', fn ($query) => $query->where('modalidad', $proyectoA->modalidad)->where('activo', true))
-            ->get(['id', 'contenido_extraido'])
-            ->mapWithKeys(fn (Documento $documento) => [$documento->id => $secciones->extraer((string) $documento->contenido_extraido)['texto']])
-            ->filter()
+            ->pluck('contenido_extraido', 'id')
+            ->filter(fn ($texto) => trim((string) $texto) !== '')
             ->toArray();
 
         $servicio = new SimilitudService;
@@ -117,8 +113,8 @@ class AnalisisController extends Controller
             $vectores[$proyectoB->documento->id] ?? []
         );
         $coincidencias = $servicio->encontrarCoincidencias(
-            $contenidoA['texto'],
-            $contenidoB['texto']
+            $contenidoA,
+            $contenidoB
         );
 
         $proyectoA->loadMissing(['estudiante', 'carrera']);
@@ -127,7 +123,7 @@ class AnalisisController extends Controller
         return view('analisis.index', compact('proyectoA', 'proyectoB', 'porcentaje', 'coincidencias', 'explicacion'));
     }
 
-    private function proyectoSeleccionable(mixed $id, SeccionesDocumentoService $secciones): ?ProyectoTitulacion
+    private function proyectoSeleccionable(mixed $id): ?ProyectoTitulacion
     {
         if (! is_numeric($id)) {
             return null;
@@ -138,7 +134,7 @@ class AnalisisController extends Controller
             ->with(['estudiante', 'carrera'])
             ->find((int) $id);
 
-        return $proyecto && $secciones->tieneContenidoAnalizable((string) $proyecto->documento?->contenido_extraido)
+        return $proyecto && trim((string) $proyecto->documento?->contenido_extraido) !== ''
             ? $proyecto
             : null;
     }

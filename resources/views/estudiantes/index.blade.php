@@ -2,7 +2,7 @@
     <x-slot name="header"><div class="page-title"><h2>Estudiantes</h2><span>Registro académico independiente de las cuentas de acceso</span></div></x-slot>
 
     <div class="container py-4">
-        @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+        @if(session('success'))<x-flash-success :message="session('success')" />@endif
         @if($errors->any())<div class="alert alert-danger">{{ $errors->first() }}</div>@endif
 
         <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-3">
@@ -30,19 +30,19 @@
         </form>
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered align-middle">
-                <thead><tr><th>Código</th><th>Nombre</th><th>Carrera</th><th>Gestión</th><th>Cuenta</th><th>Estado</th><th>Acciones</th></tr></thead>
-                <tbody>
+            <table role="table" class="table mobile-record-table table-striped table-bordered align-middle">
+                <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Código</th><th scope="col" role="columnheader">Nombre</th><th scope="col" role="columnheader">Carrera</th><th scope="col" role="columnheader">Gestión</th><th scope="col" role="columnheader">Cuenta</th><th scope="col" role="columnheader">Estado</th><th scope="col" role="columnheader">Acciones</th></tr></thead>
+                <tbody role="rowgroup">
                     @forelse($estudiantes as $estudiante)
-                        <tr class="{{ $estudiante->activo ? '' : 'inactive-record' }}">
-                            <td>{{ $estudiante->codigo ?: '—' }}</td><td><strong>{{ $estudiante->nombre }}</strong><small class="d-block text-muted">{{ $estudiante->email ?: 'Sin correo' }}</small></td>
-                            <td>{{ $estudiante->carrera?->nombre ?? '—' }}</td><td>{{ $estudiante->gestion_ingreso ?? '—' }}</td>
-                            <td>{{ $estudiante->user_id ? 'Vinculada' : 'No requerida' }}</td>
-                            <td><span class="badge {{ $estudiante->activo ? 'bg-success' : 'bg-secondary' }}">{{ $estudiante->activo ? 'Activo' : 'Inactivo' }}</span></td>
-                            <td><a href="{{ route('estudiantes.edit', $estudiante) }}" class="btn btn-sm btn-warning">Editar</a> <form action="{{ route('estudiantes.toggle-activo', $estudiante) }}" method="POST" class="d-inline">@csrf @method('PATCH')<button class="btn btn-sm {{ $estudiante->activo ? 'btn-secondary' : 'btn-success' }}">{{ $estudiante->activo ? 'Desactivar' : 'Activar' }}</button></form></td>
+                        <tr role="row" class="{{ $estudiante->activo ? '' : 'inactive-record' }}">
+                            <td role="cell" data-label="Código">{{ $estudiante->codigo ?: '—' }}</td><td role="cell" data-label="Nombre"><strong>{{ $estudiante->nombre }}</strong><small class="d-block text-muted">{{ $estudiante->email ?: 'Sin correo' }}</small></td>
+                            <td role="cell" data-label="Carrera">{{ $estudiante->carrera?->nombre ?? '—' }}</td><td role="cell" data-label="Gestión">{{ $estudiante->gestion_ingreso ?? '—' }}</td>
+                            <td role="cell" data-label="Cuenta">{{ $estudiante->user_id ? 'Vinculada' : 'No requerida' }}</td>
+                            <td role="cell" data-label="Estado"><span class="badge {{ $estudiante->activo ? 'bg-success' : 'bg-secondary' }}">{{ $estudiante->activo ? 'Activo' : 'Inactivo' }}</span></td>
+                            <td role="cell" data-label="Acciones"><a href="{{ route('estudiantes.edit', $estudiante) }}" class="btn btn-sm btn-warning">Editar</a> <form action="{{ route('estudiantes.toggle-activo', $estudiante) }}" method="POST" class="d-inline">@csrf @method('PATCH')<button class="btn btn-sm {{ $estudiante->activo ? 'btn-secondary' : 'btn-success' }}">{{ $estudiante->activo ? 'Desactivar' : 'Activar' }}</button></form></td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center py-4">No hay estudiantes registrados.</td></tr>
+                        <tr role="row"><td role="cell" colspan="7" class="text-center py-4">No hay estudiantes registrados.</td></tr>
                     @endforelse
                 </tbody>
             </table>

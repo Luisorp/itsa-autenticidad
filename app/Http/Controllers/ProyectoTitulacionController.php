@@ -9,7 +9,6 @@ use App\Models\Documento;
 use App\Models\Estudiante;
 use App\Models\ProyectoTitulacion;
 use App\Models\Reporte;
-use App\Services\SeccionesDocumentoService;
 use App\Services\SimilitudService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
@@ -254,7 +253,7 @@ class ProyectoTitulacionController extends Controller
 
     // analizis-----------------
 
-    public function analizar(ProyectoTitulacion $proyecto, SeccionesDocumentoService $secciones)
+    public function analizar(ProyectoTitulacion $proyecto)
     {
         if (! $proyecto->activo) {
             return redirect()->route('proyectos.index')->with('error', 'No se puede analizar un proyecto archivado. Restáuralo primero.');
@@ -262,9 +261,9 @@ class ProyectoTitulacionController extends Controller
 
         $documento = $proyecto->documento;
 
-        $contenidoPrincipal = $documento ? $secciones->extraer((string) $documento->contenido_extraido) : null;
-        if (! $contenidoPrincipal || $contenidoPrincipal['texto'] === '') {
-            return redirect()->route('proyectos.index')->with('error', 'Este proyecto no contiene secciones analizables (Resumen, Introducción, Marco teórico, Desarrollo/Propuesta o Conclusiones).');
+        $contenidoPrincipal = (string) $documento?->contenido_extraido;
+        if (trim($contenidoPrincipal) === '') {
+            return redirect()->route('proyectos.index')->with('error', 'Este proyecto no tiene un documento con texto extraído.');
         }
 
         $otrosDocumentos = Documento::where('id', '!=', $documento->id)
@@ -278,18 +277,18 @@ class ProyectoTitulacionController extends Controller
             ->get();
 
         $textosComparables = $otrosDocumentos->mapWithKeys(fn (Documento $otro) => [
-            $otro->id => $secciones->extraer((string) $otro->contenido_extraido)['texto'],
-        ])->filter();
+            $otro->id => (string) $otro->contenido_extraido,
+        ])->filter(fn ($texto) => trim($texto) !== '');
 
         if ($textosComparables->isEmpty()) {
             $proyecto->update(['estado' => 'analizado']);
 
-            return redirect()->route('proyectos.resultados', $proyecto)->with('success', 'Análisis completado (todavía no hay otros proyectos con secciones autorizadas para comparar).');
+            return redirect()->route('proyectos.resultados', $proyecto)->with('success', 'Análisis completado (todavía no hay otros proyectos de la misma carrera y modalidad con texto disponible para comparar).');
         }
 
         $servicio = new SimilitudService;
 
-        $corpus = [$documento->id => $contenidoPrincipal['texto']] + $textosComparables->all();
+        $corpus = [$documento->id => $contenidoPrincipal] + $textosComparables->all();
 
         $vectores = $servicio->calcularVectoresTfIdf($corpus);
 
@@ -339,9 +338,13 @@ class ProyectoTitulacionController extends Controller
             $query->where('porcentaje_similitud', '<=', $request->max);
         }
 
-        $comparaciones = $query->orderByDesc('porcentaje_similitud')->get();
+        $mostrarTodos = $request->boolean('todos');
+        $totalComparaciones = (clone $query)->count();
+        $comparaciones = $query->orderByDesc('porcentaje_similitud')->orderBy('id')
+            ->when(! $mostrarTodos, fn ($consulta) => $consulta->limit(10))
+            ->get();
 
-        return view('proyectos.resultados', compact('proyecto', 'documento', 'comparaciones'));
+        return view('proyectos.resultados', compact('proyecto', 'documento', 'comparaciones', 'mostrarTodos', 'totalComparaciones'));
     }
 
     public function verDocumento(ProyectoTitulacion $proyecto)
@@ -454,13 +457,13 @@ class ProyectoTitulacionController extends Controller
             ->when($termino !== '', fn ($query) => $query->where(function ($filtro) use ($termino) {
                 $filtro->where('nombre', 'like', "%{$termino}%")
                     ->orWhere('codigo', 'like', "%{$termino}%")
-                    ->orWhere('especialidad', 'like', "%{$termino}%");
+                    ->orWhere('email', 'like', "%{$termino}%");
             }))
             ->orderBy('nombre')->limit(15)->get()
             ->map(fn ($docente) => [
                 'id' => $docente->id,
                 'label' => $docente->nombre,
-                'meta' => collect([$docente->codigo, $docente->especialidad])->filter()->join(' · '),
+                'meta' => collect([$docente->codigo, $docente->email])->filter()->join(' · '),
             ]);
 
         return response()->json(['data' => $docentes]);

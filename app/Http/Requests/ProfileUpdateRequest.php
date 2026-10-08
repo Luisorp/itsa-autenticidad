@@ -9,6 +9,21 @@ use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Escribe tu nombre completo.',
+            'name.string' => 'El nombre debe ser un texto.',
+            'name.max' => 'El nombre no puede superar los 255 caracteres.',
+            'email.required' => 'Escribe tu correo electrónico.',
+            'email.string' => 'Escribe un correo electrónico válido.',
+            'email.email' => 'Escribe un correo electrónico válido.',
+            'email.lowercase' => 'Escribe el correo electrónico en minúsculas.',
+            'email.max' => 'El correo no puede superar los 255 caracteres.',
+            'email.unique' => 'Este correo electrónico ya está registrado en otra cuenta.',
+        ];
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

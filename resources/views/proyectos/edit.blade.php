@@ -61,7 +61,7 @@
                     <label class="form-label">Docente tutor</label>
                     <div class="project-picker @error('tutor_id') is-invalid @enderror" data-academic-picker data-optional="true" data-search-url="{{ route('proyectos.docentes.buscar') }}" data-selected-id="{{ old('tutor_id', $tutorSeleccionado?->id) }}" data-selected-label="{{ $tutorSeleccionado?->nombre }}">
                         <input type="hidden" name="tutor_id" value="{{ old('tutor_id', $tutorSeleccionado?->id) }}" data-academic-value>
-                        <div class="project-search-field"><i class="bi bi-search"></i><input type="search" autocomplete="off" placeholder="Escribe nombre, código o especialidad" aria-label="Buscar docente tutor" data-academic-search><button type="button" aria-label="Limpiar docente tutor" data-academic-clear hidden><i class="bi bi-x-lg"></i></button></div>
+                        <div class="project-search-field"><i class="bi bi-search"></i><input type="search" autocomplete="off" placeholder="Escribe nombre, código o correo" aria-label="Buscar docente tutor" data-academic-search><button type="button" aria-label="Limpiar docente tutor" data-academic-clear hidden><i class="bi bi-x-lg"></i></button></div>
                         <div class="project-search-results" data-academic-results role="listbox" hidden></div>
                     </div>
                     @error('tutor_id')<div class="invalid-feedback">{{ $message }}</div>@enderror

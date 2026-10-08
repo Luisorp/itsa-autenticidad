@@ -18,7 +18,9 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->get('/profile');
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertSee('Mi perfil')->assertSee('Guardar cambios')
+            ->assertSee('Actualizar contraseña')->assertDontSee('Profile Information');
     }
 
     public function test_profile_information_can_be_updated(): void
@@ -41,6 +43,41 @@ class ProfileTest extends TestCase
         $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
+    }
+
+    public function test_profile_rejects_another_accounts_email(): void
+    {
+        $user = User::factory()->create();
+        $other = User::factory()->create();
+        $this->actingAs($user)->from('/profile')->patch('/profile', [
+            'name' => 'Nuevo nombre',
+            'email' => $other->email,
+        ])->assertSessionHasErrors(['email' => 'Este correo electrónico ya está registrado en otra cuenta.'])->assertRedirect('/profile');
+        $this->assertSame($user->email, $user->fresh()->email);
+    }
+
+    public function test_profile_success_message_is_displayed(): void
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user)->withSession(['status' => 'profile-updated'])->get('/profile')
+            ->assertOk()->assertSee('Tus datos se guardaron correctamente.')
+            ->assertSee('data-success-notice', false);
+    }
+
+    public function test_profile_renders_field_errors_in_spanish(): void
+    {
+        $user = User::factory()->create();
+        $errors = (new \Illuminate\Support\ViewErrorBag)
+            ->put('default', new \Illuminate\Support\MessageBag(['email' => 'Este correo ya está registrado.']))
+            ->put('updatePassword', new \Illuminate\Support\MessageBag(['password' => 'La confirmación no coincide.']));
+        // The application uses JSON sessions; seed the stored error-bag format.
+        $storedErrors = collect($errors->getBags())->map(fn ($bag) => [
+            'messages' => $bag->getMessages(),
+            'format' => $bag->getFormat(),
+        ])->all();
+        $this->actingAs($user)->withSession(['errors' => $storedErrors])->get('/profile')
+            ->assertOk()->assertSee('Este correo ya está registrado.')
+            ->assertSee('La confirmación no coincide.')->assertSee('is-invalid');
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void

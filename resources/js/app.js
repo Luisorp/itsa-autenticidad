@@ -1,11 +1,29 @@
 
 
 import Alpine from 'alpinejs';
-import 'bootstrap';
+import { Alert } from 'bootstrap';
 
 window.Alpine = Alpine;
 
 Alpine.start();
+
+// Only transient confirmations expire; analysis results and errors stay visible.
+document.querySelectorAll('[data-success-notice]').forEach((notice) => {
+    let timer;
+    const pause = () => window.clearTimeout(timer);
+    const schedule = () => {
+        pause();
+        if (notice.matches(':hover') || notice.contains(document.activeElement)) return;
+        timer = window.setTimeout(() => Alert.getOrCreateInstance(notice).close(), 5000);
+    };
+
+    notice.addEventListener('mouseenter', pause);
+    notice.addEventListener('mouseleave', schedule);
+    notice.addEventListener('focusin', pause);
+    notice.addEventListener('focusout', () => window.setTimeout(schedule, 0));
+    notice.addEventListener('close.bs.alert', pause);
+    schedule();
+});
 
 const sidebar = document.querySelector('#app-sidebar');
 const sidebarToggle = sidebar?.querySelector('[data-sidebar-toggle]');
@@ -257,7 +275,7 @@ document.querySelectorAll('[data-project-career]').forEach((careerSelect) => {
         const updateAvailability = () => {
             input.setAttribute('aria-disabled', String(!careerSelect.value));
             input.placeholder = careerSelect.value
-                ? (picker.dataset.optional ? 'Escribe nombre, código o especialidad' : 'Escribe nombre, código o correo')
+                ? (picker.dataset.optional ? 'Escribe nombre, código o correo' : 'Escribe nombre, código o correo')
                 : 'Primero selecciona una carrera';
         };
 

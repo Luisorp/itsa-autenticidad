@@ -2,7 +2,7 @@
     <div class="login-heading"><span>Acceso institucional</span><h1>Bienvenido de nuevo</h1><p>Ingresa tus datos para continuar.</p></div>
 
     @if (session('status'))
-        <div class="alert alert-success">{{ session('status') }}</div>
+        <x-flash-success :message="session('status')" />
     @endif
 
     <form method="POST" action="{{ route('login') }}">

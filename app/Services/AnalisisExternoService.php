@@ -12,7 +12,6 @@ class AnalisisExternoService
         private readonly CrossrefService $crossref,
         private readonly OpenAlexService $openAlex,
         private readonly SimilitudService $similitud,
-        private readonly SeccionesDocumentoService $secciones,
     ) {}
 
     /** @return array{resultados: array<int, array<string, mixed>>, fuentesNoDisponibles: array<int, string>} */
@@ -30,8 +29,7 @@ class AnalisisExternoService
         }
 
         $publicaciones = $this->eliminarDuplicados($publicaciones);
-        $contenidoProyecto = $this->secciones->extraer((string) $proyecto->documento->contenido_extraido);
-        $corpus = ['proyecto' => $contenidoProyecto['texto']];
+        $corpus = ['proyecto' => (string) $proyecto->documento->contenido_extraido];
         foreach ($publicaciones as $indice => $publicacion) {
             $corpus['externo_'.$indice] = $this->textoComparable($publicacion);
         }

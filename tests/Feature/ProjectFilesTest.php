@@ -182,7 +182,7 @@ class ProjectFilesTest extends TestCase
             'nombre_archivo' => 'principal.pdf',
             'ruta_archivo' => 'documentos/principal.pdf',
             'tipo_archivo' => 'pdf',
-            'contenido_extraido' => "Resumen\nContenido de prueba disponible para la búsqueda de proyectos y análisis académico.",
+            'contenido_extraido' => 'Contenido sin encabezados disponible para la búsqueda de proyectos y análisis académico.',
         ]);
 
         $response = $this->actingAs($administrador)->getJson(route('analisis.proyectos.buscar', [
@@ -252,6 +252,85 @@ class ProjectFilesTest extends TestCase
             ->assertDontSee($otroProyecto->titulo);
         $this->actingAs($usuario)->get(route('reportes.archivo', $reportePropio))->assertOk();
         $this->actingAs($usuario)->get(route('reportes.archivo', $reporteAjeno))->assertForbidden();
+    }
+
+    public function test_full_text_is_used_for_manual_and_repository_comparisons(): void
+    {
+        [$admin, $project] = $this->projectFixture();
+        $other = $project->replicate();
+        $other->titulo = 'Otro proyecto';
+        $other->save();
+        $text = 'La plataforma permite registrar documentos académicos y comparar contenido mediante procesamiento del lenguaje natural.';
+        $documents = [];
+        foreach ([$project, $other] as $item) {
+            $documents[] = Documento::create([
+                'proyecto_id' => $item->id,
+                'nombre_archivo' => 'prueba.pdf',
+                'ruta_archivo' => 'documentos/prueba.pdf',
+                'tipo_archivo' => 'pdf',
+                'contenido_extraido' => $text,
+            ]);
+        }
+
+        $this->actingAs($admin)->get(route('analisis.index', ['proyecto_a' => $project->id]))
+            ->assertOk()->assertViewHas('proyectoA', fn ($selected) => $selected?->id === $project->id);
+        $this->post(route('analisis.comparar'), ['proyecto_a' => $project->id, 'proyecto_b' => $other->id])
+            ->assertOk()->assertViewHas('porcentaje', 100.0)
+            ->assertViewHas('coincidencias', fn ($matches) => count($matches) > 0);
+        $this->post(route('proyectos.analizar', $project))
+            ->assertRedirect(route('proyectos.resultados', $project))->assertSessionMissing('error');
+        $this->assertDatabaseHas('comparaciones', [
+            'documento_a_id' => $documents[0]->id,
+            'documento_b_id' => $documents[1]->id,
+            'porcentaje_similitud' => 100,
+        ]);
+
+        $documents[0]->update(['contenido_extraido' => '   ']);
+        $this->post(route('analisis.comparar'), ['proyecto_a' => $project->id, 'proyecto_b' => $other->id])
+            ->assertSessionHasErrors('proyecto_a');
+        $this->post(route('proyectos.analizar', $project))->assertSessionHas('error');
+    }
+
+    public function test_results_show_top_ten_and_allow_all_with_filters(): void
+    {
+        [$admin, $project] = $this->projectFixture();
+        $document = Documento::create([
+            'proyecto_id' => $project->id,
+            'nombre_archivo' => 'prueba.pdf',
+            'ruta_archivo' => 'documentos/prueba.pdf',
+            'tipo_archivo' => 'pdf',
+            'contenido_extraido' => 'Texto de prueba',
+        ]);
+        for ($score = 1; $score <= 12; $score++) {
+            $other = $project->replicate();
+            $other->titulo = 'Proyecto '.$score;
+            $other->save();
+            $otherDocument = $document->replicate();
+            $otherDocument->proyecto_id = $other->id;
+            $otherDocument->save();
+            \App\Models\Comparacion::create([
+                'documento_a_id' => $document->id,
+                'documento_b_id' => $otherDocument->id,
+                'porcentaje_similitud' => $score,
+                'algoritmo_usado' => 'TF-IDF',
+            ]);
+        }
+
+        $this->actingAs($admin)->get(route('proyectos.resultados', $project))
+            ->assertOk()->assertSee('Ver todos')->assertViewHas('totalComparaciones', 12)
+            ->assertViewHas('comparaciones', fn ($rows) => $rows->count() === 10
+                && (float) $rows->first()->porcentaje_similitud === 12.0
+                && (float) $rows->last()->porcentaje_similitud === 3.0);
+        $this->get(route('proyectos.resultados', ['proyecto' => $project->id, 'todos' => 1]))
+            ->assertOk()->assertSee('Ver solo los 10 más altos')
+            ->assertViewHas('comparaciones', fn ($rows) => $rows->count() === 12);
+        $this->get(route('proyectos.resultados', ['proyecto' => $project->id, 'todos' => 1, 'min' => 5, 'max' => 8]))
+            ->assertOk()->assertViewHas('totalComparaciones', 4)
+            ->assertViewHas('comparaciones', fn ($rows) => $rows->count() === 4
+                && (float) $rows->first()->porcentaje_similitud === 8.0);
+        $this->get(route('proyectos.resultados', ['proyecto' => $project->id, 'min' => 90]))
+            ->assertOk()->assertViewHas('totalComparaciones', 0)->assertDontSee('Ver todos');
+        $this->assertDatabaseCount('comparaciones', 12);
     }
 
     private function projectFixture(): array

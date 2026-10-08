@@ -3,7 +3,7 @@
 
     <div class="container py-4">
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <x-flash-success :message="session('success')" />
         @endif
         @if(session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
@@ -34,30 +34,30 @@
             <strong>{{ $roles[$rolActual] }}</strong>
         </div>
 
-        <table class="table table-striped table-bordered align-middle">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Rol</th>
-                    <th>Carrera</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+        <table role="table" class="table mobile-record-table table-striped table-bordered align-middle">
+            <thead role="rowgroup">
+                <tr role="row">
+                    <th scope="col" role="columnheader">Nombre</th>
+                    <th scope="col" role="columnheader">Correo</th>
+                    <th scope="col" role="columnheader">Rol</th>
+                    <th scope="col" role="columnheader">Carrera</th>
+                    <th scope="col" role="columnheader">Estado</th>
+                    <th scope="col" role="columnheader">Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup">
                 @forelse($usuarios as $usuario)
-                    <tr class="{{ $usuario->activo ? '' : 'inactive-record' }}">
-                        <td>{{ $usuario->name }}</td>
-                        <td>{{ $usuario->email }}</td>
-                        <td><span class="badge bg-secondary">{{ ucfirst($usuario->rol) }}</span></td>
-                        <td>{{ $usuario->carrera->nombre ?? '—' }}</td>
-                        <td>
+                    <tr role="row" class="{{ $usuario->activo ? '' : 'inactive-record' }}">
+                        <td role="cell" data-label="Nombre">{{ $usuario->name }}</td>
+                        <td role="cell" data-label="Correo">{{ $usuario->email }}</td>
+                        <td role="cell" data-label="Rol"><span class="badge bg-secondary">{{ ucfirst($usuario->rol) }}</span></td>
+                        <td role="cell" data-label="Carrera">{{ $usuario->carrera->nombre ?? '—' }}</td>
+                        <td role="cell" data-label="Estado">
                             <span class="badge {{ $usuario->activo ? 'bg-success' : 'bg-secondary' }}">
                                 {{ $usuario->activo ? 'Activo' : 'Inactivo' }}
                             </span>
                         </td>
-                        <td>
+                        <td role="cell" data-label="Acciones">
                             <a href="{{ route('usuarios.edit', $usuario) }}" class="btn btn-sm btn-warning">Editar</a>
                             <form action="{{ route('usuarios.toggle-activo', $usuario) }}" method="POST" class="d-inline">
                                 @csrf
@@ -69,7 +69,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="text-center">No hay usuarios registrados.</td></tr>
+                    <tr role="row"><td role="cell" colspan="6" class="text-center">No hay usuarios registrados.</td></tr>
                 @endforelse
             </tbody>
         </table>
