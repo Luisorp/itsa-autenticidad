@@ -35,6 +35,12 @@
 
     <h2>Resultados de comparación</h2>
 
+    @if($comparaciones->contains(fn ($comparacion) => $comparacion->algoritmo_usado !== \App\Services\SeccionesDocumentoService::ALGORITMO))
+        <p><strong>Resultados anteriores:</strong> hay comparaciones calculadas con otro alcance. Vuelve a analizar el proyecto y genera un nuevo reporte para excluir portada, tutor y marco teórico o capítulo II.</p>
+    @else
+        <p>Alcance del análisis: secciones reconocidas del resumen, introducción, desarrollo y conclusiones. Se excluyen preliminares, marco teórico o capítulo II, bibliografía y anexos.</p>
+    @endif
+
     <table class="resultados">
         <thead>
             <tr>
@@ -64,7 +70,7 @@
     </table>
 
     <div class="footer">
-        Este reporte fue generado automáticamente por el sistema de análisis de autenticidad. El porcentaje de similitud es un indicador de apoyo basado en coincidencia textual (algoritmo TF-IDF + similitud de coseno); la decisión final sobre la autenticidad del trabajo corresponde al tribunal evaluador.
+        Este reporte fue generado automáticamente por el sistema de análisis de autenticidad. El método actual compara secuencias de cinco palabras consecutivas, conservando cifras y orden, y omite rótulos de tablas y figuras y campos de plantilla. El porcentaje es un indicador de coincidencia textual, no de plagio; la decisión final sobre la autenticidad del trabajo corresponde al tribunal evaluador. Los resultados anteriores deben recalcularse para aplicar este método.
     </div>
 </body>
 </html>

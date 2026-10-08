@@ -10,6 +10,8 @@ use App\Models\Estudiante;
 use App\Models\ProyectoTitulacion;
 use App\Models\Reporte;
 use App\Services\SimilitudService;
+use App\Services\TextoPdfService;
+use App\Services\SeccionesDocumentoService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,7 +20,6 @@ use Illuminate\Support\Facades\Storage;
 // ruta de reportes
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Smalot\PdfParser\Parser;
 
 class ProyectoTitulacionController extends Controller
 {
@@ -104,7 +105,7 @@ class ProyectoTitulacionController extends Controller
         return view('proyectos.create', compact('carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, TextoPdfService $textoPdf)
     {
         $validated = $request->validate([
             'titulo' => 'required|string|max:255',
@@ -119,7 +120,7 @@ class ProyectoTitulacionController extends Controller
             'documento' => 'required|file|mimes:pdf|max:30720',
         ]);
 
-        DB::transaction(function () use ($validated, $request) {
+        DB::transaction(function () use ($validated, $request, $textoPdf) {
             $proyecto = ProyectoTitulacion::create([
                 'titulo' => $validated['titulo'],
                 'resumen' => $validated['resumen'] ?? null,
@@ -134,15 +135,7 @@ class ProyectoTitulacionController extends Controller
             $archivo = $request->file('documento');
             $ruta = $archivo->store('documentos', 'public');
 
-            $texto = null;
-            try {
-                $parser = new Parser;
-                $pdf = $parser->parseFile(storage_path('app/public/'.$ruta));
-                $texto = $pdf->getText();
-            } catch (\Exception $e) {
-                // Si el PDF está escaneado (solo imágenes) o corrupto, seguimos sin texto por ahora.
-                $texto = null;
-            }
+            $texto = $textoPdf->extraer(Storage::disk('public')->path($ruta));
 
             Documento::create([
                 'proyecto_id' => $proyecto->id,
@@ -172,7 +165,7 @@ class ProyectoTitulacionController extends Controller
         return view('proyectos.edit', compact('proyecto', 'carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades'));
     }
 
-    public function update(Request $request, ProyectoTitulacion $proyecto)
+    public function update(Request $request, ProyectoTitulacion $proyecto, TextoPdfService $textoPdf)
     {
         $validated = $request->validate([
             'titulo' => 'required|string|max:255',
@@ -201,12 +194,7 @@ class ProyectoTitulacionController extends Controller
         $reportesAnteriores = $proyecto->reportes()->pluck('ruta_pdf')->all();
 
         try {
-            $texto = null;
-            try {
-                $texto = (new Parser)->parseFile(storage_path('app/public/'.$rutaNueva))->getText();
-            } catch (\Exception) {
-                // El archivo se conserva aunque sea un PDF escaneado sin texto extraíble.
-            }
+            $texto = $textoPdf->extraer(Storage::disk('public')->path($rutaNueva));
 
             DB::transaction(function () use ($proyecto, $validated, $archivo, $rutaNueva, $texto) {
                 $documentoId = $proyecto->documento?->id;
@@ -253,7 +241,7 @@ class ProyectoTitulacionController extends Controller
 
     // analizis-----------------
 
-    public function analizar(ProyectoTitulacion $proyecto)
+    public function analizar(ProyectoTitulacion $proyecto, SeccionesDocumentoService $secciones)
     {
         if (! $proyecto->activo) {
             return redirect()->route('proyectos.index')->with('error', 'No se puede analizar un proyecto archivado. Restáuralo primero.');
@@ -261,9 +249,9 @@ class ProyectoTitulacionController extends Controller
 
         $documento = $proyecto->documento;
 
-        $contenidoPrincipal = (string) $documento?->contenido_extraido;
+        $contenidoPrincipal = $secciones->extraer((string) $documento?->contenido_extraido)['texto'];
         if (trim($contenidoPrincipal) === '') {
-            return redirect()->route('proyectos.index')->with('error', 'Este proyecto no tiene un documento con texto extraído.');
+            return redirect()->route('proyectos.index')->with('error', 'No se reconoció contenido analizable. Revisa los encabezados de introducción, desarrollo o conclusiones del PDF.');
         }
 
         $otrosDocumentos = Documento::where('id', '!=', $documento->id)
@@ -277,7 +265,7 @@ class ProyectoTitulacionController extends Controller
             ->get();
 
         $textosComparables = $otrosDocumentos->mapWithKeys(fn (Documento $otro) => [
-            $otro->id => (string) $otro->contenido_extraido,
+            $otro->id => $secciones->extraer((string) $otro->contenido_extraido)['texto'],
         ])->filter(fn ($texto) => trim($texto) !== '');
 
         if ($textosComparables->isEmpty()) {
@@ -288,23 +276,19 @@ class ProyectoTitulacionController extends Controller
 
         $servicio = new SimilitudService;
 
-        $corpus = [$documento->id => $contenidoPrincipal] + $textosComparables->all();
-
-        $vectores = $servicio->calcularVectoresTfIdf($corpus);
-
         Comparacion::where('documento_a_id', $documento->id)
             ->orWhere('documento_b_id', $documento->id)
             ->delete();
 
         foreach ($otrosDocumentos->whereIn('id', $textosComparables->keys()) as $otro) {
-            $porcentaje = $servicio->similitudCoseno($vectores[$documento->id], $vectores[$otro->id]);
+            $porcentaje = $servicio->compararTextos($contenidoPrincipal, $textosComparables[$otro->id])['porcentaje'];
 
             $idA = min($documento->id, $otro->id);
             $idB = max($documento->id, $otro->id);
 
             Comparacion::updateOrCreate(
                 ['documento_a_id' => $idA, 'documento_b_id' => $idB],
-                ['porcentaje_similitud' => $porcentaje, 'algoritmo_usado' => 'TF-IDF + similitud de coseno']
+                ['porcentaje_similitud' => $porcentaje, 'algoritmo_usado' => SeccionesDocumentoService::ALGORITMO]
             );
         }
 
@@ -383,7 +367,7 @@ class ProyectoTitulacionController extends Controller
 
         $pdf = Pdf::loadView('reportes.pdf', compact('proyecto', 'documento', 'comparaciones'));
 
-        $nombreArchivo = 'reporte_'.Str::slug($proyecto->titulo).'.pdf';
+        $nombreArchivo = 'reporte_'.$proyecto->id.'_'.Str::limit(Str::slug($proyecto->titulo), 120, '').'.pdf';
         $ruta = 'reportes/'.$nombreArchivo;
 
         Storage::disk('public')->put($ruta, $pdf->output());

@@ -4,53 +4,85 @@ namespace App\Services;
 
 class SeccionesDocumentoService
 {
-    /** @var array<string, string> */
+    public const ALGORITMO = 'Coincidencia textual; secuencias de 5 palabras (v3)';
+
     public const SECCIONES = [
         'resumen' => 'Resumen',
-        'introduccion' => 'Introducción',
-        'marco_teorico' => 'Marco teórico',
+        'introduccion' => 'Introducción y planteamiento del problema',
         'desarrollo_propuesta' => 'Desarrollo o propuesta',
-        'conclusiones' => 'Conclusiones',
+        'conclusiones' => 'Conclusiones y recomendaciones',
     ];
 
-    /**
-     * Extrae únicamente las secciones institucionales autorizadas para el análisis.
-     * Los encabezados deben ocupar una línea propia, como ocurre habitualmente al
-     * extraer texto de un PDF académico.
-     *
-     * @return array{texto: string, secciones: array<int, string>}
-     */
+    /** @return array{texto: string, secciones: array<int, string>} */
     public function extraer(string $texto): array
     {
-        $texto = preg_replace("/\r\n?|\x{00A0}/u", "\n", $texto) ?? $texto;
-        $encabezados = $this->buscarEncabezados($texto);
+        $lineas = preg_split('/\R/u', mb_scrub($texto, 'UTF-8')) ?: [];
         $secciones = [];
+        $actual = null;
+        $capitulo = null;
+        $teoria = false;
 
-        foreach ($encabezados as $indice => $encabezado) {
-            $clave = $this->clasificarSeccion($encabezado['titulo']);
-            if (! $clave) {
+        foreach ($lineas as $linea) {
+            $titulo = $this->normalizar($linea);
+
+            // Las entradas de índices no son límites del contenido del documento.
+            if (preg_match('/\.{2,}.*\d+\s*$/u', $linea)) {
                 continue;
             }
 
-            $inicio = $encabezado['fin'];
-            $fin = $encabezados[$indice + 1]['inicio'] ?? mb_strlen($texto, 'UTF-8');
-            $contenido = trim(mb_substr($texto, $inicio, $fin - $inicio, 'UTF-8'));
+            if (preg_match('/^(?:\d+\s*[.)-]\s*)?capitulo\s+(\d+|[ivxlcdm]+)\b(.*)$/', $titulo, $partes)) {
+                $capitulo = ctype_digit($partes[1]) ? (int) $partes[1] : $this->numeroRomano($partes[1]);
+                $teoria = $capitulo === 2;
+                $actual = match (true) {
+                    $capitulo === 2 => null,
+                    $capitulo === 1 => 'introduccion',
+                    str_contains($partes[2], 'conclus') => 'conclusiones',
+                    default => 'desarrollo_propuesta',
+                };
+                continue;
+            }
 
-            if (mb_strlen($contenido, 'UTF-8') >= 40) {
-                $secciones[$clave] = trim(($secciones[$clave] ?? '')."\n\n".$contenido);
+            $sinNumero = preg_replace('/^(?:\d+(?:\.\d+)*[.)]?|[ivxlcdm]+[.)])\s*/', '', $titulo);
+            if ($this->esSeccionExcluida($sinNumero)) {
+                $actual = null;
+                $teoria = (bool) preg_match('/^(?:marco|fundamentacion|fundamento|bases|sustento|revision)/', $sinNumero);
+                continue;
+            }
+
+            // Un subapartado del capítulo II nunca vuelve a habilitar el análisis.
+            if ($capitulo === 2 || ($teoria && preg_match('/^\d+\.\d+/', $titulo))) {
+                continue;
+            }
+
+            $clave = $this->clasificarSeccion($sinNumero);
+            if ($clave !== null) {
+                $actual = $clave;
+                $teoria = false;
+                continue;
+            }
+
+            // Quita números de página y encabezados institucionales repetidos.
+            if (preg_match('/^(?:\d+|[ivxlcdm]+)$/', $titulo)
+                || preg_match('/^(?:instituto tecnologico|carrera\b|r\.?\s*m\.?\b|fundado\b|(?:docente\s+)?tutor\b|postulante\b|autor(?:es)?\s*:)/', $titulo)) {
+                continue;
+            }
+
+            if ($actual !== null) {
+                $secciones[$actual][] = $linea;
             }
         }
 
-        $ordenadas = [];
+        $contenido = [];
         foreach (self::SECCIONES as $clave => $nombre) {
-            if (! empty($secciones[$clave])) {
-                $ordenadas[$clave] = $secciones[$clave];
+            $parte = (new SimilitudService)->limpiarContenido(implode("\n", $secciones[$clave] ?? []));
+            if (mb_strlen($parte, 'UTF-8') >= 40) {
+                $contenido[$clave] = $parte;
             }
         }
 
         return [
-            'texto' => implode("\n\n", $ordenadas),
-            'secciones' => array_map(fn (string $clave) => self::SECCIONES[$clave], array_keys($ordenadas)),
+            'texto' => implode("\n\n", $contenido),
+            'secciones' => array_map(fn ($clave) => self::SECCIONES[$clave], array_keys($contenido)),
         ];
     }
 
@@ -59,43 +91,41 @@ class SeccionesDocumentoService
         return $this->extraer($texto)['texto'] !== '';
     }
 
-    /** @return array<int, array{titulo: string, inicio: int, fin: int}> */
-    private function buscarEncabezados(string $texto): array
+    private function normalizar(string $linea): string
     {
-        $patron = '/^[\h]*(?:(?:\d+(?:\.\d+)*|[IVXLCDM]+)[.)]?[\h]+)?'
-            .'(resumen|introducci[oó]n|marco[\h]+te[oó]rico|metodolog[ií]a|desarrollo|propuesta|conclusiones|recomendaciones|bibliograf[ií]a|referencias|anexos?|ap[eé]ndices?|agradecimientos|dedicatoria|[ií]ndice|contenido)'
-            .'[\h:.-]*$/miu';
+        $linea = strtr(mb_strtolower(trim($linea), 'UTF-8'), [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ü' => 'u',
+        ]);
 
-        preg_match_all($patron, $texto, $coincidencias, PREG_OFFSET_CAPTURE);
-        $encabezados = [];
-        foreach ($coincidencias[0] as $indice => $coincidencia) {
-            $linea = $coincidencia[0];
-            $inicioBytes = $coincidencia[1];
-            $inicio = mb_strlen(substr($texto, 0, $inicioBytes), 'UTF-8');
-            $fin = $inicio + mb_strlen($linea, 'UTF-8');
-            $encabezados[] = [
-                'titulo' => $coincidencias[1][$indice][0],
-                'inicio' => $inicio,
-                'fin' => $fin,
-            ];
-        }
+        return preg_replace('/\s+/u', ' ', str_replace(['–', '—'], '-', $linea));
+    }
 
-        return $encabezados;
+    private function esSeccionExcluida(string $titulo): bool
+    {
+        return (bool) preg_match('/^(?:marco (?:teorico(?:(?: y)? conceptual)?|conceptual|referencial)|fundamentacion teorica|fundamento teorico|sustento teorico|bases teoricas|revision (?:de la )?literatura|bibliografia|referencias(?: bibliograficas)?|anexos?|apendices?|agradecimientos|dedicatoria|(?:indice|contenido)(?: (?:general|de .+))?|tabla de contenido)[\s:.-]*$/', $titulo);
     }
 
     private function clasificarSeccion(string $titulo): ?string
     {
-        $titulo = strtr(mb_strtolower(trim($titulo), 'UTF-8'), [
-            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ñ' => 'n', 'ü' => 'u',
-        ]);
-
         return match (true) {
-            str_starts_with($titulo, 'resumen') => 'resumen',
-            str_starts_with($titulo, 'introduccion') => 'introduccion',
-            str_starts_with($titulo, 'marco teorico') => 'marco_teorico',
-            str_starts_with($titulo, 'desarrollo'), str_starts_with($titulo, 'propuesta') => 'desarrollo_propuesta',
-            str_starts_with($titulo, 'conclusiones') => 'conclusiones',
+            (bool) preg_match('/^resumen[\s:.-]*$/', $titulo) => 'resumen',
+            (bool) preg_match('/^(?:introduccion|planteamiento del problema)[\s:.-]*$/', $titulo) => 'introduccion',
+            (bool) preg_match('/^(?:desarrollo(?: (?:del proyecto|de la propuesta))?|propuesta(?: tecnica)?|ingenieria del proyecto|implementacion)[\s:.-]*$/', $titulo) => 'desarrollo_propuesta',
+            (bool) preg_match('/^(?:conclusiones(?: y recomendaciones)?|recomendaciones)[\s:.-]*$/', $titulo) => 'conclusiones',
             default => null,
         };
+    }
+
+    private function numeroRomano(string $numero): int
+    {
+        $valores = ['i' => 1, 'v' => 5, 'x' => 10, 'l' => 50, 'c' => 100, 'd' => 500, 'm' => 1000];
+        $total = $anterior = 0;
+        foreach (array_reverse(str_split($numero)) as $letra) {
+            $valor = $valores[$letra];
+            $total += $valor < $anterior ? -$valor : $valor;
+            $anterior = $valor;
+        }
+
+        return $total;
     }
 }

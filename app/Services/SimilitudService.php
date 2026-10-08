@@ -4,6 +4,43 @@ namespace App\Services;
 
 class SimilitudService
 {
+    public const TAMANO_SECUENCIA = 5;
+    public const UMBRAL_FRAGMENTOS = 45;
+
+    /** Retira rótulos y filas de plantilla, manteniendo la redacción del proyecto. */
+    public function limpiarContenido(string $texto): string
+    {
+        $lineas = preg_split('/\R/u', mb_scrub($texto, 'UTF-8')) ?: [];
+        foreach ($lineas as &$linea) {
+            $normal = $this->normalizarTexto($linea);
+            $normal = preg_replace('/^\s*\d+(?:\.\d+)+[.)]?\s*/u', '', $normal);
+            if (preg_match('/^\s*(?:tabla|figura|grafico|ilustracion)\s*\d+\b/u', $normal)
+                || preg_match('/^\s*fuente\s*:/u', $normal)
+                || preg_match('/^\s*(?:sprint backlog|product backlog)\s*$/u', $normal)
+                || preg_match('/^\s*(?:total\s*)?\d+(?:[.,]\d+)?\s*(?:horas?|dias?|semanas?|meses?)\s*(?:(?:total|tabla|fuente)\b.*)?$/u', $normal)
+                || preg_match('/^\s*(?:prerrequisitos?|precondiciones?|postcondiciones?|actor(?:es)?|nombre (?:del )?caso de uso)\b/u', $normal)
+                || preg_match('/^\s*(?:total|tiempo estimado|estimado|n[º°o]?\.? nombre|id tareas|resultado esperado)\s*[:\d\s]*$/u', $normal)) {
+                // Mantiene un límite para no unir párrafos separados por una tabla.
+                $linea = '';
+            }
+        }
+        unset($linea);
+
+        return trim(implode("\n", $lineas));
+    }
+
+    /**
+     * Coincidencia textual simétrica: Dice sobre secuencias de cinco palabras.
+     * Conserva orden, números y negaciones; no equivale a similitud semántica.
+     */
+    public function compararTextos(string $textoA, string $textoB): array
+    {
+        return $this->compararSecuencias(
+            $this->secuencias($this->limpiarContenido($textoA)),
+            $this->secuencias($this->limpiarContenido($textoB))
+        );
+    }
+
     protected array $stopwords = [
         'de', 'la', 'que', 'el', 'en', 'y', 'a', 'los', 'del', 'se', 'las', 'por', 'un', 'para', 'con', 'no', 'una', 'su', 'al',
         'lo', 'como', 'mas', 'pero', 'sus', 'le', 'ya', 'o', 'este', 'si', 'porque', 'esta', 'entre', 'cuando', 'muy', 'sin',
@@ -50,7 +87,7 @@ class SimilitudService
 
         $tokensPorDocumento = [];
         foreach ($documentosTexto as $id => $texto) {
-            $tokensPorDocumento[$id] = $this->tokenizar($texto ?? '');
+            $tokensPorDocumento[$id] = $this->tokenizar($this->limpiarContenido($texto ?? ''));
         }
 
         $totalDocumentos = count($tokensPorDocumento);
@@ -137,7 +174,7 @@ class SimilitudService
             'terminos_proyecto_a' => count($vectorA),
             'terminos_proyecto_b' => count($vectorB),
             'principales_terminos' => array_slice(array_keys($aportes), 0, 12),
-            'umbral_fragmentos' => 45,
+            'umbral_fragmentos' => self::UMBRAL_FRAGMENTOS,
         ];
     }
 
@@ -147,8 +184,20 @@ class SimilitudService
      */
     public function encontrarCoincidencias(string $textoA, string $textoB, int $limite = 10): array
     {
-        $fragmentosA = $this->segmentarTexto($textoA);
-        $fragmentosB = $this->segmentarTexto($textoB);
+        if ($limite <= 0) {
+            return [];
+        }
+        $fragmentosA = $this->segmentarTexto($this->limpiarContenido($textoA));
+        $fragmentosB = $this->segmentarTexto($this->limpiarContenido($textoB));
+        $secuenciasA = array_map(fn ($texto) => $this->secuencias($texto), $fragmentosA);
+        $secuenciasB = array_map(fn ($texto) => $this->secuencias($texto), $fragmentosB);
+        $tokensPorB = array_map(fn ($texto) => $this->tokenizar($texto), $fragmentosB);
+        $indiceB = [];
+        foreach ($secuenciasB as $posicion => $secuencias) {
+            foreach ($secuencias as $clave => $cantidad) {
+                $indiceB[$clave][$posicion] = $cantidad;
+            }
+        }
         $candidatos = [];
 
         foreach ($fragmentosA as $indiceA => $fragmentoA) {
@@ -157,8 +206,19 @@ class SimilitudService
                 continue;
             }
 
-            foreach ($fragmentosB as $indiceB => $fragmentoB) {
-                $tokensB = $this->tokenizar($fragmentoB);
+            // Solo compara bloques que realmente comparten secuencias, no todo con todo.
+            $posibles = [];
+            foreach ($secuenciasA[$indiceA] as $clave => $cantidad) {
+                foreach ($indiceB[$clave] ?? [] as $posicion => $cantidadB) {
+                    $posibles[$posicion] = ($posibles[$posicion] ?? 0) + min($cantidad, $cantidadB);
+                }
+            }
+            foreach ($posibles as $posicionB => $cantidadCompartida) {
+                if ($cantidadCompartida < 3) {
+                    continue;
+                }
+                $fragmentoB = $fragmentosB[$posicionB];
+                $tokensB = $tokensPorB[$posicionB];
                 if (count($tokensB) < 6) {
                     continue;
                 }
@@ -168,8 +228,9 @@ class SimilitudService
                     continue;
                 }
 
-                $porcentaje = $this->similitudTokens($tokensA, $tokensB);
-                if ($porcentaje < 45) {
+                $comparacion = $this->compararSecuencias($secuenciasA[$indiceA], $secuenciasB[$posicionB]);
+                $porcentaje = $comparacion['porcentaje'];
+                if ($porcentaje < self::UMBRAL_FRAGMENTOS || $comparacion['secuencias_compartidas'] < 3) {
                     continue;
                 }
 
@@ -179,7 +240,7 @@ class SimilitudService
                     'porcentaje' => $porcentaje,
                     'palabras_comunes' => array_slice($comunes, 0, 8),
                     'indice_a' => $indiceA,
-                    'indice_b' => $indiceB,
+                    'indice_b' => $posicionB,
                 ];
             }
         }
@@ -189,13 +250,16 @@ class SimilitudService
         $seleccionados = [];
         $usadosA = [];
         $usadosB = [];
+        $pares = [];
         foreach ($candidatos as $candidato) {
-            if (isset($usadosA[$candidato['indice_a']]) || isset($usadosB[$candidato['indice_b']])) {
+            $clave = $this->normalizarTexto($candidato['fragmento_a']).'|'.$this->normalizarTexto($candidato['fragmento_b']);
+            if (isset($usadosA[$candidato['indice_a']]) || isset($usadosB[$candidato['indice_b']]) || isset($pares[$clave])) {
                 continue;
             }
 
             $usadosA[$candidato['indice_a']] = true;
             $usadosB[$candidato['indice_b']] = true;
+            $pares[$clave] = true;
             unset($candidato['indice_a'], $candidato['indice_b']);
             $seleccionados[] = $candidato;
 
@@ -235,25 +299,46 @@ class SimilitudService
         return $fragmentos;
     }
 
-    private function similitudTokens(array $tokensA, array $tokensB): float
+    private function normalizarTexto(string $texto): string
     {
-        $frecuenciasA = array_count_values($tokensA);
-        $frecuenciasB = array_count_values($tokensB);
-        $palabras = array_unique(array_merge(array_keys($frecuenciasA), array_keys($frecuenciasB)));
-        $producto = $magnitudA = $magnitudB = 0.0;
+        return strtr(mb_strtolower(trim($texto), 'UTF-8'), [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ü' => 'u',
+        ]);
+    }
 
-        foreach ($palabras as $palabra) {
-            $a = $frecuenciasA[$palabra] ?? 0;
-            $b = $frecuenciasB[$palabra] ?? 0;
-            $producto += $a * $b;
-            $magnitudA += $a ** 2;
-            $magnitudB += $b ** 2;
+    /** Frecuencias por secuencia, sin cruzar límites entre oraciones o párrafos. */
+    private function secuencias(string $texto): array
+    {
+        $secuencias = [];
+        $bloques = preg_split('/(?<=[.!?])\s+|\R\s*\R/u', $texto, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        foreach ($bloques as $bloque) {
+            preg_match_all('/\p{L}+|\d+(?:[.,]\d+)*/u', $this->normalizarTexto($bloque), $palabras);
+            $tokens = $palabras[0];
+            for ($i = 0; $i <= count($tokens) - self::TAMANO_SECUENCIA; $i++) {
+                $clave = implode(' ', array_slice($tokens, $i, self::TAMANO_SECUENCIA));
+                $secuencias[$clave] = ($secuencias[$clave] ?? 0) + 1;
+            }
         }
 
-        if ($magnitudA === 0.0 || $magnitudB === 0.0) {
-            return 0.0;
-        }
+        return $secuencias;
+    }
 
-        return round(($producto / (sqrt($magnitudA) * sqrt($magnitudB))) * 100, 2);
+    private function compararSecuencias(array $a, array $b): array
+    {
+        $comunes = 0;
+        foreach ($a as $clave => $cantidad) {
+            $comunes += min($cantidad, $b[$clave] ?? 0);
+        }
+        $totalA = array_sum($a);
+        $totalB = array_sum($b);
+
+        return [
+            'porcentaje' => $totalA + $totalB > 0 ? round(200 * $comunes / ($totalA + $totalB), 2) : 0.0,
+            'secuencias_compartidas' => $comunes,
+            'secuencias_proyecto_a' => $totalA,
+            'secuencias_proyecto_b' => $totalB,
+            'cobertura_proyecto_a' => $totalA > 0 ? round(100 * $comunes / $totalA, 2) : 0.0,
+            'cobertura_proyecto_b' => $totalB > 0 ? round(100 * $comunes / $totalB, 2) : 0.0,
+        ];
     }
 }

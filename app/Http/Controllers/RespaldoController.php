@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\File;
-use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\DB;
 
 class RespaldoController extends Controller
 {
     protected function rutaRespaldos(): string
     {
-        $ruta = storage_path('app/respaldos');
+        $ruta = config('filesystems.backups_path', storage_path('app/respaldos'));
 
         if (! File::isDirectory($ruta)) {
             File::makeDirectory($ruta, 0755, true);
@@ -34,13 +33,19 @@ class RespaldoController extends Controller
 
     public function generar()
     {
-        $nombreArchivo = 'respaldo_' . now()->format('Y-m-d_His') . '.sql';
+        $nombreArchivo = 'respaldo_' . now()->format('Y-m-d_His_u') . '.sql';
         $ruta = $this->rutaRespaldos() . DIRECTORY_SEPARATOR . $nombreArchivo;
 
-        $tablas = ['carreras', 'users', 'proyectos_titulacion', 'documentos', 'comparaciones', 'reportes'];
+        $tablas = ['carreras', 'users', 'estudiantes', 'docentes', 'carrera_docente', 'proyectos_titulacion', 'documentos', 'comparaciones', 'reportes'];
+        $mysql = DB::getDriverName() === 'mysql';
+        $pdo = DB::connection()->getPdo();
 
         $sql = "-- Respaldo generado el " . now()->format('d/m/Y H:i:s') . "\n";
-        $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
+        $sql .= $mysql ? "SET FOREIGN_KEY_CHECKS=0;\n\n" : "PRAGMA foreign_keys=OFF;\n\n";
+        foreach (array_reverse($tablas) as $tabla) {
+            $sql .= "DELETE FROM `{$tabla}`;\n";
+        }
+        $sql .= "\n";
 
         foreach ($tablas as $tabla) {
             $filas = DB::table($tabla)->get();
@@ -50,13 +55,12 @@ class RespaldoController extends Controller
             }
 
             $sql .= "-- Tabla: {$tabla}\n";
-            $sql .= "TRUNCATE TABLE `{$tabla}`;\n";
 
             foreach ($filas as $fila) {
                 $datos = (array) $fila;
                 $columnas = array_keys($datos);
-                $valores = array_map(function ($valor) {
-                    return is_null($valor) ? 'NULL' : "'" . addslashes($valor) . "'";
+                $valores = array_map(function ($valor) use ($pdo) {
+                    return is_null($valor) ? 'NULL' : $pdo->quote((string) $valor);
                 }, array_values($datos));
 
                 $sql .= "INSERT INTO `{$tabla}` (`" . implode('`, `', $columnas) . "`) VALUES (" . implode(', ', $valores) . ");\n";
@@ -65,7 +69,7 @@ class RespaldoController extends Controller
             $sql .= "\n";
         }
 
-        $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
+        $sql .= $mysql ? "SET FOREIGN_KEY_CHECKS=1;\n" : "PRAGMA foreign_keys=ON;\n";
 
         File::put($ruta, $sql);
 

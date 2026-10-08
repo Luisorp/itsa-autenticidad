@@ -6,7 +6,7 @@
             <div class="analysis-intro-icon"><i class="bi bi-intersect"></i></div>
             <div>
                 <h3>Comparación guiada</h3>
-                <p>Selecciona dos proyectos de la misma modalidad. El sistema compara todo el texto extraído de ambos documentos y localiza fragmentos similares.</p>
+                <p>Selecciona dos proyectos de la misma modalidad. Se comparan resumen, introducción, desarrollo y conclusiones. Se excluyen portada, tutor, índices, marco teórico o capítulo II, bibliografía y anexos.</p>
             </div>
         </div>
 
@@ -51,6 +51,11 @@
         </form>
 
         @isset($porcentaje)
+            <div class="alert alert-info mt-4">
+                <strong>Contenido analizado</strong><br>
+                Proyecto A: {{ implode(', ', $alcanceA['secciones']) }}.<br>
+                Proyecto B: {{ implode(', ', $alcanceB['secciones']) }}.
+            </div>
             @php
                 $clase = $porcentaje >= 70 ? 'danger' : ($porcentaje >= 40 ? 'warning' : 'success');
             @endphp
@@ -64,13 +69,16 @@
                 <div class="score-explanation-content">
                     <h4>¿De dónde sale el {{ $porcentaje }}%?</h4>
                     <p>
-                        Es una comparación global del vocabulario de ambos documentos mediante TF-IDF y similitud de coseno.
-                        Se encontraron <strong>{{ $explicacion['terminos_compartidos'] }} términos relevantes compartidos</strong>
-                        entre {{ $explicacion['terminos_proyecto_a'] }} términos del Proyecto A y {{ $explicacion['terminos_proyecto_b'] }} del Proyecto B.
+                        Se comparan secuencias de cinco palabras consecutivas, manteniendo su orden, cifras y negaciones.
+                        Se encontraron <strong>{{ $explicacion['secuencias_compartidas'] }} secuencias compartidas</strong>
+                        de {{ $explicacion['secuencias_proyecto_a'] }} en el Proyecto A y {{ $explicacion['secuencias_proyecto_b'] }} en el Proyecto B.
+                        El porcentaje es dos veces las secuencias compartidas dividido entre el total de secuencias de ambos proyectos.
+                        Las secuencias coincidentes representan {{ $explicacion['cobertura_proyecto_a'] }}% del texto comparable de A y {{ $explicacion['cobertura_proyecto_b'] }}% de B.
+                        Se excluyen rótulos de tablas y figuras, fuentes y campos de plantilla.
                     </p>
                     @if($explicacion['principales_terminos'] !== [])
                         <div class="contributing-terms">
-                            <span>Palabras que más aportaron:</span>
+                            <span>Vocabulario compartido (dato secundario; no determina el porcentaje):</span>
                             @foreach($explicacion['principales_terminos'] as $termino)
                                 <mark>{{ $termino }}</mark>
                             @endforeach
@@ -79,7 +87,7 @@
                     @if($coincidencias === [])
                         <p class="score-clarification">
                             <i class="bi bi-info-circle"></i>
-                            El porcentaje global puede ser mayor que cero aunque no haya fragmentos: las palabras están repartidas en el documento, pero ninguna oración o bloque alcanzó el {{ $explicacion['umbral_fragmentos'] }}% requerido para mostrarse como coincidencia textual.
+                            Puede haber secuencias breves compartidas sin un fragmento suficientemente extenso: se muestran bloques con al menos tres secuencias coincidentes y {{ $explicacion['umbral_fragmentos'] }}% de coincidencia textual.
                         </p>
                     @endif
                 </div>
@@ -106,7 +114,7 @@
                     <article class="match-card match-{{ $nivel }}">
                         <div class="match-card-top">
                             <span class="match-number">Coincidencia {{ $indice + 1 }}</span>
-                            <span class="match-score">{{ $coincidencia['porcentaje'] }}% similar</span>
+                            <span class="match-score">{{ $coincidencia['porcentaje'] }}% de coincidencia textual</span>
                         </div>
                         <div class="match-columns">
                             <div class="match-fragment">

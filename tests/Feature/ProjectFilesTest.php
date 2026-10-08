@@ -254,13 +254,13 @@ class ProjectFilesTest extends TestCase
         $this->actingAs($usuario)->get(route('reportes.archivo', $reporteAjeno))->assertForbidden();
     }
 
-    public function test_full_text_is_used_for_manual_and_repository_comparisons(): void
+    public function test_recognized_sections_are_used_for_manual_and_repository_comparisons(): void
     {
         [$admin, $project] = $this->projectFixture();
         $other = $project->replicate();
         $other->titulo = 'Otro proyecto';
         $other->save();
-        $text = 'La plataforma permite registrar documentos académicos y comparar contenido mediante procesamiento del lenguaje natural.';
+        $text = "INTRODUCCIÓN\nLa plataforma permite registrar documentos académicos y comparar contenido mediante procesamiento del lenguaje natural.";
         $documents = [];
         foreach ([$project, $other] as $item) {
             $documents[] = Documento::create([
@@ -331,6 +331,103 @@ class ProjectFilesTest extends TestCase
         $this->get(route('proyectos.resultados', ['proyecto' => $project->id, 'min' => 90]))
             ->assertOk()->assertViewHas('totalComparaciones', 0)->assertDontSee('Ver todos');
         $this->assertDatabaseCount('comparaciones', 12);
+    }
+
+    public function test_shared_tutor_and_theory_do_not_inflate_manual_or_repository_scores(): void
+    {
+        [$admin, $project] = $this->projectFixture();
+        $other = $project->replicate();
+        $other->titulo = 'Proyecto diferente';
+        $other->save();
+        $front = "TUTOR: Freddy Ledezma Higuera\nNoviembre, 2025 Sacaba, Cochabamba, Bolivia\n";
+        $theory = "CAPÍTULO II MARCO TEÓRICO CONCEPTUAL\n".str_repeat('Scrum Master asegura prácticas del equipo y el Product Owner ordena tareas durante los sprints. ', 20);
+        foreach ([$project, $other] as $index => $item) {
+            $body = $index === 0
+                ? 'Agricultura cosechas semillas fertilizantes riego cultivos parcelas suelos herramientas campesinos.'
+                : 'Música instrumentos melodías partituras conciertos piano violines acordes orquesta percusión.';
+            Documento::create([
+                'proyecto_id' => $item->id,
+                'nombre_archivo' => 'prueba.pdf',
+                'ruta_archivo' => 'documentos/prueba.pdf',
+                'tipo_archivo' => 'pdf',
+                'contenido_extraido' => $front."CAPÍTULO I INTRODUCCIÓN\n".$body."\n".$theory,
+            ]);
+        }
+
+        $this->actingAs($admin)->post(route('analisis.comparar'), [
+            'proyecto_a' => $project->id, 'proyecto_b' => $other->id,
+        ])->assertOk()->assertViewHas('porcentaje', 0.0)->assertViewHas('coincidencias', []);
+        $this->post(route('proyectos.analizar', $project))->assertRedirect(route('proyectos.resultados', $project));
+        $this->assertDatabaseHas('comparaciones', ['porcentaje_similitud' => 0]);
+        $this->assertStringContainsString('Freddy', $project->documento->fresh()->contenido_extraido);
+    }
+
+    public function test_unrecognized_sections_are_rejected_instead_of_using_full_text(): void
+    {
+        [$admin, $project] = $this->projectFixture();
+        $other = $project->replicate();
+        $other->save();
+        foreach ([$project, $other] as $item) {
+            Documento::create([
+                'proyecto_id' => $item->id,
+                'nombre_archivo' => 'prueba.pdf',
+                'ruta_archivo' => 'documentos/prueba.pdf',
+                'contenido_extraido' => 'TUTOR: Persona compartida, texto sin encabezados reconocibles.',
+            ]);
+        }
+
+        $this->actingAs($admin)->post(route('analisis.comparar'), [
+            'proyecto_a' => $project->id, 'proyecto_b' => $other->id,
+        ])->assertSessionHasErrors(['proyecto_a', 'proyecto_b']);
+        $this->post(route('proyectos.analizar', $project))->assertSessionHas('error');
+        $this->post(route('crossref.comparar'), ['proyecto_id' => $project->id])->assertSessionHasErrors('proyecto_id');
+        $this->assertDatabaseCount('comparaciones', 0);
+    }
+
+    public function test_pdf_report_generation_remains_available_after_section_filtering(): void
+    {
+        Storage::fake('public');
+        [$admin, $project] = $this->projectFixture();
+        Documento::create([
+            'proyecto_id' => $project->id,
+            'nombre_archivo' => 'prueba.pdf',
+            'ruta_archivo' => 'documentos/prueba.pdf',
+            'contenido_extraido' => "INTRODUCCIÓN\nEsta propuesta implementa un sistema original para registrar documentos académicos y analizar su contenido.",
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('proyectos.reporte', $project));
+        $response->assertOk()->assertHeader('content-type', 'application/pdf');
+        $this->assertStringStartsWith('%PDF-', $response->getContent());
+        $reporte = $project->reportes()->firstOrFail();
+        Storage::disk('public')->assertExists($reporte->ruta_pdf);
+        $this->assertSame($admin->id, $reporte->generado_por);
+    }
+
+    public function test_shared_sprint_tables_do_not_raise_scores_for_different_project_content(): void
+    {
+        [$admin, $project] = $this->projectFixture();
+        $other = $project->replicate();
+        $other->save();
+        $textos = [
+            "CAPÍTULO III INGENIERÍA DEL PROYECTO\nAgricultura cosechas semillas fertilizantes riego cultivos parcelas suelos herramientas campesinos.\n50 horas\nTotal 160 horas\nTabla 9: Sprint Backlog\nFuente: Elaboración Propia",
+            "CAPÍTULO III INGENIERÍA DEL PROYECTO\nMúsica instrumentos melodías partituras conciertos piano violines acordes orquesta percusión.\n100 horas\nTOTAL 200 horas\nTabla 7 Sprint Backlog\nFuente: Elaboración Propia",
+        ];
+        foreach ([$project, $other] as $indice => $item) {
+            Documento::create([
+                'proyecto_id' => $item->id,
+                'nombre_archivo' => 'prueba.pdf',
+                'ruta_archivo' => 'documentos/prueba.pdf',
+                'contenido_extraido' => $textos[$indice],
+            ]);
+        }
+
+        $this->actingAs($admin)->post(route('analisis.comparar'), [
+            'proyecto_a' => $project->id, 'proyecto_b' => $other->id,
+        ])->assertOk()->assertViewHas('porcentaje', 0.0)->assertViewHas('coincidencias', []);
+        $this->post(route('proyectos.analizar', $project))->assertRedirect(route('proyectos.resultados', $project));
+        $this->assertDatabaseHas('comparaciones', [
+            'porcentaje_similitud' => 0, 'algoritmo_usado' => \App\Services\SeccionesDocumentoService::ALGORITMO,
+        ]);
     }
 
     private function projectFixture(): array

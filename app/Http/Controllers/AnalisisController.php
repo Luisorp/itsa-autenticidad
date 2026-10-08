@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\Documento;
 use App\Models\ProyectoTitulacion;
 use App\Services\SimilitudService;
+use App\Services\SeccionesDocumentoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -69,7 +70,7 @@ class AnalisisController extends Controller
         return response()->json(['data' => $proyectos]);
     }
 
-    public function comparar(Request $request)
+    public function comparar(Request $request, SeccionesDocumentoService $secciones)
     {
         $validated = $request->validate([
             'proyecto_a' => 'required|exists:proyectos_titulacion,id|different:proyecto_b',
@@ -80,13 +81,15 @@ class AnalisisController extends Controller
         $proyectoB = ProyectoTitulacion::where('activo', true)->with('documento')->findOrFail($validated['proyecto_b']);
 
         $errores = [];
-        $contenidoA = (string) $proyectoA->documento?->contenido_extraido;
-        $contenidoB = (string) $proyectoB->documento?->contenido_extraido;
+        $alcanceA = $secciones->extraer((string) $proyectoA->documento?->contenido_extraido);
+        $alcanceB = $secciones->extraer((string) $proyectoB->documento?->contenido_extraido);
+        $contenidoA = $alcanceA['texto'];
+        $contenidoB = $alcanceB['texto'];
         if (trim($contenidoA) === '') {
-            $errores['proyecto_a'] = 'El Proyecto A no tiene texto extraído disponible para comparar.';
+            $errores['proyecto_a'] = 'No se reconoció contenido analizable en el Proyecto A. Revisa los encabezados del PDF: introducción, desarrollo o conclusiones.';
         }
         if (trim($contenidoB) === '') {
-            $errores['proyecto_b'] = 'El Proyecto B no tiene texto extraído disponible para comparar.';
+            $errores['proyecto_b'] = 'No se reconoció contenido analizable en el Proyecto B. Revisa los encabezados del PDF: introducción, desarrollo o conclusiones.';
         }
         if ($proyectoA->modalidad !== $proyectoB->modalidad) {
             $errores['proyecto_b'] = 'Solo se pueden comparar proyectos de la misma modalidad de graduación.';
@@ -98,20 +101,20 @@ class AnalisisController extends Controller
         $corpus = Documento::whereNotNull('contenido_extraido')
             ->whereHas('proyecto', fn ($query) => $query->where('modalidad', $proyectoA->modalidad)->where('activo', true))
             ->pluck('contenido_extraido', 'id')
+            ->map(fn ($texto) => $secciones->extraer((string) $texto)['texto'])
             ->filter(fn ($texto) => trim((string) $texto) !== '')
             ->toArray();
 
         $servicio = new SimilitudService;
         $vectores = $servicio->calcularVectoresTfIdf($corpus);
 
-        $porcentaje = $servicio->similitudCoseno(
-            $vectores[$proyectoA->documento->id] ?? [],
-            $vectores[$proyectoB->documento->id] ?? []
-        );
+        $comparacionTextual = $servicio->compararTextos($contenidoA, $contenidoB);
+        $porcentaje = $comparacionTextual['porcentaje'];
         $explicacion = $servicio->explicarSimilitud(
             $vectores[$proyectoA->documento->id] ?? [],
             $vectores[$proyectoB->documento->id] ?? []
         );
+        $explicacion = array_merge($explicacion, $comparacionTextual);
         $coincidencias = $servicio->encontrarCoincidencias(
             $contenidoA,
             $contenidoB
@@ -120,7 +123,7 @@ class AnalisisController extends Controller
         $proyectoA->loadMissing(['estudiante', 'carrera']);
         $proyectoB->loadMissing(['estudiante', 'carrera']);
 
-        return view('analisis.index', compact('proyectoA', 'proyectoB', 'porcentaje', 'coincidencias', 'explicacion'));
+        return view('analisis.index', compact('proyectoA', 'proyectoB', 'porcentaje', 'coincidencias', 'explicacion', 'alcanceA', 'alcanceB'));
     }
 
     private function proyectoSeleccionable(mixed $id): ?ProyectoTitulacion

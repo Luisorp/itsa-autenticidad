@@ -2,6 +2,7 @@
     <x-slot name="header"><h2>Respaldos de la base de datos</h2></x-slot>
 
     <div class="container py-4">
+        <div class="alert alert-info">El respaldo SQL incluye proyectos, análisis, cuentas y registros académicos. Para conservar también los PDF y reportes, copia la carpeta <strong>storage/app/public</strong>. La restauración requiere una base con las mismas migraciones.</div>
         @if(session('success'))
             <x-flash-success :message="session('success')" />
         @endif

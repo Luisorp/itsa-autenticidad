@@ -12,11 +12,18 @@ class AnalisisExternoService
         private readonly CrossrefService $crossref,
         private readonly OpenAlexService $openAlex,
         private readonly SimilitudService $similitud,
+        private readonly SeccionesDocumentoService $secciones,
     ) {}
 
     /** @return array{resultados: array<int, array<string, mixed>>, fuentesNoDisponibles: array<int, string>} */
     public function comparar(ProyectoTitulacion $proyecto): array
     {
+        $contenido = $this->secciones->extraer((string) $proyecto->documento?->contenido_extraido)['texto'];
+        if ($contenido === '') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'proyecto_id' => 'No se reconoció contenido analizable. Revisa los encabezados del PDF antes de comparar.',
+            ]);
+        }
         $publicaciones = [];
         $fuentesNoDisponibles = [];
 
@@ -29,19 +36,15 @@ class AnalisisExternoService
         }
 
         $publicaciones = $this->eliminarDuplicados($publicaciones);
-        $corpus = ['proyecto' => (string) $proyecto->documento->contenido_extraido];
+        $corpus = ['proyecto' => $contenido];
         foreach ($publicaciones as $indice => $publicacion) {
             $corpus['externo_'.$indice] = $this->textoComparable($publicacion);
         }
 
-        $vectores = $this->similitud->calcularVectoresTfIdf($corpus);
         $resultados = [];
         foreach ($publicaciones as $indice => $publicacion) {
             $textoExterno = $corpus['externo_'.$indice];
-            $publicacion['porcentaje'] = $this->similitud->similitudCoseno(
-                $vectores['proyecto'] ?? [],
-                $vectores['externo_'.$indice] ?? []
-            );
+            $publicacion['porcentaje'] = $this->similitud->compararTextos($contenido, $textoExterno)['porcentaje'];
             $publicacion['coincidencias'] = $publicacion['resumen']
                 ? $this->similitud->encontrarCoincidencias($corpus['proyecto'], $textoExterno, 3)
                 : [];

@@ -11,7 +11,7 @@
             <x-flash-success :message="session('success')" />
         @endif
 
-        <div class="similarity-notice"><i class="bi bi-info-circle"></i><span>Los nuevos análisis usan todo el texto extraído del PDF. Si este resultado se obtuvo por secciones, vuelve a analizar el proyecto para actualizarlo.</span></div>
+        <div class="similarity-notice"><i class="bi bi-info-circle"></i><span>El método actual compara secuencias de palabras en orden y conserva cifras; excluye portada, marco teórico o capítulo II, bibliografía, anexos y rótulos de tablas y figuras. Vuelve a analizar el proyecto para actualizar porcentajes anteriores y genera nuevamente su reporte.</span></div>
 
         <form method="GET" class="row g-2 mb-3 align-items-end" style="max-width: 500px;">
             @if($mostrarTodos)<input type="hidden" name="todos" value="1">@endif
