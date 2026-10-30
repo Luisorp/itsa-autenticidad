@@ -88,7 +88,6 @@ class DocenteController extends Controller
             'codigo' => ['nullable', 'string', 'max:50', Rule::unique('docentes', 'codigo')->ignore($docente)],
             'nombre' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
-            'especialidad' => ['nullable', 'string', 'max:255'],
             'carrera_ids' => ['required', 'array', 'min:1'],
             'carrera_ids.*' => ['integer', Rule::exists('carreras', 'id')],
             'user_id' => [

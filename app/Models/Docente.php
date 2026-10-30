@@ -10,7 +10,6 @@ class Docente extends Model
         'codigo',
         'nombre',
         'email',
-        'especialidad',
         'user_id',
         'activo',
     ];
