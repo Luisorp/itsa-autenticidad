@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="850" viewBox="0 0 1500 850">
+<defs>
+  <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker>
+  <style>text{font-family:Arial,sans-serif;fill:#111}.actor{fill:none;stroke:#111;stroke-width:3}.use{fill:#fff;stroke:#111;stroke-width:2.5}.assoc{fill:none;stroke:#111;stroke-width:2}.inc{fill:none;stroke:#111;stroke-width:2;stroke-dasharray:8 6;marker-end:url(#arr)}</style>
+</defs>
+<rect x="350" y="45" width="980" height="760" fill="#fff" stroke="#111" stroke-width="2.5"/>
+<!-- Actores y permisos reales del sistema. -->
+<g aria-label="Administrador"><circle class="actor" cx="65" cy="135" r="16"/><path class="actor" d="M65 151v48M40 168h50M65 199l-22 36M65 199l22 36"/><text x="65" y="263" text-anchor="middle" font-size="19">Administrador</text></g>
+<g aria-label="Gestor"><circle class="actor" cx="65" cy="375" r="16"/><path class="actor" d="M65 391v48M40 408h50M65 439l-22 36M65 439l22 36"/><text x="65" y="503" text-anchor="middle" font-size="19">Gestor</text></g>
+<g aria-label="Usuario"><circle class="actor" cx="65" cy="615" r="16"/><path class="actor" d="M65 631v48M40 648h50M65 679l-22 36M65 679l22 36"/><text x="65" y="743" text-anchor="middle" font-size="19">Usuario</text></g>
+<ellipse class="use" cx="555" cy="270" rx="175" ry="58"/><text x="555" y="264" text-anchor="middle" font-size="24"><tspan x="555">Generar reporte</tspan><tspan x="555" dy="29">PDF</tspan></text>
+<ellipse class="use" cx="555" cy="570" rx="175" ry="58"/><text x="555" y="564" text-anchor="middle" font-size="24"><tspan x="555">Consultar reportes</tspan><tspan x="555" dy="29">PDF</tspan></text>
+<ellipse class="use" cx="1040" cy="145" rx="220" ry="48"/><text x="1040" y="139" text-anchor="middle" font-size="21"><tspan x="1040">Validar acceso y</tspan><tspan x="1040" dy="25">documento del proyecto</tspan></text>
+<ellipse class="use" cx="1040" cy="270" rx="220" ry="48"/><text x="1040" y="264" text-anchor="middle" font-size="21"><tspan x="1040">Obtener resultados</tspan><tspan x="1040" dy="25">de comparación</tspan></text>
+<ellipse class="use" cx="1040" cy="395" rx="220" ry="48"/><text x="1040" y="389" text-anchor="middle" font-size="21"><tspan x="1040">Crear y guardar</tspan><tspan x="1040" dy="25">el reporte PDF</tspan></text>
+<ellipse class="use" cx="1040" cy="540" rx="220" ry="48"/><text x="1040" y="534" text-anchor="middle" font-size="21"><tspan x="1040">Mostrar historial</tspan><tspan x="1040" dy="25">según permisos</tspan></text>
+<ellipse class="use" cx="1040" cy="680" rx="220" ry="48"/><text x="1040" y="674" text-anchor="middle" font-size="21"><tspan x="1040">Abrir reporte</tspan><tspan x="1040" dy="25">PDF disponible</tspan></text>
+<path class="assoc" d="M90 168L380 250M90 180L380 530M90 408L380 290M90 420L380 550M90 648L380 610"/>
+<path class="inc" d="M730 250L820 145"/><text x="758" y="191" font-size="18">«include»</text>
+<path class="inc" d="M730 270H820"/><text x="747" y="258" font-size="18">«include»</text>
+<path class="inc" d="M730 290L820 395"/><text x="758" y="352" font-size="18">«include»</text>
+<path class="inc" d="M730 550L820 540"/><text x="747" y="532" font-size="18">«include»</text>
+<path class="inc" d="M730 590L820 680"/><text x="758" y="647" font-size="18">«include»</text>
+
+
+</svg>

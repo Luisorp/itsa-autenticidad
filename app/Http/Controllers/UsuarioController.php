@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Carrera;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +21,7 @@ class UsuarioController extends Controller
             ? $request->string('rol')->toString()
             : 'usuario';
         $conteos = User::selectRaw('rol, COUNT(*) as total')->groupBy('rol')->pluck('total', 'rol');
-        $usuarios = User::with('carrera')
+        $usuarios = User::with(['estudiante.carrera', 'docente.carreras'])
             ->where('rol', $rolActual)
             ->orderBy('name')
             ->paginate(10)
@@ -33,9 +32,7 @@ class UsuarioController extends Controller
 
     public function create()
     {
-        $carreras = Carrera::where('activo', true)->orderBy('nombre')->get();
-
-        return view('usuarios.create', compact('carreras'));
+        return view('usuarios.create');
     }
 
     public function store(Request $request)
@@ -45,7 +42,6 @@ class UsuarioController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => ['required', 'confirmed', Password::defaults()],
             'rol' => ['required', Rule::in(array_keys(User::ROLES))],
-            'carrera_id' => ['nullable', Rule::exists('carreras', 'id')->where(fn ($query) => $query->where('activo', true))],
         ]);
 
         User::create([
@@ -53,7 +49,6 @@ class UsuarioController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'rol' => $validated['rol'],
-            'carrera_id' => $validated['carrera_id'] ?? null,
         ]);
 
         return redirect()->route('usuarios.index', ['rol' => $validated['rol']])->with('success', 'Usuario creado correctamente.');
@@ -61,11 +56,7 @@ class UsuarioController extends Controller
 
     public function edit(User $usuario)
     {
-        $carreras = Carrera::where(function ($query) use ($usuario) {
-            $query->where('activo', true)->orWhere('id', $usuario->carrera_id);
-        })->orderBy('nombre')->get();
-
-        return view('usuarios.edit', compact('usuario', 'carreras'));
+        return view('usuarios.edit', compact('usuario'));
     }
 
     public function update(Request $request, User $usuario)
@@ -74,7 +65,6 @@ class UsuarioController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$usuario->id,
             'rol' => ['required', Rule::in(array_keys(User::ROLES))],
-            'carrera_id' => 'nullable|exists:carreras,id',
         ]);
 
         $usuario->update($validated);

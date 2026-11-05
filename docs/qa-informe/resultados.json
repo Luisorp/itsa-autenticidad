@@ -1,0 +1,132 @@
+{
+  "executedAt": "2026-10-16T21:34:51.916Z",
+  "environment": "SQLite temporal; Edge headless; datos ficticios",
+  "results": [
+    {
+      "code": "TC-001",
+      "title": "Inicio de sesión válido",
+      "status": "APROBADO",
+      "detail": "Acceso al dashboard con cuenta activa de administrador.",
+      "evidence": "evidencias/TC-001.png"
+    },
+    {
+      "code": "TC-002",
+      "title": "Cierre de sesión",
+      "status": "APROBADO",
+      "detail": "Sesión cerrada; /dashboard redirige a /login.",
+      "evidence": "evidencias/TC-002.png"
+    },
+    {
+      "code": "TC-003",
+      "title": "Contraseña incorrecta",
+      "status": "APROBADO",
+      "detail": "These credentials do not match our records.",
+      "evidence": "evidencias/TC-003.png"
+    },
+    {
+      "code": "TC-004",
+      "title": "Correo obligatorio",
+      "status": "APROBADO",
+      "detail": "El navegador bloquea el envío: correo obligatorio; se conserva la pantalla de acceso.",
+      "evidence": "evidencias/TC-004.png"
+    },
+    {
+      "code": "TC-005",
+      "title": "Cuenta desactivada",
+      "status": "APROBADO",
+      "detail": "Acceso rechazado: Esta cuenta ha sido desactivada. Contacta al administrador.",
+      "evidence": "evidencias/TC-005.png"
+    },
+    {
+      "code": "TC-006",
+      "title": "Crear usuario gestor",
+      "status": "APROBADO",
+      "detail": "Cuenta de Lucía Rojas creada y visible en la lista de gestores.",
+      "evidence": "evidencias/TC-006.png"
+    },
+    {
+      "code": "TC-007",
+      "title": "Rechazar usuario sin correo",
+      "status": "APROBADO",
+      "detail": "The email field is required.",
+      "evidence": "evidencias/TC-007.png"
+    },
+    {
+      "code": "TC-008",
+      "title": "Rechazar confirmación diferente",
+      "status": "APROBADO",
+      "detail": "The password field confirmation does not match.",
+      "evidence": "evidencias/TC-008.png"
+    },
+    {
+      "code": "TC-009",
+      "title": "Rechazar correo duplicado",
+      "status": "APROBADO",
+      "detail": "The email has already been taken.",
+      "evidence": "evidencias/TC-009.png"
+    },
+    {
+      "code": "TC-010",
+      "title": "Restringir administración al usuario",
+      "status": "APROBADO",
+      "detail": "La cuenta con rol usuario recibe HTTP 403 al intentar abrir /usuarios.",
+      "evidence": "evidencias/TC-010.png"
+    },
+    {
+      "code": "TC-011",
+      "title": "Registrar estudiante sin cuenta",
+      "status": "APROBADO",
+      "detail": "Estudiante QA-002 registrado en el padrón de Sistemas Informáticos.",
+      "evidence": "evidencias/TC-011.png"
+    },
+    {
+      "code": "TC-012",
+      "title": "Registrar proyecto y cargar PDF",
+      "status": "APROBADO",
+      "detail": "Proyecto registrado; archivo PDF recibido. Se verifica texto extraído con el control de datos temporal.",
+      "evidence": "evidencias/TC-012.png"
+    },
+    {
+      "code": "TC-013",
+      "title": "Comparar textos idénticos",
+      "status": "APROBADO",
+      "detail": "100% de similitud entre A y B; 3 fragmentos coincidentes visibles. La comprobación usa elementos HTML y no texto transformado a mayúsculas por CSS.",
+      "evidence": "evidencias/TC-013.png"
+    },
+    {
+      "code": "TC-014",
+      "title": "Rechazar modalidades distintas",
+      "status": "APROBADO",
+      "detail": "El servidor rechaza la solicitud: Solo se pueden comparar proyectos de la misma modalidad de graduación.",
+      "evidence": "evidencias/TC-014.png"
+    },
+    {
+      "code": "TC-015",
+      "title": "Rechazar texto sin secciones",
+      "status": "APROBADO",
+      "detail": "El sistema solicita encabezados reconocibles para el Proyecto B; no presenta un porcentaje.",
+      "evidence": "evidencias/TC-015.png"
+    },
+    {
+      "code": "TC-016",
+      "title": "Generar y descargar reporte PDF",
+      "status": "APROBADO",
+      "detail": "Descarga HTTP 200, tipo application/pdf, firma %PDF- y registro en Reportes; 2755 bytes.",
+      "evidence": "evidencias/TC-016.png"
+    },
+    {
+      "code": "TC-017",
+      "title": "Generar y descargar respaldo SQL",
+      "status": "APROBADO",
+      "detail": "Respaldo SQL descargado con HTTP 200 y datos de estudiantes/documentos. Los PDF se respaldan aparte.",
+      "evidence": "evidencias/TC-017.png"
+    },
+    {
+      "code": "TC-018",
+      "title": "Dashboard en pantalla móvil",
+      "status": "APROBADO",
+      "detail": "Dashboard renderizado a 390 × 844 px sin desbordamiento horizontal.",
+      "evidence": "evidencias/TC-018.png"
+    }
+  ]
+}

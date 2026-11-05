@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="960" viewBox="0 0 1440 960" role="img" aria-labelledby="title desc">
+  <title id="title">Mockup HU02: Gestión de usuarios</title>
+  <desc id="desc">Propuesta visual de la pantalla de administración de usuarios: filtros por rol, listado, creación, edición y activación o desactivación de cuentas.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif}
+      .nav{font-size:15px;fill:#e9f2ed}
+      .muted{fill:#718079}
+      .body{fill:#24332c}
+      .small{font-size:13px}
+      .medium{font-size:15px}
+      .table-head{font-size:13px;font-weight:700;fill:#627168}
+      .cell{font-size:14px;fill:#26372e}
+      .shadow{filter:url(#shadow)}
+    </style>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="145%">
+      <feDropShadow dx="0" dy="5" stdDeviation="9" flood-color="#173d2c" flood-opacity=".08"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="960" fill="#f4f7f5"/>
+
+  <!-- Barra lateral -->
+  <rect width="245" height="960" fill="#103d2e"/>
+  <path d="M30 31 L46 25 L62 31 V44 Q62 61 46 68 Q30 61 30 44 Z" fill="#a7e36d"/>
+  <path d="M38 44 L44 50 L54 38" fill="none" stroke="#10452f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="75" y="43" fill="#fff" font-size="16" font-weight="700">Sistema de</text>
+  <text x="75" y="63" fill="#fff" font-size="16" font-weight="700">autenticidad</text>
+  <text x="28" y="112" fill="#9bb8a8" font-size="11" font-weight="700" letter-spacing="1.2">MENÚ PRINCIPAL</text>
+
+  <g class="nav">
+    <rect x="16" y="132" width="213" height="46" rx="9" fill="transparent"/>
+    <circle cx="39" cy="155" r="8" fill="none" stroke="#cfe2d7" stroke-width="1.8"/>
+    <path d="M28 168 Q39 157 50 168" fill="none" stroke="#cfe2d7" stroke-width="1.8"/>
+    <text x="65" y="160">Inicio</text>
+
+    <rect x="16" y="188" width="213" height="46" rx="9" fill="transparent"/>
+    <path d="M30 202 H49 L53 209 V223 H30 Z M35 198 H49 L52 202" fill="none" stroke="#cfe2d7" stroke-width="1.8" stroke-linejoin="round"/>
+    <text x="65" y="216">Proyectos</text>
+
+    <text x="28" y="277" fill="#9bb8a8" font-size="11" font-weight="700" letter-spacing="1.2">ADMINISTRACIÓN</text>
+    <rect x="16" y="292" width="213" height="48" rx="9" fill="#1d684b"/>
+    <circle cx="39" cy="316" r="7" fill="none" stroke="#fff" stroke-width="1.8"/>
+    <circle cx="49" cy="319" r="5" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <path d="M28 331 Q39 319 49 331 M42 331 Q50 324 57 331" fill="none" stroke="#fff" stroke-width="1.6"/>
+    <text x="68" y="321" fill="#fff" font-weight="700">Usuarios</text>
+
+    <rect x="16" y="348" width="213" height="46" rx="9" fill="transparent"/>
+    <path d="M30 360 H49 V380 H30 Z M34 355 H45 V360 M34 366 H45 M34 372 H45" fill="none" stroke="#cfe2d7" stroke-width="1.7"/>
+    <text x="65" y="377">Carreras</text>
+  </g>
+
+  <line x1="22" y1="870" x2="223" y2="870" stroke="#35624e"/>
+  <circle cx="45" cy="908" r="18" fill="#d7eadf"/>
+  <text x="45" y="913" text-anchor="middle" font-size="13" font-weight="700" fill="#15543b">A</text>
+  <text x="73" y="905" fill="#fff" font-size="14" font-weight="700">Administrador</text>
+  <text x="73" y="923" fill="#a9c3b4" font-size="12">Cuenta activa</text>
+
+  <!-- Encabezado de página -->
+  <text x="285" y="78" class="small muted">Administración  /  Usuarios</text>
+  <text x="285" y="128" class="body" font-size="30" font-weight="700">Gestión de usuarios</text>
+  <text x="285" y="158" class="muted" font-size="15">Consulta cuentas y administra sus roles y estados.</text>
+
+  <rect x="1125" y="105" width="270" height="52" rx="9" fill="#0b6944"/>
+  <circle cx="1154" cy="131" r="10" fill="none" stroke="#fff" stroke-width="2"/>
+  <path d="M1154 125 V137 M1148 131 H1160" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <text x="1270" y="137" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">Nuevo usuario</text>
+
+  <!-- Filtros por rol -->
+  <g class="shadow">
+    <rect x="285" y="195" width="345" height="112" rx="13" fill="#fff" stroke="#dce5df"/>
+    <rect x="650" y="195" width="345" height="112" rx="13" fill="#fff" stroke="#dce5df"/>
+    <rect x="1015" y="195" width="380" height="112" rx="13" fill="#f0f7f2" stroke="#0b6944" stroke-width="2"/>
+  </g>
+  <circle cx="325" cy="251" r="22" fill="#edf3ef"/>
+  <path d="M316 250 A9 9 0 1 1 334 250 M309 269 Q325 250 341 269" fill="none" stroke="#4d6a59" stroke-width="2"/>
+  <text x="365" y="238" class="body" font-size="15" font-weight="700">Administradores</text>
+  <text x="365" y="270" class="muted" font-size="13">03 cuentas</text>
+
+  <circle cx="690" cy="251" r="22" fill="#edf3ef"/>
+  <path d="M681 250 A9 9 0 1 1 699 250 M674 269 Q690 250 706 269" fill="none" stroke="#4d6a59" stroke-width="2"/>
+  <text x="730" y="238" class="body" font-size="15" font-weight="700">Gestores</text>
+  <text x="730" y="270" class="muted" font-size="13">05 cuentas</text>
+
+  <circle cx="1057" cy="251" r="22" fill="#dcefe2"/>
+  <path d="M1048 250 A9 9 0 1 1 1066 250 M1041 269 Q1057 250 1073 269" fill="none" stroke="#0b6944" stroke-width="2"/>
+  <text x="1097" y="238" class="body" font-size="15" font-weight="700">Usuarios</text>
+  <text x="1097" y="270" fill="#0b6944" font-size="13">12 cuentas · seleccionada</text>
+
+  <!-- Listado -->
+  <g class="shadow">
+    <rect x="285" y="330" width="1110" height="510" rx="13" fill="#fff" stroke="#dce5df"/>
+  </g>
+  <text x="315" y="373" class="body" font-size="18" font-weight="700">Usuarios registrados</text>
+  <text x="1365" y="373" class="muted" font-size="13" text-anchor="end">Rol seleccionado: Usuario</text>
+  <line x1="285" y1="395" x2="1395" y2="395" stroke="#e7ece8"/>
+
+  <text x="315" y="430" class="table-head">NOMBRE</text>
+  <text x="510" y="430" class="table-head">CORREO</text>
+  <text x="750" y="430" class="table-head">ROL</text>
+  <text x="850" y="430" class="table-head">CARRERA</text>
+  <text x="1030" y="430" class="table-head">ESTADO</text>
+  <text x="1130" y="430" class="table-head">ACCIONES</text>
+  <line x1="285" y1="448" x2="1395" y2="448" stroke="#e7ece8"/>
+
+  <!-- Fila 1 -->
+  <circle cx="334" cy="489" r="17" fill="#e8f2ec"/>
+  <text x="334" y="494" text-anchor="middle" fill="#276347" font-size="12" font-weight="700">AM</text>
+  <text x="360" y="486" class="cell" font-weight="700">Ana Martínez</text>
+  <text x="510" y="486" class="cell">ana.martinez@ejemplo.edu</text>
+  <text x="750" y="486" class="cell">Usuario</text>
+  <text x="850" y="486" class="cell">Sistemas</text>
+  <rect x="1028" y="469" width="68" height="27" rx="13" fill="#e6f4eb"/>
+  <circle cx="1041" cy="482" r="4" fill="#20844c"/>
+  <text x="1051" y="487" fill="#1e7042" font-size="12" font-weight="700">Activo</text>
+  <rect x="1130" y="466" width="92" height="32" rx="6" fill="#fff" stroke="#d5ded8"/>
+  <text x="1176" y="487" text-anchor="middle" fill="#34473c" font-size="13" font-weight="700">Editar</text>
+  <rect x="1230" y="466" width="130" height="32" rx="6" fill="#f2f4f3" stroke="#d5ded8"/>
+  <text x="1295" y="487" text-anchor="middle" fill="#46534c" font-size="13" font-weight="700">Desactivar</text>
+  <line x1="305" y1="520" x2="1375" y2="520" stroke="#eef1ef"/>
+
+  <!-- Fila 2 -->
+  <circle cx="334" cy="562" r="17" fill="#e8f2ec"/>
+  <text x="334" y="567" text-anchor="middle" fill="#276347" font-size="12" font-weight="700">LR</text>
+  <text x="360" y="559" class="cell" font-weight="700">Luis Rivera</text>
+  <text x="510" y="559" class="cell">luis.rivera@ejemplo.edu</text>
+  <text x="750" y="559" class="cell">Usuario</text>
+  <text x="850" y="559" class="cell">Contabilidad</text>
+  <rect x="1028" y="542" width="68" height="27" rx="13" fill="#e6f4eb"/>
+  <circle cx="1041" cy="555" r="4" fill="#20844c"/>
+  <text x="1051" y="560" fill="#1e7042" font-size="12" font-weight="700">Activo</text>
+  <rect x="1130" y="539" width="92" height="32" rx="6" fill="#fff" stroke="#d5ded8"/>
+  <text x="1176" y="560" text-anchor="middle" fill="#34473c" font-size="13" font-weight="700">Editar</text>
+  <rect x="1230" y="539" width="130" height="32" rx="6" fill="#f2f4f3" stroke="#d5ded8"/>
+  <text x="1295" y="560" text-anchor="middle" fill="#46534c" font-size="13" font-weight="700">Desactivar</text>
+  <line x1="305" y1="593" x2="1375" y2="593" stroke="#eef1ef"/>
+
+  <!-- Fila 3 -->
+  <circle cx="334" cy="635" r="17" fill="#f0eee7"/>
+  <text x="334" y="640" text-anchor="middle" fill="#75683b" font-size="12" font-weight="700">CE</text>
+  <text x="360" y="632" class="cell" font-weight="700">Cuenta de ejemplo</text>
+  <text x="510" y="632" class="cell">persona@ejemplo.edu</text>
+  <text x="750" y="632" class="cell">Usuario</text>
+  <text x="850" y="632" class="cell">—</text>
+  <rect x="1028" y="615" width="78" height="27" rx="13" fill="#f0f1f1"/>
+  <circle cx="1041" cy="628" r="4" fill="#89918d"/>
+  <text x="1051" y="633" fill="#66716b" font-size="12" font-weight="700">Inactivo</text>
+  <rect x="1130" y="612" width="92" height="32" rx="6" fill="#fff" stroke="#d5ded8"/>
+  <text x="1176" y="633" text-anchor="middle" fill="#34473c" font-size="13" font-weight="700">Editar</text>
+  <rect x="1230" y="612" width="130" height="32" rx="6" fill="#e8f4ec" stroke="#c8e3d1"/>
+  <text x="1295" y="633" text-anchor="middle" fill="#1e7042" font-size="13" font-weight="700">Activar</text>
+
+  <!-- Paginación -->
+  <line x1="285" y1="680" x2="1395" y2="680" stroke="#e7ece8"/>
+  <text x="315" y="718" class="muted" font-size="13">Mostrando cuentas del rol seleccionado</text>
+  <rect x="1114" y="697" width="84" height="34" rx="6" fill="#fff" stroke="#d8e0db"/>
+  <text x="1156" y="719" text-anchor="middle" fill="#6a766f" font-size="12">Anterior</text>
+  <rect x="1205" y="697" width="36" height="34" rx="6" fill="#0b6944"/>
+  <text x="1223" y="719" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">1</text>
+  <rect x="1248" y="697" width="36" height="34" rx="6" fill="#fff" stroke="#d8e0db"/>
+  <text x="1266" y="719" text-anchor="middle" fill="#526057" font-size="13">2</text>
+  <rect x="1291" y="697" width="84" height="34" rx="6" fill="#fff" stroke="#d8e0db"/>
+  <text x="1333" y="719" text-anchor="middle" fill="#526057" font-size="12">Siguiente</text>
+
+  <text x="285" y="890" fill="#8a9690" font-size="12">Mockup de referencia HU02 · Datos ficticios para representar la interfaz</text>
+</svg>

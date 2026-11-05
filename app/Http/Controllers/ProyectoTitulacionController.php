@@ -28,6 +28,7 @@ class ProyectoTitulacionController extends Controller
         $carreras = Carrera::where('activo', true)->orderBy('nombre')->get();
         $anios = ProyectoTitulacion::select('anio')->distinct()->orderByDesc('anio')->pluck('anio');
         $modalidades = ProyectoTitulacion::MODALIDADES;
+        $periodosAcademicos = ProyectoTitulacion::PERIODOS_ACADEMICOS;
 
         $vista = $request->string('vista')->toString() === 'archivados' ? 'archivados' : 'activos';
         $estado = in_array($request->string('estado')->toString(), ['pendiente_analisis', 'analizado'], true)
@@ -44,7 +45,7 @@ class ProyectoTitulacionController extends Controller
             'archivados' => ProyectoTitulacion::where('activo', false)->count(),
         ];
 
-        $query = ProyectoTitulacion::with(['carrera', 'estudiante', 'documento'])
+        $query = ProyectoTitulacion::with(['carrera', 'estudiante.cuenta', 'documento'])
             ->where('activo', $vista === 'activos');
 
         if (auth()->user()->esUsuario()) {
@@ -63,6 +64,15 @@ class ProyectoTitulacionController extends Controller
             $query->where('modalidad', $request->modalidad);
         }
 
+        $periodoAcademico = $request->string('periodo_academico')->toString();
+        if (array_key_exists($periodoAcademico, ProyectoTitulacion::PERIODOS_ACADEMICOS)) {
+            $query->where('periodo_academico', $periodoAcademico);
+        } elseif ($periodoAcademico === 'sin_especificar') {
+            $query->whereNull('periodo_academico');
+        } else {
+            $periodoAcademico = '';
+        }
+
         if ($estado) {
             $query->where('estado', $estado);
         }
@@ -72,7 +82,8 @@ class ProyectoTitulacionController extends Controller
             $query->where(function ($q) use ($termino) {
                 $q->where('titulo', 'like', "%{$termino}%")
                     ->orWhereHas('estudiante', function ($q2) use ($termino) {
-                        $q2->where('nombre', 'like', "%{$termino}%");
+                        $q2->where('nombre', 'like', "%{$termino}%")
+                            ->orWhereHas('cuenta', fn ($cuenta) => $cuenta->where('name', 'like', "%{$termino}%"));
                     });
             });
         }
@@ -87,7 +98,7 @@ class ProyectoTitulacionController extends Controller
         $proyectos = $query->paginate(10)->withQueryString();
 
         return view('proyectos.index', compact(
-            'proyectos', 'carreras', 'anios', 'modalidades', 'vista', 'estado', 'orden', 'estadisticas'
+            'proyectos', 'carreras', 'anios', 'modalidades', 'periodosAcademicos', 'periodoAcademico', 'vista', 'estado', 'orden', 'estadisticas'
         ));
     }
 
@@ -101,8 +112,9 @@ class ProyectoTitulacionController extends Controller
             ? Docente::find($request->old('tutor_id'))
             : null;
         $modalidades = ProyectoTitulacion::MODALIDADES;
+        $periodosAcademicos = ProyectoTitulacion::PERIODOS_ACADEMICOS;
 
-        return view('proyectos.create', compact('carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades'));
+        return view('proyectos.create', compact('carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades', 'periodosAcademicos'));
     }
 
     public function store(Request $request, TextoPdfService $textoPdf)
@@ -117,6 +129,7 @@ class ProyectoTitulacionController extends Controller
                 ->where('carrera_id', $request->integer('carrera_id')))],
             'tutor_id' => ['nullable', $this->reglaTutorParaCarrera($request->integer('carrera_id'))],
             'anio' => 'required|integer|min:2000|max:'.(date('Y') + 1),
+            'periodo_academico' => ['required', Rule::in(array_keys(ProyectoTitulacion::PERIODOS_ACADEMICOS))],
             'documento' => 'required|file|mimes:pdf|max:30720',
         ]);
 
@@ -129,6 +142,7 @@ class ProyectoTitulacionController extends Controller
                 'estudiante_id' => $validated['estudiante_id'],
                 'tutor_id' => $validated['tutor_id'] ?? null,
                 'anio' => $validated['anio'],
+                'periodo_academico' => $validated['periodo_academico'],
                 'estado' => 'pendiente_analisis',
             ]);
 
@@ -161,8 +175,9 @@ class ProyectoTitulacionController extends Controller
             ? Docente::find($request->old('tutor_id', $proyecto->tutor_id))
             : null;
         $modalidades = ProyectoTitulacion::MODALIDADES;
+        $periodosAcademicos = ProyectoTitulacion::PERIODOS_ACADEMICOS;
 
-        return view('proyectos.edit', compact('proyecto', 'carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades'));
+        return view('proyectos.edit', compact('proyecto', 'carreras', 'estudianteSeleccionado', 'tutorSeleccionado', 'modalidades', 'periodosAcademicos'));
     }
 
     public function update(Request $request, ProyectoTitulacion $proyecto, TextoPdfService $textoPdf)
@@ -177,6 +192,7 @@ class ProyectoTitulacionController extends Controller
                 ->where(fn ($estado) => $estado->where('activo', true)->orWhere('id', $proyecto->estudiante_id)))],
             'tutor_id' => ['nullable', $this->reglaTutorParaCarrera($request->integer('carrera_id'), $proyecto)],
             'anio' => 'required|integer|min:2000|max:'.(date('Y') + 1),
+            'periodo_academico' => ['required', Rule::in(array_keys(ProyectoTitulacion::PERIODOS_ACADEMICOS))],
             'documento' => 'nullable|file|mimes:pdf|max:30720',
         ]);
 
@@ -191,7 +207,7 @@ class ProyectoTitulacionController extends Controller
 
         $rutaNueva = $archivo->store('documentos', 'public');
         $rutaAnterior = $proyecto->documento?->ruta_archivo;
-        $reportesAnteriores = $proyecto->reportes()->pluck('ruta_pdf')->all();
+        $reporteAnterior = $proyecto->reporte?->ruta_pdf;
 
         try {
             $texto = $textoPdf->extraer(Storage::disk('public')->path($rutaNueva));
@@ -204,7 +220,7 @@ class ProyectoTitulacionController extends Controller
                         ->delete();
                 }
 
-                $proyecto->reportes()->delete();
+                $proyecto->reporte()->delete();
                 $proyecto->update([...$validated, 'estado' => 'pendiente_analisis']);
                 $proyecto->documento()->updateOrCreate([], [
                     'nombre_archivo' => $archivo->getClientOriginalName(),
@@ -223,7 +239,9 @@ class ProyectoTitulacionController extends Controller
         if ($rutaAnterior && $rutaAnterior !== $rutaNueva) {
             Storage::disk('public')->delete($rutaAnterior);
         }
-        Storage::disk('public')->delete($reportesAnteriores);
+        if ($reporteAnterior) {
+            Storage::disk('public')->delete($reporteAnterior);
+        }
 
         return redirect()->route('proyectos.index')->with('success', 'Proyecto y documento actualizados. Los análisis anteriores fueron invalidados y deben ejecutarse nuevamente.');
     }
@@ -312,7 +330,7 @@ class ProyectoTitulacionController extends Controller
         ]);
 
         $query = $this->comparacionesDeLaMismaModalidad($documento, $proyecto->modalidad)
-            ->with(['documentoA.proyecto.estudiante', 'documentoB.proyecto.estudiante']);
+            ->with(['documentoA.proyecto.estudiante.cuenta', 'documentoB.proyecto.estudiante.cuenta']);
 
         if ($request->filled('min')) {
             $query->where('porcentaje_similitud', '>=', $request->min);
@@ -358,10 +376,10 @@ class ProyectoTitulacionController extends Controller
             return redirect()->route('proyectos.index')->with('error', 'Este proyecto no tiene documento.');
         }
 
-        $proyecto->load(['carrera', 'estudiante', 'tutor']);
+        $proyecto->load(['carrera', 'estudiante.cuenta', 'tutor.cuenta']);
 
         $comparaciones = $this->comparacionesDeLaMismaModalidad($documento, $proyecto->modalidad)
-            ->with(['documentoA.proyecto.estudiante', 'documentoB.proyecto.estudiante'])
+            ->with(['documentoA.proyecto.estudiante.cuenta', 'documentoB.proyecto.estudiante.cuenta'])
             ->orderByDesc('porcentaje_similitud')
             ->get();
 
@@ -416,8 +434,11 @@ class ProyectoTitulacionController extends Controller
             ->when($termino !== '', fn ($query) => $query->where(function ($filtro) use ($termino) {
                 $filtro->where('nombre', 'like', "%{$termino}%")
                     ->orWhere('codigo', 'like', "%{$termino}%")
-                    ->orWhere('email', 'like', "%{$termino}%");
+                    ->orWhere('email', 'like', "%{$termino}%")
+                    ->orWhereHas('cuenta', fn ($cuenta) => $cuenta->where('name', 'like', "%{$termino}%")
+                        ->orWhere('email', 'like', "%{$termino}%"));
             }))
+            ->with('cuenta')
             ->orderBy('nombre')->limit(15)->get()
             ->map(fn ($estudiante) => [
                 'id' => $estudiante->id,
@@ -441,8 +462,11 @@ class ProyectoTitulacionController extends Controller
             ->when($termino !== '', fn ($query) => $query->where(function ($filtro) use ($termino) {
                 $filtro->where('nombre', 'like', "%{$termino}%")
                     ->orWhere('codigo', 'like', "%{$termino}%")
-                    ->orWhere('email', 'like', "%{$termino}%");
+                    ->orWhere('email', 'like', "%{$termino}%")
+                    ->orWhereHas('cuenta', fn ($cuenta) => $cuenta->where('name', 'like', "%{$termino}%")
+                        ->orWhere('email', 'like', "%{$termino}%"));
             }))
+            ->with('cuenta')
             ->orderBy('nombre')->limit(15)->get()
             ->map(fn ($docente) => [
                 'id' => $docente->id,

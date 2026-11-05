@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2300" height="1720" viewBox="0 0 2300 1720" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de clases del sistema de autenticidad</title>
+  <desc id="desc">Clases principales del sistema, con atributos, operaciones Eloquent y multiplicidades tomadas de los modelos y migraciones Laravel.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}
+      .page-title{font-size:34px;font-weight:700;letter-spacing:.4px}
+      .class-title{font-size:23px;font-weight:700}
+      .field,.method{font-size:18px}
+      .multiplicity{font-size:17px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+      .association-name{font-size:16px;font-style:italic;paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+      .class-box{fill:#fff;stroke:#111;stroke-width:2}
+      .class-head{fill:#e8e8e8;stroke:#111;stroke-width:2}
+      .divider{stroke:#111;stroke-width:1.5}
+      .relation{fill:none;stroke:#222;stroke-width:2}
+      .legend{font-size:16px;fill:#444}
+    </style>
+  </defs>
+  <rect width="2300" height="1720" fill="#fff"/>
+  <text class="page-title" x="1150" y="62" text-anchor="middle">DIAGRAMA DE CLASES — SISTEMA DE AUTENTICIDAD</text>
+
+  <g class="relation">
+    <path d="M600 300 H850"/>
+    <path d="M340 520 V650"/>
+    <path d="M600 430 L850 700"/>
+    <path d="M600 180 V100 H1650 V180"/>
+    <path d="M850 540 H780 V630 H620 V720 H600"/>
+    <path d="M1500 330 H1650"/>
+    <path d="M600 850 H850"/>
+    <path d="M1650 430 L1500 780"/>
+    <path d="M850 1110 L700 1270"/>
+    <path d="M1500 1110 L1650 1290"/>
+    <path d="M1500 560 L1900 1260"/>
+    <path d="M700 1340 H850"/>
+    <path d="M700 1470 H850"/>
+  </g>
+
+  <g class="multiplicity" text-anchor="middle">
+    <text x="615" y="287">0..1</text><text x="835" y="287">0..*</text>
+    <text x="357" y="540">0..1</text><text x="357" y="642">0..*</text>
+    <text x="615" y="442">1</text><text x="835" y="690">0..*</text>
+    <text x="620" y="120">0..*</text><text x="1630" y="120">0..*</text>
+    <text x="830" y="525">0..1</text><text x="615" y="744">0..1</text>
+    <text x="1518" y="316">0..1</text><text x="1632" y="316">0..1</text>
+    <text x="615" y="837">1</text><text x="835" y="837">0..*</text>
+    <text x="1630" y="450">0..1</text><text x="1518" y="770">0..*</text>
+    <text x="830" y="1125">1</text><text x="720" y="1260">0..1</text>
+    <text x="1518" y="1120">1</text><text x="1632" y="1274">0..*</text>
+    <text x="1512" y="585">1</text><text x="1910" y="1245">0..*</text>
+    <text x="715" y="1325">0..*</text><text x="835" y="1325">1</text>
+    <text x="715" y="1455">0..*</text><text x="835" y="1455">1</text>
+  </g>
+  <g class="association-name" text-anchor="middle">
+    <text x="770" y="88">carrera_docente</text>
+    <text x="770" y="1328">documento_a</text>
+    <text x="770" y="1458">documento_b</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="80" y="150" width="520" height="370"/>
+    <rect class="class-head" x="80" y="150" width="520" height="52"/>
+    <text class="class-title" x="340" y="184" text-anchor="middle">Carrera</text>
+    <text class="field" x="102" y="235">+ id: bigint</text>
+    <text class="field" x="102" y="266">+ nombre: string</text>
+    <text class="field" x="102" y="297">+ codigo: string?</text>
+    <text class="field" x="102" y="328">+ activo: boolean</text>
+    <line class="divider" x1="80" y1="348" x2="600" y2="348"/>
+    <text class="method" x="102" y="379">+ usuarios(): User[]</text>
+    <text class="method" x="102" y="410">+ proyectos(): ProyectoTitulacion[]</text>
+    <text class="method" x="102" y="441">+ estudiantes(): Estudiante[]</text>
+    <text class="method" x="102" y="472">+ docentes(): Docente[]</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="850" y="150" width="650" height="430"/>
+    <rect class="class-head" x="850" y="150" width="650" height="52"/>
+    <text class="class-title" x="1175" y="184" text-anchor="middle">User</text>
+    <text class="field" x="872" y="232">+ id: bigint</text>
+    <text class="field" x="872" y="260">+ name: string</text>
+    <text class="field" x="872" y="288">+ email: string</text>
+    <text class="field" x="872" y="316">+ rol: administrador | gestor | usuario</text>
+    <text class="field" x="872" y="344">+ carrera_id: bigint?</text>
+    <text class="field" x="872" y="372">+ activo: boolean</text>
+    <line class="divider" x1="850" y1="391" x2="1500" y2="391"/>
+    <text class="method" x="872" y="419">+ esAdministrador(): bool</text>
+    <text class="method" x="872" y="445">+ esGestor(): bool</text>
+    <text class="method" x="872" y="471">+ esUsuario(): bool</text>
+    <text class="method" x="872" y="497">+ carrera(): Carrera</text>
+    <text class="method" x="872" y="523">+ estudiante(): Estudiante?</text>
+    <text class="method" x="872" y="549">+ docente(): Docente?</text>
+    <text class="method" x="872" y="575">+ reportesGenerados(): Reporte[]</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="1650" y="150" width="520" height="370"/>
+    <rect class="class-head" x="1650" y="150" width="520" height="52"/>
+    <text class="class-title" x="1910" y="184" text-anchor="middle">Docente</text>
+    <text class="field" x="1672" y="231">+ id: bigint</text>
+    <text class="field" x="1672" y="258">+ codigo: string?</text>
+    <text class="field" x="1672" y="285">+ nombre: string</text>
+    <text class="field" x="1672" y="312">+ email: string?</text>
+    <text class="field" x="1672" y="339">+ user_id: bigint?</text>
+    <text class="field" x="1672" y="366">+ activo: boolean</text>
+    <line class="divider" x1="1650" y1="385" x2="2170" y2="385"/>
+    <text class="method" x="1672" y="413">+ cuenta(): User?</text>
+    <text class="method" x="1672" y="440">+ proyectosTutorados(): ProyectoTitulacion[]</text>
+    <text class="method" x="1672" y="467">+ carreras(): Carrera[]</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="80" y="650" width="520" height="400"/>
+    <rect class="class-head" x="80" y="650" width="520" height="52"/>
+    <text class="class-title" x="340" y="684" text-anchor="middle">Estudiante</text>
+    <text class="field" x="102" y="732">+ id: bigint</text>
+    <text class="field" x="102" y="760">+ codigo: string?</text>
+    <text class="field" x="102" y="788">+ nombre: string</text>
+    <text class="field" x="102" y="816">+ email: string?</text>
+    <text class="field" x="102" y="844">+ carrera_id: bigint?</text>
+    <text class="field" x="102" y="872">+ gestion_ingreso: smallint?</text>
+    <text class="field" x="102" y="900">+ user_id: bigint?</text>
+    <text class="field" x="102" y="928">+ activo: boolean</text>
+    <line class="divider" x1="80" y1="947" x2="600" y2="947"/>
+    <text class="method" x="102" y="976">+ carrera(): Carrera?</text>
+    <text class="method" x="102" y="1003">+ cuenta(): User?</text>
+    <text class="method" x="102" y="1030">+ proyectos(): ProyectoTitulacion[]</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="850" y="650" width="650" height="550"/>
+    <rect class="class-head" x="850" y="650" width="650" height="52"/>
+    <text class="class-title" x="1175" y="684" text-anchor="middle">ProyectoTitulacion</text>
+    <text class="field" x="872" y="732">+ id: bigint</text>
+    <text class="field" x="872" y="759">+ titulo: string</text>
+    <text class="field" x="872" y="786">+ resumen: text?</text>
+    <text class="field" x="872" y="813">+ modalidad: string</text>
+    <text class="field" x="872" y="840">+ carrera_id: bigint</text>
+    <text class="field" x="872" y="867">+ estudiante_id: bigint</text>
+    <text class="field" x="872" y="894">+ tutor_id: bigint?</text>
+    <text class="field" x="872" y="921">+ anio: smallint</text>
+    <text class="field" x="872" y="948">+ estado: enum</text>
+    <text class="field" x="872" y="975">+ activo: boolean</text>
+    <line class="divider" x1="850" y1="994" x2="1500" y2="994"/>
+    <text class="method" x="872" y="1022">+ modalidadNombre(): string</text>
+    <text class="method" x="872" y="1048">+ carrera(): Carrera</text>
+    <text class="method" x="872" y="1074">+ estudiante(): Estudiante</text>
+    <text class="method" x="872" y="1100">+ tutor(): Docente?</text>
+    <text class="method" x="872" y="1126">+ documento(): Documento?</text>
+    <text class="method" x="872" y="1152">+ reportes(): Reporte[]</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="80" y="1220" width="620" height="410"/>
+    <rect class="class-head" x="80" y="1220" width="620" height="52"/>
+    <text class="class-title" x="390" y="1254" text-anchor="middle">Documento</text>
+    <text class="field" x="102" y="1302">+ id: bigint</text>
+    <text class="field" x="102" y="1329">+ proyecto_id: bigint</text>
+    <text class="field" x="102" y="1356">+ nombre_archivo: string</text>
+    <text class="field" x="102" y="1383">+ ruta_archivo: string</text>
+    <text class="field" x="102" y="1410">+ tipo_archivo: string?</text>
+    <text class="field" x="102" y="1437">+ tamano_archivo: bigint?</text>
+    <text class="field" x="102" y="1464">+ hash_archivo: string?</text>
+    <text class="field" x="102" y="1491">+ contenido_extraido: longText?</text>
+    <line class="divider" x1="80" y1="1510" x2="700" y2="1510"/>
+    <text class="method" x="102" y="1538">+ proyecto(): ProyectoTitulacion</text>
+    <text class="method" x="102" y="1565">+ archivoDisponible(): bool</text>
+    <text class="method" x="102" y="1592">+ comparacionesComoA(): Comparacion[]</text>
+    <text class="method" x="102" y="1619">+ comparacionesComoB(): Comparacion[]</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="850" y="1280" width="650" height="310"/>
+    <rect class="class-head" x="850" y="1280" width="650" height="52"/>
+    <text class="class-title" x="1175" y="1314" text-anchor="middle">Comparacion</text>
+    <text class="field" x="872" y="1362">+ id: bigint</text>
+    <text class="field" x="872" y="1390">+ documento_a_id: bigint</text>
+    <text class="field" x="872" y="1418">+ documento_b_id: bigint</text>
+    <text class="field" x="872" y="1446">+ porcentaje_similitud: decimal(5,2)</text>
+    <text class="field" x="872" y="1474">+ algoritmo_usado: string?</text>
+    <line class="divider" x1="850" y1="1493" x2="1500" y2="1493"/>
+    <text class="method" x="872" y="1521">+ documentoA(): Documento</text>
+    <text class="method" x="872" y="1549">+ documentoB(): Documento</text>
+  </g>
+
+  <g>
+    <rect class="class-box" x="1650" y="1260" width="520" height="300"/>
+    <rect class="class-head" x="1650" y="1260" width="520" height="52"/>
+    <text class="class-title" x="1910" y="1294" text-anchor="middle">Reporte</text>
+    <text class="field" x="1672" y="1342">+ id: bigint</text>
+    <text class="field" x="1672" y="1372">+ proyecto_id: bigint</text>
+    <text class="field" x="1672" y="1402">+ generado_por: bigint</text>
+    <text class="field" x="1672" y="1432">+ ruta_pdf: string?</text>
+    <line class="divider" x1="1650" y1="1452" x2="2170" y2="1452"/>
+    <text class="method" x="1672" y="1482">+ proyecto(): ProyectoTitulacion</text>
+    <text class="method" x="1672" y="1512">+ generadoPor(): User</text>
+    <text class="method" x="1672" y="1542">+ archivoDisponible(): bool</text>
+  </g>
+
+</svg>

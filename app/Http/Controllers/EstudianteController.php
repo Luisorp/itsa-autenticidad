@@ -14,13 +14,16 @@ class EstudianteController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Estudiante::with('carrera')->orderBy('nombre');
+        $query = Estudiante::with(['carrera', 'cuenta'])
+            ->orderByRaw('COALESCE((SELECT name FROM users WHERE users.id = estudiantes.user_id), estudiantes.nombre)');
 
         if ($request->filled('buscar')) {
             $termino = $request->string('buscar')->toString();
             $query->where(fn ($q) => $q->where('nombre', 'like', "%{$termino}%")
                 ->orWhere('codigo', 'like', "%{$termino}%")
-                ->orWhere('email', 'like', "%{$termino}%"));
+                ->orWhere('email', 'like', "%{$termino}%")
+                ->orWhereHas('cuenta', fn ($cuenta) => $cuenta->where('name', 'like', "%{$termino}%")
+                    ->orWhere('email', 'like', "%{$termino}%")));
         }
 
         if ($request->filled('carrera_id')) {
@@ -43,7 +46,13 @@ class EstudianteController extends Controller
 
     public function store(Request $request)
     {
-        Estudiante::create($this->validar($request));
+        $datos = $this->validar($request);
+        if (! empty($datos['user_id'])) {
+            $datos['nombre'] = null;
+            $datos['email'] = null;
+        }
+
+        Estudiante::create($datos);
 
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante registrado correctamente.');
     }
@@ -61,7 +70,13 @@ class EstudianteController extends Controller
 
     public function update(Request $request, Estudiante $estudiante)
     {
-        $estudiante->update($this->validar($request, $estudiante));
+        $datos = $this->validar($request, $estudiante);
+        if (! empty($datos['user_id'])) {
+            $datos['nombre'] = null;
+            $datos['email'] = null;
+        }
+
+        $estudiante->update($datos);
 
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado correctamente.');
     }
@@ -158,7 +173,12 @@ class EstudianteController extends Controller
 
         DB::transaction(function () use ($filas) {
             foreach ($filas as $fila) {
-                Estudiante::updateOrCreate(['codigo' => $fila['codigo']], $fila);
+                $estudiante = Estudiante::updateOrCreate(['codigo' => $fila['codigo']], $fila);
+
+                // CSV roster data must not create a second identity for a linked account.
+                if ($estudiante->user_id !== null) {
+                    $estudiante->update(['nombre' => null, 'email' => null]);
+                }
             }
         });
 
@@ -179,7 +199,7 @@ class EstudianteController extends Controller
     {
         return $request->validate([
             'codigo' => ['nullable', 'string', 'max:50', Rule::unique('estudiantes', 'codigo')->ignore($estudiante)],
-            'nombre' => ['required', 'string', 'max:255'],
+            'nombre' => ['required_without:user_id', 'nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'carrera_id' => ['required', Rule::exists('carreras', 'id')],
             'gestion_ingreso' => ['nullable', 'integer', 'min:2000', 'max:'.(date('Y') + 1)],

@@ -19,6 +19,16 @@ class Docente extends Model
         return ['activo' => 'boolean'];
     }
 
+    public function getNombreAttribute(?string $value): string
+    {
+        return $this->cuenta?->name ?? $value ?? '';
+    }
+
+    public function getEmailAttribute(?string $value): ?string
+    {
+        return $this->cuenta?->email ?? $value;
+    }
+
     public function cuenta()
     {
         return $this->belongsTo(User::class, 'user_id');

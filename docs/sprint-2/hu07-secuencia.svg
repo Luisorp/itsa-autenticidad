@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="555" viewBox="0 0 1000 555">
+<defs><marker id="f" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker><style>text{font-family:Arial,sans-serif;fill:#111}.box{fill:#fff;stroke:#111;stroke-width:2}.line{stroke:#555;stroke-dasharray:6 5}.msg{stroke:#111;stroke-width:1.7;marker-end:url(#f)}.ret{stroke:#555;stroke-width:1.5;stroke-dasharray:5 4;marker-end:url(#f)}</style></defs>
+<rect class="box" x="28" y="20" width="184" height="44" rx="2"/>
+<text x="120" y="47" text-anchor="middle" font-size="15">Gestor</text>
+<path class="line" d="M120 64V540"/>
+<rect class="box" x="278" y="20" width="184" height="44" rx="2"/>
+<text x="370" y="47" text-anchor="middle" font-size="15">Formulario proyecto</text>
+<path class="line" d="M370 64V540"/>
+<rect class="box" x="528" y="20" width="184" height="44" rx="2"/>
+<text x="620" y="47" text-anchor="middle" font-size="15">ProyectoController</text>
+<path class="line" d="M620 64V540"/>
+<rect class="box" x="778" y="20" width="184" height="44" rx="2"/>
+<text x="870" y="47" text-anchor="middle" font-size="15">BD / almacenamiento</text>
+<path class="line" d="M870 64V540"/>
+<path class="msg" d="M120 95H370"/>
+<text x="245" y="88" text-anchor="middle" font-size="13">Abrir formulario</text>
+<path class="msg" d="M370 140H620"/>
+<text x="495" y="133" text-anchor="middle" font-size="13">Solicitar catálogos académicos</text>
+<path class="msg" d="M620 185H870"/>
+<text x="745" y="178" text-anchor="middle" font-size="13">Consultar carreras, estudiantes y tutores</text>
+<path class="ret" d="M870 230H620"/>
+<text x="745" y="223" text-anchor="middle" font-size="13">Devolver opciones</text>
+<path class="msg" d="M120 275H370"/>
+<text x="245" y="268" text-anchor="middle" font-size="13">Enviar datos y PDF</text>
+<path class="msg" d="M370 320H620"/>
+<text x="495" y="313" text-anchor="middle" font-size="13">Validar campos y compatibilidad</text>
+<path class="msg" d="M620 365H870"/>
+<text x="745" y="358" text-anchor="middle" font-size="13">Guardar proyecto y documento</text>
+<path class="msg" d="M620 410H870"/>
+<text x="745" y="403" text-anchor="middle" font-size="13">Almacenar PDF y extraer texto</text>
+<path class="ret" d="M620 455H370"/>
+<text x="495" y="448" text-anchor="middle" font-size="13">Confirmar operación o errores</text>
+</svg>

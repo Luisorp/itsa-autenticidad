@@ -139,7 +139,7 @@ Esta elección busca reducir falsas coincidencias por vocabulario común. Por ej
 
 El resultado sigue necesitando revisión humana. Un porcentaje alto puede justificar una revisión más detallada, pero una coincidencia también puede proceder de una expresión habitual o de contenido legítimamente compartido. Un porcentaje bajo tampoco demuestra que todas las ideas sean originales: una paráfrasis puede cambiar la redacción conservando una idea ajena.
 
-El alcance actual se centra en texto extraíble de PDF. No analiza imágenes ni determina por sí solo si una cita es correcta. Un documento escaneado sin texto necesita un procesamiento adicional. Asimismo, la búsqueda externa depende de las fuentes disponibles; no equivale a comparar contra todos los documentos de Internet.
+El alcance actual se centra en comparar texto extraíble de PDF entre proyectos del repositorio institucional. No analiza imágenes ni determina por sí solo si una cita es correcta. Un documento escaneado sin texto necesita un procesamiento adicional. La versión actual no consulta Crossref, OpenAlex ni otras fuentes de Internet.
 
 Durante la revisión previa a esta exposición se aprobaron setenta y ocho pruebas y se verificaron los flujos principales en el navegador. Esto aporta evidencia de funcionamiento, aunque no sustituye la evaluación académica de la precisión con más documentos y casos conocidos.
 
@@ -209,7 +209,7 @@ El porcentaje cuenta secuencias del conjunto analizable. Los fragmentos visibles
 El método principal busca coincidencia textual, no equivalencia semántica completa. Una reformulación profunda, traducción o sustitución por sinónimos puede pasar desapercibida. Esa es una limitación y una posible línea de mejora.
 
 **¿Compara con todo Internet?**  
-No. La comparación interna usa documentos del repositorio. Las funciones externas consultan fuentes como Crossref y OpenAlex, con los contenidos disponibles; no garantizan acceso al texto completo de todas las publicaciones.
+No. Compara los documentos del repositorio institucional. No busca en Internet ni consulta Crossref u OpenAlex.
 
 **¿Cómo sabes que funciona?**  
 Se verificaron rutas, permisos, carga y extracción de PDF, generación de reportes, respaldos y flujos en navegador. Las 78 pruebas aprobadas muestran funcionamiento de los casos probados. Para afirmar una tasa de precisión académica haría falta un conjunto de casos evaluados por expertos y medir falsos positivos y falsos negativos.
@@ -224,7 +224,7 @@ Evaluar el análisis con documentos reales autorizados y casos etiquetados por d
 3. Practica sin mirar estas cuatro explicaciones: problema, TF-IDF, coseno y porcentaje actual con Dice.
 4. No memorices todas las fórmulas. Recuerda qué representa cada componente y utiliza el ejemplo de veinte secuencias compartidas.
 5. Si la demostración falla o se demora, muestra la captura y continúa con la explicación; conserva el tiempo del bloque de comparación.
-6. Antes de empezar, comprueba Laragon, MySQL, acceso al sistema y que el PDF elegido abra. Las consultas externas requieren Internet.
+6. Antes de empezar, comprueba Laragon, MySQL, acceso al sistema y que el PDF elegido abra. La comparación interna no depende de servicios externos.
 
 ### E. Fuentes para sustentar la explicación
 

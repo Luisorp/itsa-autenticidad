@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#527568"/></marker></defs>
+<rect width="1200" height="300" rx="28" fill="#f3f8f5"/>
+<text x="54" y="58" font-family="Arial" font-size="29" font-weight="700" fill="#123c2c">Flujo propuesto de automatización</text>
+<g font-family="Arial" text-anchor="middle"><rect x="48" y="104" width="220" height="118" rx="18" fill="#e0efe7" stroke="#72a389" stroke-width="3"/><text x="158" y="153" font-size="23" font-weight="700" fill="#123c2c">Requisitos</text><text x="158" y="185" font-size="17" fill="#345c4b">RF04 · RF05 · RF06</text>
+<rect x="344" y="104" width="220" height="118" rx="18" fill="#dceaf8" stroke="#7799c0" stroke-width="3"/><text x="454" y="153" font-size="23" font-weight="700" fill="#17395b">Playwright</text><text x="454" y="185" font-size="17" fill="#34516d">Acciones del navegador</text>
+<rect x="640" y="104" width="220" height="118" rx="18" fill="#fff0d5" stroke="#d1a34b" stroke-width="3"/><text x="750" y="153" font-size="23" font-weight="700" fill="#65470d">Aserciones</text><text x="750" y="185" font-size="17" fill="#705c30">Esperado vs. observado</text>
+<rect x="936" y="104" width="220" height="118" rx="18" fill="#f0e5f6" stroke="#aa83bc" stroke-width="3"/><text x="1046" y="153" font-size="23" font-weight="700" fill="#49255c">Evidencias</text><text x="1046" y="185" font-size="17" fill="#614b6b">Reporte · captura · traza</text></g>
+<path d="M275 163H328M571 163H624M867 163H920" stroke="#527568" stroke-width="5" marker-end="url(#a)"/>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+<defs>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#111}
+    .boundary{fill:#fff;stroke:#111;stroke-width:2}
+    .actor{fill:none;stroke:#111;stroke-width:2}
+    .usecase{fill:#fff;stroke:#111;stroke-width:2}
+    .association{fill:none;stroke:#111;stroke-width:1.8}
+  </style>
+</defs>
+
+<!-- Límite del sistema -->
+<rect class="boundary" x="220" y="25" width="760" height="550"/>
+
+<!-- Asociaciones: ambos roles tienen acceso a la gestión de estudiantes -->
+<g class="association">
+  <path d="M125 245L340 90"/>
+  <path d="M125 245L340 190"/>
+  <path d="M125 245L340 290"/>
+  <path d="M125 245L340 390"/>
+  <path d="M125 245L340 490"/>
+  <path d="M1075 245L860 90"/>
+  <path d="M1075 245L860 190"/>
+  <path d="M1075 245L860 290"/>
+  <path d="M1075 245L860 390"/>
+  <path d="M1075 245L860 490"/>
+</g>
+
+<!-- Actor: Administrador -->
+<g class="actor">
+  <circle cx="95" cy="205" r="18"/>
+  <path d="M95 223V278M65 245H125M95 278L70 315M95 278L120 315"/>
+</g>
+<text x="95" y="345" text-anchor="middle" font-size="18">Administrador</text>
+
+<!-- Actor: Gestor -->
+<g class="actor">
+  <circle cx="1105" cy="205" r="18"/>
+  <path d="M1105 223V278M1075 245H1135M1105 278L1080 315M1105 278L1130 315"/>
+</g>
+<text x="1105" y="345" text-anchor="middle" font-size="18">Gestor</text>
+
+<!-- Casos de uso -->
+<ellipse class="usecase" cx="600" cy="90" rx="260" ry="32"/>
+<text x="600" y="96" text-anchor="middle" font-size="18">Consultar y filtrar estudiantes</text>
+
+<ellipse class="usecase" cx="600" cy="190" rx="260" ry="32"/>
+<text x="600" y="196" text-anchor="middle" font-size="18">Registrar estudiante</text>
+
+<ellipse class="usecase" cx="600" cy="290" rx="260" ry="32"/>
+<text x="600" y="296" text-anchor="middle" font-size="18">Editar datos del estudiante</text>
+
+<ellipse class="usecase" cx="600" cy="390" rx="260" ry="32"/>
+<text x="600" y="396" text-anchor="middle" font-size="18">Importar estudiantes desde CSV</text>
+
+<ellipse class="usecase" cx="600" cy="490" rx="260" ry="32"/>
+<text x="600" y="496" text-anchor="middle" font-size="18">Activar o desactivar registro</text>
+</svg>

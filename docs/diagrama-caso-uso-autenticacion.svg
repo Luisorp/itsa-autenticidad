@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1250" viewBox="0 0 1600 1250" role="img" aria-labelledby="title desc">
+  <title id="title">Caso de uso específico: autenticación</title>
+  <desc id="desc">Diagrama UML de inicio y cierre de sesión para Administrador, Gestor y Usuario, con validaciones y manejo de intentos basados en el sistema.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 z" fill="#222"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #161616; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 17px; fill: #444; }
+      .boundary { fill: #fff; stroke: #222; stroke-width: 2.5; }
+      .boundary-title { font-size: 22px; font-weight: 700; }
+      .uc { fill: #fff; stroke: #222; stroke-width: 2.2; }
+      .uc-label { font-size: 19px; text-anchor: middle; dominant-baseline: middle; }
+      .actor-line { stroke: #222; stroke-width: 2; fill: none; }
+      .dependency { stroke: #222; stroke-width: 1.8; fill: none; stroke-dasharray: 9 7; marker-end: url(#arrow); }
+      .stereotype { font-size: 16px; font-style: italic; text-anchor: middle; fill: #333; }
+      .actor-label { font-size: 18px; font-weight: 600; text-anchor: middle; }
+      .note { fill: #fff; stroke: #555; stroke-width: 1.6; }
+      .note-text { font-size: 16px; }
+      .small { font-size: 15px; fill: #333; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1250" fill="#fff"/>
+
+
+  <!-- Límite del sistema -->
+  <rect class="boundary" x="350" y="115" width="1190" height="1070" rx="3"/>
+
+
+  <!-- Actores -->
+  <g aria-label="Administrador">
+    <circle cx="145" cy="285" r="25" fill="#fff" stroke="#222" stroke-width="2.3"/>
+    <path class="actor-line" d="M145 310 V380 M108 335 H182 M145 380 L110 425 M145 380 L180 425"/>
+    <text class="actor-label" x="145" y="455">Administrador</text>
+  </g>
+  <g aria-label="Gestor">
+    <circle cx="145" cy="590" r="25" fill="#fff" stroke="#222" stroke-width="2.3"/>
+    <path class="actor-line" d="M145 615 V685 M108 640 H182 M145 685 L110 730 M145 685 L180 730"/>
+    <text class="actor-label" x="145" y="760">Gestor</text>
+  </g>
+  <g aria-label="Usuario">
+    <circle cx="145" cy="895" r="25" fill="#fff" stroke="#222" stroke-width="2.3"/>
+    <path class="actor-line" d="M145 920 V990 M108 945 H182 M145 990 L110 1035 M145 990 L180 1035"/>
+    <text class="actor-label" x="145" y="1065">Usuario</text>
+  </g>
+
+  <!-- Asociaciones de cada rol con los dos casos principales -->
+  <g class="actor-line">
+    <path d="M185 350 L440 300"/><path d="M185 370 L440 925"/>
+    <path d="M185 650 L440 330"/><path d="M185 680 L440 925"/>
+    <path d="M185 950 L440 360"/><path d="M185 970 L440 925"/>
+  </g>
+
+  <!-- Casos principales -->
+  <ellipse class="uc" cx="625" cy="315" rx="190" ry="62"/>
+  <text class="uc-label" x="625" y="315">Iniciar sesión</text>
+
+  <ellipse class="uc" cx="625" cy="925" rx="190" ry="62"/>
+  <text class="uc-label" x="625" y="925">Cerrar sesión</text>
+
+  <!-- Casos incluidos del inicio de sesión -->
+  <ellipse class="uc" cx="1160" cy="235" rx="225" ry="54"/>
+  <text class="uc-label" x="1160" y="235">Validar correo y contraseña</text>
+
+  <ellipse class="uc" cx="1160" cy="385" rx="225" ry="54"/>
+  <text class="uc-label" x="1160" y="385">Verificar que la cuenta esté activa</text>
+
+  <ellipse class="uc" cx="1160" cy="535" rx="225" ry="54"/>
+  <text class="uc-label" x="1160" y="535">Controlar intentos de acceso</text>
+
+  <ellipse class="uc" cx="1160" cy="685" rx="225" ry="54"/>
+  <text class="uc-label" x="1160" y="685">Crear sesión segura</text>
+
+  <!-- Resultado alternativo -->
+  <ellipse class="uc" cx="625" cy="590" rx="220" ry="62"/>
+  <text class="uc-label" x="625" y="590">Rechazar acceso y mostrar error</text>
+
+  <!-- Caso incluido del cierre de sesión -->
+  <ellipse class="uc" cx="1160" cy="925" rx="225" ry="58"/>
+  <text class="uc-label" x="1160" y="925">Invalidar sesión y renovar token</text>
+
+  <!-- Relaciones UML: include y extend -->
+  <path class="dependency" d="M785 282 C860 250 900 240 935 237"/>
+  <text class="stereotype" x="865" y="238">«include»</text>
+  <path class="dependency" d="M790 315 C865 330 890 365 935 380"/>
+  <text class="stereotype" x="865" y="345">«include»</text>
+  <path class="dependency" d="M790 335 C860 390 890 485 935 530"/>
+  <text class="stereotype" x="865" y="440">«include»</text>
+  <path class="dependency" d="M785 350 C860 450 900 610 935 680"/>
+  <text class="stereotype" x="870" y="570">«include»</text>
+
+  <!-- El caso opcional de error extiende el inicio de sesión; la flecha apunta al caso base -->
+  <path class="dependency" d="M625 528 C625 470 625 410 625 380"/>
+  <text class="stereotype" x="710" y="455">«extend»</text>
+
+  <path class="dependency" d="M815 925 L935 925"/>
+  <text class="stereotype" x="875" y="900">«include»</text>
+
+
+
+</svg>

@@ -76,6 +76,20 @@
             </div>
 
             <div class="mb-3">
+                <label for="periodo_academico" class="form-label">Periodo académico</label>
+                <select id="periodo_academico" name="periodo_academico" required class="form-select @error('periodo_academico') is-invalid @enderror">
+                    <option value="">Seleccione el periodo</option>
+                    @foreach($periodosAcademicos as $valor => $nombre)
+                        <option value="{{ $valor }}" @selected(old('periodo_academico', $proyecto->periodo_academico) === $valor)>{{ $nombre }}</option>
+                    @endforeach
+                </select>
+                @error('periodo_academico')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                @if($proyecto->periodo_academico === null)
+                    <div class="form-text">Este proyecto es anterior al registro de periodos. Seleccione el dato correcto si está disponible.</div>
+                @endif
+            </div>
+
+            <div class="mb-3">
                 <label for="documento" class="form-label">Reemplazar documento PDF <span class="text-muted fw-normal">(opcional)</span></label>
                 <input type="file" name="documento" id="documento" accept="application/pdf" class="form-control @error('documento') is-invalid @enderror">
                 @error('documento')<div class="invalid-feedback">{{ $message }}</div>@enderror

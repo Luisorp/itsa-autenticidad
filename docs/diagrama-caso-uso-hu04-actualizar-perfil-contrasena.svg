@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Caso de uso HU04: Actualizar perfil y contraseña</title>
+  <desc id="desc">Una persona autenticada puede actualizar su nombre y correo o cambiar su contraseña confirmando primero la actual. El sistema valida los datos y guarda los cambios.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}.title{font-size:30px;font-weight:700}.system-title{font-size:21px;font-weight:700}.actor-label{font-size:19px;font-weight:700}.case-label{font-size:18px}.relation-label{font-size:15px;font-weight:700}.boundary{fill:#fff;stroke:#111;stroke-width:2.5}.use-case{fill:#fff;stroke:#111;stroke-width:2}.actor-line{fill:none;stroke:#111;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.association{fill:none;stroke:#333;stroke-width:1.8}.relation{fill:none;stroke:#111;stroke-width:1.7;stroke-dasharray:8 6;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0 0 L10 5 L0 10 z" fill="#111"/></marker>
+  </defs>
+  <rect width="1400" height="900" fill="#fff"/>
+  <text class="title" x="700" y="55" text-anchor="middle">CASO DE USO — HU04</text>
+  <rect class="boundary" x="350" y="100" width="1000" height="740"/>
+  <text class="system-title" x="850" y="145" text-anchor="middle">Sistema de autenticidad de proyectos de titulación</text>
+  <g class="association"><path d="M235 430 L510 350"/><path d="M235 430 L510 590"/></g>
+  <g class="relation"><path d="M815 350 L940 350"/><path d="M820 590 L940 590"/></g>
+  <g aria-label="Actor Usuario autenticado">
+    <circle cx="190" cy="365" r="20" class="actor-line"/><path d="M190 385 L190 440 M150 405 L230 405 M190 440 L155 485 M190 440 L225 485" class="actor-line"/>
+    <text class="actor-label" x="190" y="520" text-anchor="middle">Usuario</text><text class="actor-label" x="190" y="545" text-anchor="middle">autenticado</text>
+  </g>
+  <ellipse class="use-case" cx="635" cy="350" rx="190" ry="58"/><text class="case-label" x="635" y="344" text-anchor="middle">Actualizar nombre</text><text class="case-label" x="635" y="370" text-anchor="middle">y correo</text>
+  <ellipse class="use-case" cx="635" cy="590" rx="190" ry="58"/><text class="case-label" x="635" y="584" text-anchor="middle">Cambiar</text><text class="case-label" x="635" y="610" text-anchor="middle">contraseña</text>
+  <ellipse class="use-case" cx="1110" cy="350" rx="170" ry="52"/><text class="case-label" x="1110" y="344" text-anchor="middle">Validar datos</text><text class="case-label" x="1110" y="370" text-anchor="middle">del perfil</text>
+  <ellipse class="use-case" cx="1110" cy="590" rx="170" ry="62"/><text class="case-label" x="1110" y="575" text-anchor="middle">Verificar contraseña actual</text><text class="case-label" x="1110" y="601" text-anchor="middle">y confirmar la nueva</text>
+  <text class="relation-label" x="855" y="333" text-anchor="middle">«include»</text><text class="relation-label" x="855" y="573" text-anchor="middle">«include»</text>
+  <text x="850" y="785" text-anchor="middle" font-size="16" fill="#444">Disponible para cualquier usuario que haya iniciado sesión.</text>
+</svg>

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1390" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de secuencia unificado: iniciar y cerrar sesión</title>
+  <desc id="desc">Secuencia desde la solicitud de acceso hasta el cierre de sesión para Administrador, Gestor y Usuario. Incluye validación de credenciales, cuenta activa, límite de intentos y destrucción segura de la sesión.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,4 L0,8 z" fill="#34483d"/></marker>
+    <marker id="returnArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,4 L0,8 z" fill="#65786c"/></marker>
+    <style>
+      .bg{fill:#fff}.title{font:700 25px Arial,sans-serif;fill:#173c2c}.subtitle{font:14px Arial,sans-serif;fill:#53665a}
+      .participant{fill:#e9f0eb;stroke:#51685a;stroke-width:1.5;rx:8}.ptxt{font:13px Arial,sans-serif;fill:#20382a;text-anchor:middle}
+      .life{stroke:#9ba99f;stroke-width:1.3;stroke-dasharray:6 6}.msg{stroke:#34483d;stroke-width:1.7;marker-end:url(#arrow)}
+      .ret{stroke:#65786c;stroke-width:1.5;stroke-dasharray:7 5;marker-end:url(#returnArrow)}
+      .label{font:13px Arial,sans-serif;fill:#263a2e;text-anchor:middle}.small{font:12px Arial,sans-serif;fill:#42584a}
+      .frame{fill:#fbfcfb;stroke:#65786c;stroke-width:1.4}.framehead{fill:#e6eee8;stroke:#65786c;stroke-width:1.2}
+      .frameText{font:700 13px Arial,sans-serif;fill:#263a2e}.guard{font:italic 12px Arial,sans-serif;fill:#355342}
+      .note{fill:#f5f7f5;stroke:#adb9b0;stroke-width:1.2;rx:6}.noteText{font:12px Arial,sans-serif;fill:#42584a;text-anchor:middle}
+      .separator{stroke:#aab6ad;stroke-width:1;stroke-dasharray:4 4}
+    </style>
+  </defs>
+  <rect class="bg" width="1600" height="1390"/>
+  <text class="title" x="800" y="39" text-anchor="middle">DIAGRAMA DE SECUENCIA: INICIO Y CIERRE DE SESIÓN</text>
+  <text class="subtitle" x="800" y="66" text-anchor="middle">Flujo web Laravel común a Administrador, Gestor y Usuario</text>
+
+  <!-- Participantes -->
+  <g>
+    <rect class="participant" x="30" y="92" width="180" height="72"/><text class="ptxt" x="120" y="122"><tspan x="120">Persona usuaria</tspan><tspan x="120" dy="18">(Admin./Gestor/Usuario)</tspan></text>
+    <rect class="participant" x="260" y="92" width="180" height="72"/><text class="ptxt" x="350" y="132">Navegador</text>
+    <rect class="participant" x="490" y="92" width="180" height="72"/><text class="ptxt" x="580" y="119"><tspan x="580">AuthenticatedSession</tspan><tspan x="580" dy="18">Controller</tspan></text>
+    <rect class="participant" x="720" y="92" width="180" height="72"/><text class="ptxt" x="810" y="132">LoginRequest</text>
+    <rect class="participant" x="950" y="92" width="180" height="72"/><text class="ptxt" x="1040" y="132">Auth (web guard)</text>
+    <rect class="participant" x="1180" y="92" width="180" height="72"/><text class="ptxt" x="1270" y="119"><tspan x="1270">Base de datos</tspan><tspan x="1270" dy="18">users</tspan></text>
+    <rect class="participant" x="1410" y="92" width="160" height="72"/><text class="ptxt" x="1490" y="119"><tspan x="1490">Sesión</tspan><tspan x="1490" dy="18">Laravel</tspan></text>
+  </g>
+  <g class="life">
+    <line x1="120" y1="164" x2="120" y2="1320"/><line x1="350" y1="164" x2="350" y2="1320"/>
+    <line x1="580" y1="164" x2="580" y2="1320"/><line x1="810" y1="164" x2="810" y2="1320"/>
+    <line x1="1040" y1="164" x2="1040" y2="1320"/><line x1="1270" y1="164" x2="1270" y2="1320"/>
+    <line x1="1490" y1="164" x2="1490" y2="1320"/>
+  </g>
+
+  <!-- Inicio de sesión -->
+  <line class="msg" x1="120" y1="205" x2="350" y2="205"/><text class="label" x="235" y="196">Abrir inicio de sesión</text>
+  <line class="msg" x1="350" y1="244" x2="580" y2="244"/><text class="label" x="465" y="235">GET /login</text>
+  <line class="ret" x1="580" y1="283" x2="350" y2="283"/><text class="label" x="465" y="274">Mostrar formulario</text>
+  <line class="msg" x1="120" y1="322" x2="350" y2="322"/><text class="label" x="235" y="313">Ingresar correo y contraseña</text>
+  <line class="msg" x1="350" y1="361" x2="580" y2="361"/><text class="label" x="465" y="352">POST /login</text>
+  <line class="msg" x1="580" y1="400" x2="810" y2="400"/><text class="label" x="695" y="391">Validar campos y autenticar</text>
+  <path class="msg" d="M810 432 h48 v24 h-48"/><text class="small" x="866" y="448">RateLimiter: máximo 5 intentos</text>
+  <line class="msg" x1="810" y1="488" x2="1040" y2="488"/><text class="label" x="925" y="479">Auth::attempt(email, password)</text>
+  <line class="msg" x1="1040" y1="527" x2="1270" y2="527"/><text class="label" x="1155" y="518">Buscar cuenta por correo</text>
+  <line class="ret" x1="1270" y1="566" x2="1040" y2="566"/><text class="label" x="1155" y="557">Usuario, hash y estado activo</text>
+
+  <!-- Resultados alternativos -->
+  <rect class="frame" x="35" y="595" width="1530" height="405" rx="5"/>
+  <path class="framehead" d="M35 595 h178 v28 h-178 z"/><text class="frameText" x="49" y="614">alt</text><text class="frameText" x="99" y="614">Resultado del inicio de sesión</text>
+  <line class="separator" x1="35" y1="690" x2="1565" y2="690"/>
+  <line class="separator" x1="35" y1="790" x2="1565" y2="790"/>
+  <line class="separator" x1="35" y1="890" x2="1565" y2="890"/>
+
+  <text class="guard" x="55" y="646">[Se alcanzó el límite de intentos]</text>
+  <line class="ret" x1="810" y1="660" x2="580" y2="660"/><text class="label" x="695" y="651">Informar bloqueo temporal</text>
+  <line class="ret" x1="580" y1="676" x2="350" y2="676"/><text class="label" x="465" y="671">Mostrar mensaje de espera</text>
+
+  <text class="guard" x="55" y="730">[Credenciales incorrectas]</text>
+  <path class="msg" d="M810 741 h45 v20 h-45"/><text class="small" x="900" y="755">Incrementar intentos fallidos</text>
+  <line class="ret" x1="580" y1="773" x2="350" y2="773"/><text class="label" x="465" y="768">Mostrar error de acceso</text>
+
+  <text class="guard" x="55" y="830">[Cuenta desactivada]</text>
+  <line class="msg" x1="810" y1="841" x2="1040" y2="841"/><text class="label" x="925" y="832">Auth::logout()</text>
+  <line class="ret" x1="580" y1="873" x2="350" y2="873"/><text class="label" x="465" y="868">Mostrar aviso de cuenta inactiva</text>
+
+  <text class="guard" x="55" y="930">[Credenciales correctas y cuenta activa]</text>
+  <line class="msg" x1="810" y1="941" x2="1040" y2="941"/><text class="label" x="925" y="932">Limpiar contador de intentos</text>
+  <line class="msg" x1="580" y1="969" x2="1490" y2="969"/><text class="label" x="1035" y="960">Regenerar ID de sesión y autenticar</text>
+  <line class="ret" x1="580" y1="988" x2="350" y2="988"/><text class="label" x="465" y="983">Redirigir al panel solicitado</text>
+
+  <!-- Uso de la aplicación y cierre -->
+  <rect class="note" x="520" y="1020" width="600" height="42"/><text class="noteText" x="820" y="1046">Tras un inicio válido, la persona utiliza las funciones permitidas por su rol.</text>
+  <line class="msg" x1="120" y1="1090" x2="350" y2="1090"/><text class="label" x="235" y="1081">Seleccionar «Cerrar sesión»</text>
+  <line class="msg" x1="350" y1="1130" x2="580" y2="1130"/><text class="label" x="465" y="1121">POST /logout (con CSRF)</text>
+  <line class="msg" x1="580" y1="1170" x2="1040" y2="1170"/><text class="label" x="810" y="1161">Auth::guard('web')->logout()</text>
+  <line class="msg" x1="580" y1="1210" x2="1490" y2="1210"/><text class="label" x="1035" y="1201">Invalidar sesión y regenerar token CSRF</text>
+  <line class="ret" x1="580" y1="1250" x2="350" y2="1250"/><text class="label" x="465" y="1241">Redirigir a /</text>
+  <line class="ret" x1="350" y1="1290" x2="120" y2="1290"/><text class="label" x="235" y="1281">Mostrar página pública</text>
+  <circle cx="120" cy="1330" r="12" fill="#243b2e"/><circle cx="120" cy="1330" r="6" fill="#fff"/>
+  <text class="small" x="800" y="1365" text-anchor="middle">Fuente: elaboración propia, conforme al flujo de autenticación implementado en Laravel.</text>
+</svg>

@@ -4,12 +4,15 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
+#[TestDox('Perfil del usuario')]
 class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
+    #[TestDox('Muestra la página del perfil con sus opciones')]
     public function test_profile_page_is_displayed(): void
     {
         $user = User::factory()->create();
@@ -23,6 +26,7 @@ class ProfileTest extends TestCase
             ->assertSee('Actualizar contraseña')->assertDontSee('Profile Information');
     }
 
+    #[TestDox('Permite actualizar el nombre y el correo del perfil')]
     public function test_profile_information_can_be_updated(): void
     {
         $user = User::factory()->create();
@@ -45,6 +49,7 @@ class ProfileTest extends TestCase
         $this->assertNull($user->email_verified_at);
     }
 
+    #[TestDox('Rechaza un correo que ya pertenece a otra cuenta')]
     public function test_profile_rejects_another_accounts_email(): void
     {
         $user = User::factory()->create();
@@ -56,6 +61,7 @@ class ProfileTest extends TestCase
         $this->assertSame($user->email, $user->fresh()->email);
     }
 
+    #[TestDox('Muestra un mensaje cuando los datos del perfil se guardan')]
     public function test_profile_success_message_is_displayed(): void
     {
         $user = User::factory()->create();
@@ -64,6 +70,7 @@ class ProfileTest extends TestCase
             ->assertSee('data-success-notice', false);
     }
 
+    #[TestDox('Muestra en español los errores de validación del perfil y la contraseña')]
     public function test_profile_renders_field_errors_in_spanish(): void
     {
         $user = User::factory()->create();
@@ -80,6 +87,7 @@ class ProfileTest extends TestCase
             ->assertSee('La confirmación no coincide.')->assertSee('is-invalid');
     }
 
+    #[TestDox('Conserva la verificación si el correo electrónico no cambia')]
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
         $user = User::factory()->create();
@@ -98,6 +106,7 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
+    #[TestDox('Impide que el usuario elimine su cuenta desde el perfil')]
     public function test_user_cannot_delete_their_account(): void
     {
         $user = User::factory()->create();
@@ -113,6 +122,7 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->fresh());
     }
 
+    #[TestDox('No muestra una opción para eliminar la cuenta')]
     public function test_profile_page_does_not_offer_account_deletion(): void
     {
         $user = User::factory()->create();

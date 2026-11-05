@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mockup HU03: Gestión de carreras</title>
+  <desc id="desc">Propuesta sencilla para la pantalla de carreras del Administrador: listado con nombre, código y estado, botón para crear, acciones de edición y activación o desactivación.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif}
+      .nav{font-size:15px;fill:#e9f2ed}
+      .muted{fill:#718079}
+      .body{fill:#24332c}
+      .small{font-size:13px}
+      .table-head{font-size:13px;font-weight:700;fill:#627168}
+      .cell{font-size:15px;fill:#26372e}
+      .shadow{filter:url(#shadow)}
+    </style>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="145%">
+      <feDropShadow dx="0" dy="5" stdDeviation="9" flood-color="#173d2c" flood-opacity=".08"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="900" fill="#f4f7f5"/>
+
+  <!-- Menú lateral -->
+  <rect width="235" height="900" fill="#103d2e"/>
+  <path d="M26 28 L42 22 L58 28 V42 Q58 58 42 65 Q26 58 26 42 Z" fill="#a7e36d"/>
+  <path d="M34 41 L40 47 L50 35" fill="none" stroke="#10452f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="72" y="40" fill="#fff" font-size="16" font-weight="700">Sistema de</text>
+  <text x="72" y="60" fill="#fff" font-size="16" font-weight="700">autenticidad</text>
+  <text x="25" y="108" fill="#9bb8a8" font-size="11" font-weight="700" letter-spacing="1.1">MENÚ PRINCIPAL</text>
+
+  <g class="nav">
+    <rect x="14" y="125" width="207" height="44" rx="8" fill="transparent"/>
+    <circle cx="36" cy="147" r="7" fill="none" stroke="#cfe2d7" stroke-width="1.8"/>
+    <path d="M26 160 Q36 150 46 160" fill="none" stroke="#cfe2d7" stroke-width="1.8"/>
+    <text x="60" y="152">Inicio</text>
+
+    <rect x="14" y="177" width="207" height="44" rx="8" fill="transparent"/>
+    <path d="M27 189 H45 L49 196 V211 H27 Z M32 185 H45 L48 189" fill="none" stroke="#cfe2d7" stroke-width="1.7" stroke-linejoin="round"/>
+    <text x="60" y="204">Proyectos</text>
+
+    <text x="25" y="263" fill="#9bb8a8" font-size="11" font-weight="700" letter-spacing="1.1">ADMINISTRACIÓN</text>
+    <rect x="14" y="278" width="207" height="46" rx="9" fill="#1d684b"/>
+    <path d="M28 291 H46 V311 H28 Z M32 287 H42 V291 M32 298 H42 M32 304 H42" fill="none" stroke="#fff" stroke-width="1.7"/>
+    <text x="60" y="307" fill="#fff" font-weight="700">Carreras</text>
+
+    <rect x="14" y="333" width="207" height="44" rx="8" fill="transparent"/>
+    <circle cx="33" cy="347" r="6" fill="none" stroke="#cfe2d7" stroke-width="1.6"/>
+    <circle cx="43" cy="350" r="5" fill="none" stroke="#cfe2d7" stroke-width="1.5"/>
+    <path d="M24 364 Q33 353 42 364 M39 364 Q47 357 53 364" fill="none" stroke="#cfe2d7" stroke-width="1.5"/>
+    <text x="60" y="360">Usuarios</text>
+  </g>
+
+  <line x1="20" y1="820" x2="215" y2="820" stroke="#35624e"/>
+  <circle cx="42" cy="856" r="17" fill="#d7eadf"/>
+  <text x="42" y="861" text-anchor="middle" font-size="13" font-weight="700" fill="#15543b">A</text>
+  <text x="68" y="852" fill="#fff" font-size="14" font-weight="700">Administrador</text>
+  <text x="68" y="870" fill="#a9c3b4" font-size="12">Cuenta activa</text>
+
+  <!-- Encabezado -->
+  <text x="275" y="66" class="small muted">Administración / Carreras</text>
+  <text x="275" y="116" class="body" font-size="30" font-weight="700">Gestión de carreras</text>
+  <text x="275" y="146" class="muted" font-size="15">Consulta y administra las carreras del repositorio.</text>
+
+  <rect x="1115" y="92" width="280" height="50" rx="9" fill="#0b6944"/>
+  <circle cx="1143" cy="117" r="9" fill="none" stroke="#fff" stroke-width="2"/>
+  <path d="M1143 112 V122 M1138 117 H1148" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <text x="1265" y="123" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">Nueva carrera</text>
+
+  <!-- Listado sencillo -->
+  <g class="shadow">
+    <rect x="275" y="180" width="1120" height="555" rx="13" fill="#fff" stroke="#dce5df"/>
+  </g>
+  <text x="305" y="222" class="body" font-size="18" font-weight="700">Carreras registradas</text>
+  <text x="1365" y="222" class="muted" font-size="13" text-anchor="end">Listado ordenado por nombre</text>
+  <line x1="275" y1="242" x2="1395" y2="242" stroke="#e7ece8"/>
+
+  <text x="310" y="280" class="table-head">NOMBRE</text>
+  <text x="700" y="280" class="table-head">CÓDIGO</text>
+  <text x="870" y="280" class="table-head">ESTADO</text>
+  <text x="1080" y="280" class="table-head">ACCIONES</text>
+  <line x1="300" y1="298" x2="1370" y2="298" stroke="#e7ece8"/>
+
+  <!-- Fila activa -->
+  <text x="310" y="348" class="cell" font-weight="700">Carrera de ejemplo 1</text>
+  <text x="700" y="348" class="cell">CAR-01</text>
+  <rect x="865" y="328" width="78" height="28" rx="14" fill="#e6f4eb"/>
+  <circle cx="880" cy="342" r="4" fill="#20844c"/>
+  <text x="891" y="347" fill="#1e7042" font-size="13" font-weight="700">Activa</text>
+  <rect x="1060" y="324" width="95" height="34" rx="6" fill="#fff" stroke="#d5ded8"/>
+  <text x="1107" y="346" text-anchor="middle" fill="#34473c" font-size="13" font-weight="700">Editar</text>
+  <rect x="1165" y="324" width="145" height="34" rx="6" fill="#f2f4f3" stroke="#d5ded8"/>
+  <text x="1237" y="346" text-anchor="middle" fill="#46534c" font-size="13" font-weight="700">Desactivar</text>
+  <line x1="300" y1="380" x2="1370" y2="380" stroke="#eef1ef"/>
+
+  <!-- Fila activa -->
+  <text x="310" y="431" class="cell" font-weight="700">Carrera de ejemplo 2</text>
+  <text x="700" y="431" class="cell">CAR-02</text>
+  <rect x="865" y="411" width="78" height="28" rx="14" fill="#e6f4eb"/>
+  <circle cx="880" cy="425" r="4" fill="#20844c"/>
+  <text x="891" y="430" fill="#1e7042" font-size="13" font-weight="700">Activa</text>
+  <rect x="1060" y="407" width="95" height="34" rx="6" fill="#fff" stroke="#d5ded8"/>
+  <text x="1107" y="429" text-anchor="middle" fill="#34473c" font-size="13" font-weight="700">Editar</text>
+  <rect x="1165" y="407" width="145" height="34" rx="6" fill="#f2f4f3" stroke="#d5ded8"/>
+  <text x="1237" y="429" text-anchor="middle" fill="#46534c" font-size="13" font-weight="700">Desactivar</text>
+  <line x1="300" y1="463" x2="1370" y2="463" stroke="#eef1ef"/>
+
+  <!-- Fila inactiva -->
+  <text x="310" y="514" class="cell" font-weight="700">Carrera de ejemplo 3</text>
+  <text x="700" y="514" class="cell">—</text>
+  <rect x="865" y="494" width="88" height="28" rx="14" fill="#f0f1f1"/>
+  <circle cx="880" cy="508" r="4" fill="#89918d"/>
+  <text x="891" y="513" fill="#66716b" font-size="13" font-weight="700">Inactiva</text>
+  <rect x="1060" y="490" width="95" height="34" rx="6" fill="#fff" stroke="#d5ded8"/>
+  <text x="1107" y="512" text-anchor="middle" fill="#34473c" font-size="13" font-weight="700">Editar</text>
+  <rect x="1165" y="490" width="145" height="34" rx="6" fill="#e8f4ec" stroke="#c8e3d1"/>
+  <text x="1237" y="512" text-anchor="middle" fill="#1e7042" font-size="13" font-weight="700">Activar</text>
+
+  <line x1="275" y1="565" x2="1395" y2="565" stroke="#e7ece8"/>
+  <text x="305" y="600" class="muted" font-size="13">Se muestran hasta 10 carreras por página.</text>
+  <rect x="1190" y="582" width="86" height="34" rx="6" fill="#fff" stroke="#d8e0db"/>
+  <text x="1233" y="604" text-anchor="middle" fill="#6a766f" font-size="12">Anterior</text>
+  <rect x="1284" y="582" width="36" height="34" rx="6" fill="#0b6944"/>
+  <text x="1302" y="604" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">1</text>
+  <rect x="1328" y="582" width="55" height="34" rx="6" fill="#fff" stroke="#d8e0db"/>
+  <text x="1355" y="604" text-anchor="middle" fill="#526057" font-size="12">Siguiente</text>
+
+  <!-- Mensaje sobre el estado -->
+  <rect x="275" y="765" width="1120" height="58" rx="10" fill="#edf5ef" stroke="#d7e8dc"/>
+  <circle cx="307" cy="794" r="11" fill="#d7eadf"/>
+  <text x="307" y="799" text-anchor="middle" fill="#276347" font-size="14" font-weight="700">i</text>
+  <text x="330" y="799" fill="#496455" font-size="14">Desactivar una carrera conserva sus datos históricos; no se elimina del sistema.</text>
+
+  <text x="275" y="865" fill="#8a9690" font-size="12">Mockup HU03 · Datos de ejemplo para representar la interfaz</text>
+</svg>

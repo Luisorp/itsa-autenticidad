@@ -21,6 +21,16 @@ class Estudiante extends Model
         return ['activo' => 'boolean'];
     }
 
+    public function getNombreAttribute(?string $value): string
+    {
+        return $this->cuenta?->name ?? $value ?? '';
+    }
+
+    public function getEmailAttribute(?string $value): ?string
+    {
+        return $this->cuenta?->email ?? $value;
+    }
+
     public function carrera()
     {
         return $this->belongsTo(Carrera::class);

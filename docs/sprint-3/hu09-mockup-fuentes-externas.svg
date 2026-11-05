@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="820" viewBox="0 0 1100 820">
+<defs><style>
+text{font-family:Arial,sans-serif;fill:#111}.panel{fill:#fff;stroke:#111;stroke-width:1.5}.light{stroke:#bbb;stroke-width:1}
+</style></defs>
+<rect x="12" y="12" width="1076" height="796" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="42" y="56" font-size="26" font-weight="700">Búsqueda académica</text>
+<line x1="40" y1="76" x2="1060" y2="76" stroke="#111"/>
+<text x="45" y="112" font-size="15" font-weight="700">Crossref</text>
+<text x="45" y="136" font-size="13">DOI y metadatos editoriales</text>
+<text x="340" y="112" font-size="15" font-weight="700">OpenAlex</text>
+<text x="340" y="136" font-size="13">Publicaciones, autores y resúmenes disponibles</text>
+<line class="light" x1="45" y1="158" x2="1055" y2="158"/>
+
+<text x="45" y="194" font-size="14" font-weight="700">Proyecto que se comparará</text>
+<rect class="panel" x="45" y="205" width="1010" height="42"/>
+<text x="60" y="232" font-size="14">[Buscar por título, estudiante o carrera]</text>
+<rect class="panel" x="45" y="264" width="270" height="42"/><text x="180" y="291" text-anchor="middle" font-size="14">Buscar y comparar en ambas APIs</text>
+<rect class="panel" x="330" y="264" width="170" height="42"/><text x="415" y="291" text-anchor="middle" font-size="14">Volver a proyectos</text>
+
+<rect class="panel" x="45" y="330" width="1010" height="66"/>
+<text x="62" y="355" font-size="13" font-weight="700">Proyecto seleccionado</text>
+<text x="62" y="380" font-size="14">[Título del proyecto] — [Estudiante] — [Carrera]</text>
+<text x="45" y="432" font-size="17" font-weight="700">Coincidencias académicas externas</text>
+<text x="1050" y="432" text-anchor="end" font-size="13">[Cantidad] publicaciones revisadas</text>
+
+<rect class="panel" x="45" y="451" width="1010" height="142"/>
+<text x="66" y="482" font-size="20" font-weight="700">[Porcentaje] %</text>
+<text x="66" y="504" font-size="13">similitud</text>
+<line class="light" x1="190" y1="466" x2="190" y2="577"/>
+<text x="212" y="480" font-size="14" font-weight="700">Crossref — [Título de la publicación]</text>
+<text x="212" y="506" font-size="13">[Autores] · [Año] · [DOI]</text>
+<text x="212" y="532" font-size="13">[Resumen o fragmento relacionado]</text>
+<rect class="panel" x="212" y="546" width="190" height="32"/><text x="307" y="567" text-anchor="middle" font-size="13">Consultar publicación</text>
+
+<rect class="panel" x="45" y="610" width="1010" height="142"/>
+<text x="66" y="641" font-size="20" font-weight="700">[Porcentaje] %</text>
+<text x="66" y="663" font-size="13">similitud</text>
+<line class="light" x1="190" y1="625" x2="190" y2="736"/>
+<text x="212" y="639" font-size="14" font-weight="700">OpenAlex — [Título de la publicación]</text>
+<text x="212" y="665" font-size="13">[Autores] · [Año] · [DOI]</text>
+<text x="212" y="691" font-size="13">[Resumen o fragmento relacionado]</text>
+<rect class="panel" x="212" y="705" width="190" height="32"/><text x="307" y="726" text-anchor="middle" font-size="13">Consultar publicación</text>
+</svg>

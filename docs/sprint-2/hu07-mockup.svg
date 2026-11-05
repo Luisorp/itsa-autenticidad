@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="590" viewBox="0 0 1100 590">
+<defs><style>text{font-family:Arial,sans-serif;fill:#111}.b{fill:#fff;stroke:#111;stroke-width:1.5}.muted{fill:#555}</style></defs>
+<rect x="12" y="12" width="1076" height="566" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="45" y="58" font-size="27" font-weight="700">Proyecto</text><line x1="40" y1="78" x2="1060" y2="78" stroke="#111"/>
+<text x="45" y="115" font-size="14">Título</text>
+<rect class="b" x="45" y="125" width="239" height="36"/>
+<text x="302" y="115" font-size="14">Modalidad</text>
+<rect class="b" x="302" y="125" width="239" height="36"/>
+<text x="559" y="115" font-size="14">Carrera</text>
+<rect class="b" x="559" y="125" width="239" height="36"/>
+<text x="816" y="115" font-size="14">Estudiante</text>
+<rect class="b" x="816" y="125" width="239" height="36"/>
+<text x="45" y="183" font-size="14">Tutor</text>
+<rect class="b" x="45" y="193" width="239" height="36"/>
+<text x="302" y="183" font-size="14">Año</text>
+<rect class="b" x="302" y="193" width="239" height="36"/>
+<rect class="b" x="45" y="265" width="145" height="38"/><text x="117" y="290" text-anchor="middle" font-size="14">Seleccionar PDF</text>
+<rect class="b" x="205" y="265" width="145" height="38"/><text x="277" y="290" text-anchor="middle" font-size="14">Guardar</text>
+<rect class="b" x="365" y="265" width="145" height="38"/><text x="437" y="290" text-anchor="middle" font-size="14">Cancelar</text>
+<rect class="b" x="45" y="330" width="1010" height="190"/>
+<text x="55" y="360" font-size="13" font-weight="700">Documento PDF</text>
+<line x1="382" y1="330" x2="382" y2="520" stroke="#777"/>
+<text x="392" y="360" font-size="13" font-weight="700">Nombre de archivo</text>
+<line x1="719" y1="330" x2="719" y2="520" stroke="#777"/>
+<text x="729" y="360" font-size="13" font-weight="700">Estado</text>
+<line x1="45" y1="378" x2="1055" y2="378" stroke="#aaa"/>
+<line x1="45" y1="425" x2="1055" y2="425" stroke="#aaa"/>
+<line x1="45" y1="472" x2="1055" y2="472" stroke="#aaa"/>
+<line x1="45" y1="519" x2="1055" y2="519" stroke="#aaa"/>
+</svg>

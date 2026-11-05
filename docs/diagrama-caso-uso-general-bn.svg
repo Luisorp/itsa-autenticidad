@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1320" viewBox="0 0 1680 1320" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama general de casos de uso</title>
+  <desc id="desc">Diagrama general del sistema de autenticidad de proyectos de titulación. Agrupa las historias de usuario vigentes en nueve casos de uso para los actores Usuario, Gestor y Administrador.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}
+      .page-title{font-size:32px;font-weight:700;letter-spacing:.5px}
+      .system-title{font-size:23px;font-weight:700}
+      .actor-label{font-size:20px;font-weight:700}
+      .case-label{font-size:18px}
+      .boundary{fill:#fff;stroke:#111;stroke-width:2.5}
+      .ellipse{fill:#fff;stroke:#111;stroke-width:2}
+      .actor-line{fill:none;stroke:#111;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .association{fill:none;stroke:#333;stroke-width:1.7}
+    </style>
+  </defs>
+  <rect width="1680" height="1320" fill="#fff"/>
+
+
+  <rect class="boundary" x="300" y="105" width="1040" height="1165"/>
+
+
+  <!-- Asociaciones por actor; se muestran las responsabilidades principales de cada rol. -->
+  <g class="association">
+    <!-- Usuario: acceso y consulta de las funciones disponibles según permisos. -->
+    <path d="M200 390 L540 235"/>
+    <path d="M200 390 L540 345"/>
+    <path d="M200 390 L540 455"/>
+    <!-- Gestor: operación del repositorio, análisis y reportes autorizados. -->
+    <path d="M200 780 L540 565"/>
+    <path d="M200 780 L540 675"/>
+    <path d="M200 780 L540 785"/>
+    <path d="M200 780 L540 895"/>
+    <!-- Administrador: puede utilizar todos los casos de uso del sistema. -->
+    <path d="M1440 1043 L1100 235"/>
+    <path d="M1440 1043 L1100 345"/>
+    <path d="M1440 1043 L1100 455"/>
+    <path d="M1440 1043 L1100 565"/>
+    <path d="M1440 1043 L1100 675"/>
+    <path d="M1440 1043 L1100 785"/>
+    <path d="M1440 1043 L1100 895"/>
+    <path d="M1440 1043 L1100 1005"/>
+    <path d="M1440 1043 L1100 1115"/>
+  </g>
+
+  <g>
+    <ellipse class="ellipse" cx="820" cy="235" rx="280" ry="36"/>
+    <text class="case-label" x="820" y="242" text-anchor="middle">Iniciar y cerrar sesión</text>
+
+    <ellipse class="ellipse" cx="820" cy="345" rx="280" ry="36"/>
+    <text class="case-label" x="820" y="352" text-anchor="middle">Actualizar perfil y contraseña</text>
+
+    <ellipse class="ellipse" cx="820" cy="455" rx="280" ry="38"/>
+    <text class="case-label" x="820" y="449" text-anchor="middle">
+      <tspan x="820">Buscar proyectos y consultar documentos PDF</tspan>
+      <tspan x="820" dy="22"></tspan>
+    </text>
+
+    <ellipse class="ellipse" cx="820" cy="565" rx="280" ry="36"/>
+    <text class="case-label" x="820" y="572" text-anchor="middle">Generar y consultar reportes PDF</text>
+
+    <ellipse class="ellipse" cx="820" cy="675" rx="280" ry="38"/>
+    <text class="case-label" x="820" y="669" text-anchor="middle">
+      <tspan x="820">Registrar y editar proyectos</tspan>
+      <tspan x="820" dy="22">con sus relaciones académicas</tspan>
+    </text>
+
+    <ellipse class="ellipse" cx="820" cy="785" rx="280" ry="38"/>
+    <text class="case-label" x="820" y="779" text-anchor="middle">
+      <tspan x="820">Comparar proyectos con el repositorio</tspan>
+      <tspan x="820" dy="22">institucional y entre sí</tspan>
+    </text>
+
+    <ellipse class="ellipse" cx="820" cy="895" rx="280" ry="38"/>
+    <text class="case-label" x="820" y="889" text-anchor="middle">
+      <tspan x="820">Gestionar estudiantes, docentes</tspan>
+   
+    </text>
+
+    <ellipse class="ellipse" cx="820" cy="1005" rx="280" ry="38"/>
+    <text class="case-label" x="820" y="999" text-anchor="middle">
+      <tspan x="820">Administrar cuentas y roles</tspan>
+      <tspan x="820" dy="22">y mantener las carreras</tspan>
+    </text>
+
+    <ellipse class="ellipse" cx="820" cy="1115" rx="280" ry="36"/>
+    <text class="case-label" x="820" y="1122" text-anchor="middle">Generar y descargar respaldos</text>
+  </g>
+
+  <g transform="translate(165 390)">
+    <circle class="actor-line" cx="0" cy="-65" r="19"/>
+    <path class="actor-line" d="M0 -46V20M-34 -17H34M0 20L-29 58M0 20L29 58"/>
+    <text class="actor-label" x="0" y="94" text-anchor="middle">Usuario</text>
+  </g>
+  <g transform="translate(165 780)">
+    <circle class="actor-line" cx="0" cy="-65" r="19"/>
+    <path class="actor-line" d="M0 -46V20M-34 -17H34M0 20L-29 58M0 20L29 58"/>
+    <text class="actor-label" x="0" y="94" text-anchor="middle">Gestor</text>
+  </g>
+  <g transform="translate(1475 1060)">
+    <circle class="actor-line" cx="0" cy="-65" r="19"/>
+    <path class="actor-line" d="M0 -46V20M-34 -17H34M0 20L-29 58M0 20L29 58"/>
+    <text class="actor-label" x="0" y="94" text-anchor="middle">Administrador</text>
+  </g>
+</svg>

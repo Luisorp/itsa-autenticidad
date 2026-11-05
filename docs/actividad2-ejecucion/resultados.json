@@ -1,0 +1,48 @@
+{
+  "executedAt": "2026-10-25T23:59:13.677Z",
+  "environment": "Laravel local; Playwright con Microsoft Edge headless; base SQLite temporal; datos ficticios; MySQL/.env intactos",
+  "results": [
+    {
+      "id": "M2-01",
+      "title": "Registrar proyecto y cargar PDF",
+      "status": "APROBADO",
+      "detail": "El formulario creó el proyecto, mostró confirmación y devolvió al catálogo.",
+      "evidence": "evidencias/M2-01.png"
+    },
+    {
+      "id": "M2-02",
+      "title": "Validar campo obligatorio del título",
+      "status": "APROBADO",
+      "detail": "El servidor rechazó el registro sin título y mostró el campo como inválido.",
+      "evidence": "evidencias/M2-02.png"
+    },
+    {
+      "id": "M2-03",
+      "title": "Editar datos de un proyecto",
+      "status": "APROBADO",
+      "detail": "La actualización guardó el nuevo título y mostró confirmación en el catálogo.",
+      "evidence": "evidencias/M2-03.png"
+    },
+    {
+      "id": "M2-04",
+      "title": "Buscar por título del proyecto",
+      "status": "APROBADO",
+      "detail": "La búsqueda por título mostró el registro coincidente y excluyó el otro proyecto.",
+      "evidence": "evidencias/M2-04.png"
+    },
+    {
+      "id": "M2-05",
+      "title": "Rechazar archivo no PDF",
+      "status": "APROBADO",
+      "detail": "El servidor rechazó la extensión no permitida y señaló el control Documento PDF.",
+      "evidence": "evidencias/M2-05.png"
+    },
+    {
+      "id": "M2-06",
+      "title": "Controlar acceso de estudiante",
+      "status": "APROBADO",
+      "detail": "Una cuenta con rol estudiante recibió HTTP 403 al abrir el formulario restringido.",
+      "evidence": "evidencias/M2-06.png"
+    }
+  ]
+}

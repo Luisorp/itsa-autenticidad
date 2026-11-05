@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="1120" viewBox="0 0 1220 1120">
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+    <path d="M0 0L10 5L0 10Z" fill="#111"/>
+  </marker>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#111}
+    .box{fill:#fff;stroke:#111;stroke-width:2}
+    .life{stroke:#666;stroke-dasharray:7 6;stroke-width:1.7}
+    .msg{stroke:#111;stroke-width:2;marker-end:url(#arrow)}
+    .ret{stroke:#444;stroke-width:1.7;stroke-dasharray:7 5;marker-end:url(#arrow)}
+    .frame{fill:none;stroke:#111;stroke-width:2}
+    .divider{stroke:#555;stroke-width:1.5;stroke-dasharray:6 5}
+  </style>
+</defs>
+
+<g font-size="16">
+  <rect class="box" x="10" y="20" width="180" height="55"/><text x="100" y="54" text-anchor="middle">Administrador / Gestor</text>
+  <rect class="box" x="250" y="20" width="180" height="55"/><text x="340" y="54" text-anchor="middle">Vista de análisis</text>
+  <rect class="box" x="490" y="20" width="180" height="55"/><text x="580" y="54" text-anchor="middle">Controlador</text>
+  <rect class="box" x="730" y="20" width="180" height="55"/><text x="820" y="54" text-anchor="middle">Servicio de análisis</text>
+  <rect class="box" x="970" y="20" width="180" height="55"/><text x="1060" y="54" text-anchor="middle">Base de datos</text>
+</g>
+
+<path class="life" d="M100 75V1090M340 75V1090M580 75V1090M820 75V1090M1060 75V1090"/>
+
+<g font-size="15">
+  <path class="msg" d="M100 125H340"/><text x="220" y="115" text-anchor="middle">Abrir análisis</text>
+  <path class="msg" d="M340 180H580"/><text x="460" y="170" text-anchor="middle">Solicitar proyectos analizables</text>
+  <path class="msg" d="M580 235H1060"/><text x="820" y="225" text-anchor="middle">Consultar proyectos activos y texto extraído</text>
+  <path class="ret" d="M1060 285H580"/><text x="820" y="275" text-anchor="middle">Devolver datos académicos</text>
+  <path class="ret" d="M580 335H340"/><text x="460" y="325" text-anchor="middle">Mostrar opciones de comparación</text>
+
+  <path class="msg" d="M100 390H340"/><text x="220" y="380" text-anchor="middle">Elegir modo y proyecto(s)</text>
+  <path class="msg" d="M340 445H580"/><text x="460" y="435" text-anchor="middle">Enviar selección</text>
+  <path class="msg" d="M580 500H1060"/><text x="820" y="490" text-anchor="middle">Validar estado, modalidad y documentos</text>
+  <path class="ret" d="M1060 550H580"/><text x="820" y="540" text-anchor="middle">Devolver texto y relaciones</text>
+  <path class="msg" d="M580 605H820"/><text x="700" y="595" text-anchor="middle">Extraer secciones permitidas</text>
+</g>
+
+<rect class="frame" x="520" y="645" width="600" height="330"/>
+<text x="535" y="670" font-size="16" font-weight="700">alt [Modo de comparación]</text>
+
+<g font-size="14">
+  <text x="550" y="695">[Repositorio interno]</text>
+  <path class="msg" d="M820 720H1060"/><text x="940" y="710" text-anchor="middle">Buscar proyectos compatibles</text>
+  <path class="ret" d="M1060 755H820"/><text x="940" y="745" text-anchor="middle">Devolver candidatos</text>
+  <path class="msg" d="M820 790H1060"/><text x="940" y="780" text-anchor="middle">Guardar porcentajes de similitud</text>
+  <path class="ret" d="M820 820H580"/><text x="700" y="810" text-anchor="middle">Devolver resultados ordenados</text>
+
+  <path class="divider" d="M520 840H1120"/>
+  <text x="550" y="865">[Dos proyectos]</text>
+  <path class="ret" d="M820 915H580"/><text x="700" y="905" text-anchor="middle">Devolver porcentaje y fragmentos coincidentes</text>
+</g>
+
+<path class="ret" d="M580 1020H340"/><text x="460" y="1010" text-anchor="middle" font-size="15">Mostrar resultados o validación</text>
+<path class="ret" d="M340 1070H100"/><text x="220" y="1060" text-anchor="middle" font-size="15">Revisar similitudes encontradas</text>
+</svg>

@@ -40,7 +40,7 @@
                     <th scope="col" role="columnheader">Nombre</th>
                     <th scope="col" role="columnheader">Correo</th>
                     <th scope="col" role="columnheader">Rol</th>
-                    <th scope="col" role="columnheader">Carrera</th>
+                    <th scope="col" role="columnheader">Carreras académicas</th>
                     <th scope="col" role="columnheader">Estado</th>
                     <th scope="col" role="columnheader">Acciones</th>
                 </tr>
@@ -51,7 +51,19 @@
                         <td role="cell" data-label="Nombre">{{ $usuario->name }}</td>
                         <td role="cell" data-label="Correo">{{ $usuario->email }}</td>
                         <td role="cell" data-label="Rol"><span class="badge bg-secondary">{{ ucfirst($usuario->rol) }}</span></td>
-                        <td role="cell" data-label="Carrera">{{ $usuario->carrera->nombre ?? '—' }}</td>
+                        <td role="cell" data-label="Carreras académicas">
+                            @if($usuario->estudiante?->carrera)
+                                {{ $usuario->estudiante->carrera->nombre }}
+                            @elseif($usuario->docente)
+                                @forelse($usuario->docente->carreras as $carrera)
+                                    <span class="badge bg-light text-dark border me-1 mb-1">{{ $carrera->nombre }}</span>
+                                @empty
+                                    —
+                                @endforelse
+                            @else
+                                —
+                            @endif
+                        </td>
                         <td role="cell" data-label="Estado">
                             <span class="badge {{ $usuario->activo ? 'bg-success' : 'bg-secondary' }}">
                                 {{ $usuario->activo ? 'Activo' : 'Inactivo' }}

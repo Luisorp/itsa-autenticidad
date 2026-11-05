@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="2460" viewBox="0 0 1700 2460" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de secuencia HU02: Gestión de usuarios</title>
+  <desc id="desc">Secuencia para consultar usuarios por rol, crear y editar cuentas, y activar o desactivar usuarios. Incluye validaciones y la restricción de no desactivar la propia cuenta.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}
+      .title{font-size:29px;font-weight:700}
+      .participant{font-size:18px;font-weight:700}
+      .message-label{font-size:15px}
+      .section-label{font-size:17px;font-weight:700}
+      .guard{font-size:14px;font-weight:700}
+      .lifeline{stroke:#777;stroke-width:1.5;stroke-dasharray:7 7}
+      .request{stroke:#111;stroke-width:1.8;fill:none;marker-end:url(#arrow)}
+      .response{stroke:#111;stroke-width:1.6;stroke-dasharray:8 6;fill:none;marker-end:url(#arrow)}
+      .frame{fill:#fff;stroke:#111;stroke-width:1.8}
+      .frame-head{fill:#f2f2f2;stroke:#111;stroke-width:1.5}
+      .divider{stroke:#555;stroke-width:1.4;stroke-dasharray:7 5}
+      .participant-box{fill:#f7f7f7;stroke:#111;stroke-width:1.5}
+      .db-shape{fill:#f7f7f7;stroke:#111;stroke-width:1.5}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1700" height="2460" fill="#fff"/>
+  <text class="title" x="850" y="45" text-anchor="middle">DIAGRAMA DE SECUENCIA — HU02: GESTIÓN DE USUARIOS</text>
+
+  <!-- Participantes -->
+  <g aria-label="Participantes del diagrama">
+    <circle cx="150" cy="92" r="18" fill="#fff" stroke="#111" stroke-width="2"/>
+    <path d="M150 110 L150 150 M125 126 L175 126 M150 150 L130 178 M150 150 L170 178" fill="none" stroke="#111" stroke-width="2.4" stroke-linecap="round"/>
+    <text class="participant" x="150" y="205" text-anchor="middle">Administrador</text>
+
+    <rect class="participant-box" x="380" y="85" width="210" height="58" rx="4"/>
+    <text class="participant" x="485" y="120" text-anchor="middle">Navegador web</text>
+
+    <rect class="participant-box" x="775" y="85" width="260" height="58" rx="4"/>
+    <text class="participant" x="905" y="120" text-anchor="middle">Backend Laravel</text>
+
+    <path class="db-shape" d="M1300 90 C1300 70 1510 70 1510 90 L1510 145 C1510 165 1300 165 1300 145 Z"/>
+    <ellipse cx="1405" cy="90" rx="105" ry="20" fill="#f7f7f7" stroke="#111" stroke-width="1.5"/>
+    <path d="M1300 145 C1300 165 1510 165 1510 145" fill="none" stroke="#111" stroke-width="1.5"/>
+    <text class="participant" x="1405" y="127" text-anchor="middle">Base de datos</text>
+  </g>
+
+  <g class="lifeline" aria-hidden="true">
+    <path d="M150 215 V2410"/><path d="M485 145 V2410"/><path d="M905 145 V2410"/><path d="M1405 165 V2410"/>
+  </g>
+
+  <!-- Consulta del listado -->
+  <rect class="frame" x="35" y="235" width="1625" height="300"/>
+  <rect class="frame-head" x="680" y="220" width="340" height="32"/>
+  <text class="section-label" x="850" y="242" text-anchor="middle">Consultar cuentas</text>
+  <path class="request" d="M150 285 H485"/><text class="message-label" x="315" y="276" text-anchor="middle">Abrir Usuarios</text>
+  <path class="request" d="M485 330 H905"/><text class="message-label" x="695" y="321" text-anchor="middle">GET /usuarios?rol=...</text>
+  <text class="message-label" x="930" y="355">Middleware auth + admin; index()</text>
+  <path class="request" d="M905 385 H1405"/><text class="message-label" x="1155" y="376" text-anchor="middle">COUNT por rol y consulta paginada por rol</text>
+  <path class="response" d="M1405 420 H905"/><text class="message-label" x="1155" y="411" text-anchor="middle">Conteos y cuentas con carrera</text>
+  <path class="response" d="M905 455 H485"/><text class="message-label" x="695" y="446" text-anchor="middle">HTML renderizado: usuarios.index + datos</text>
+  <path class="response" d="M485 490 H150"/><text class="message-label" x="315" y="481" text-anchor="middle">Mostrar listado por rol (10 por página)</text>
+
+  <!-- Crear cuenta -->
+  <rect class="frame" x="35" y="560" width="1625" height="555"/>
+  <rect class="frame-head" x="680" y="545" width="340" height="32"/>
+  <text class="section-label" x="850" y="567" text-anchor="middle">opt [Crear cuenta]</text>
+  <path class="request" d="M150 610 H485"/><text class="message-label" x="315" y="601" text-anchor="middle">Seleccionar “Nuevo usuario”</text>
+  <path class="request" d="M485 650 H905"/><text class="message-label" x="695" y="641" text-anchor="middle">GET /usuarios/create</text>
+  <path class="request" d="M905 690 H1405"/><text class="message-label" x="1155" y="681" text-anchor="middle">SELECT carreras activas</text>
+  <path class="response" d="M1405 725 H905"/><text class="message-label" x="1155" y="716" text-anchor="middle">Carreras disponibles</text>
+  <path class="response" d="M905 760 H485"/><text class="message-label" x="695" y="751" text-anchor="middle">Formulario HTML de creación</text>
+  <path class="request" d="M150 795 H485"/><text class="message-label" x="315" y="786" text-anchor="middle">Completar datos y enviar</text>
+  <path class="request" d="M485 835 H905"/><text class="message-label" x="695" y="826" text-anchor="middle">POST /usuarios</text>
+  <text class="message-label" x="930" y="861">Validar nombre, correo único, contraseña confirmada, rol y carrera activa opcional</text>
+
+  <rect class="frame" x="755" y="885" width="855" height="205"/>
+  <path class="divider" d="M755 988 H1610"/>
+  <path class="divider" d="M755 885 H1610"/>
+  <text class="guard" x="770" y="910">alt</text>
+  <text class="guard" x="790" y="939">[Datos inválidos]</text>
+  <path class="response" d="M905 960 H485"/><text class="message-label" x="695" y="951" text-anchor="middle">Redirección al formulario con errores</text>
+  <text class="guard" x="790" y="1015">[Datos válidos]</text>
+  <path class="request" d="M905 1040 H1405"/><text class="message-label" x="1155" y="1031" text-anchor="middle">INSERT users (contraseña con hash)</text>
+  <path class="response" d="M1405 1067 H905"/><text class="message-label" x="1155" y="1058" text-anchor="middle">Cuenta creada</text>
+  <path class="response" d="M905 1090 H485"/><text class="message-label" x="695" y="1081" text-anchor="middle">302 al listado + mensaje de éxito</text>
+
+  <!-- Editar cuenta -->
+  <rect class="frame" x="35" y="1140" width="1625" height="600"/>
+  <rect class="frame-head" x="680" y="1125" width="340" height="32"/>
+  <text class="section-label" x="850" y="1147" text-anchor="middle">opt [Editar cuenta]</text>
+  <path class="request" d="M150 1190 H485"/><text class="message-label" x="315" y="1181" text-anchor="middle">Seleccionar “Editar”</text>
+  <path class="request" d="M485 1230 H905"/><text class="message-label" x="695" y="1221" text-anchor="middle">GET /usuarios/{usuario}/edit</text>
+  <path class="request" d="M905 1270 H1405"/><text class="message-label" x="1155" y="1261" text-anchor="middle">SELECT usuario y carreras aplicables</text>
+  <path class="response" d="M1405 1305 H905"/><text class="message-label" x="1155" y="1296" text-anchor="middle">Datos de cuenta y carreras</text>
+  <path class="response" d="M905 1340 H485"/><text class="message-label" x="695" y="1331" text-anchor="middle">Formulario HTML con datos actuales</text>
+  <path class="request" d="M150 1375 H485"/><text class="message-label" x="315" y="1366" text-anchor="middle">Guardar cambios</text>
+  <path class="request" d="M485 1415 H905"/><text class="message-label" x="695" y="1406" text-anchor="middle">PUT /usuarios/{usuario}</text>
+  <text class="message-label" x="930" y="1441">Validar nombre, correo único, rol y carrera existente</text>
+
+  <rect class="frame" x="755" y="1465" width="855" height="235"/>
+  <path class="divider" d="M755 1578 H1610"/>
+  <text class="guard" x="770" y="1490">alt</text>
+  <text class="guard" x="790" y="1520">[Validación fallida]</text>
+  <path class="response" d="M905 1545 H485"/><text class="message-label" x="695" y="1536" text-anchor="middle">Redirección con errores; no se actualiza</text>
+  <text class="guard" x="790" y="1605">[Datos válidos]</text>
+  <path class="request" d="M905 1630 H1405"/><text class="message-label" x="1155" y="1621" text-anchor="middle">UPDATE users: nombre, correo, rol, carrera</text>
+  <path class="response" d="M1405 1660 H905"/><text class="message-label" x="1155" y="1651" text-anchor="middle">Cambios guardados</text>
+  <path class="response" d="M905 1690 H485"/><text class="message-label" x="695" y="1681" text-anchor="middle">302 al listado + mensaje de éxito</text>
+
+  <!-- Cambio de estado -->
+  <rect class="frame" x="35" y="1770" width="1625" height="600"/>
+  <rect class="frame-head" x="680" y="1755" width="340" height="32"/>
+  <text class="section-label" x="850" y="1777" text-anchor="middle">opt [Activar / desactivar cuenta]</text>
+  <path class="request" d="M150 1820 H485"/><text class="message-label" x="315" y="1811" text-anchor="middle">Seleccionar activar o desactivar</text>
+  <path class="request" d="M485 1860 H905"/><text class="message-label" x="695" y="1851" text-anchor="middle">PATCH /usuarios/{usuario}/toggle-activo</text>
+  <text class="message-label" x="930" y="1887">Comparar usuario seleccionado con auth()->id()</text>
+
+  <rect class="frame" x="755" y="1910" width="855" height="245"/>
+  <path class="divider" d="M755 2028 H1610"/>
+  <text class="guard" x="770" y="1935">alt</text>
+  <text class="guard" x="790" y="1965">[Es la cuenta del Administrador]</text>
+  <path class="response" d="M905 1990 H485"/><text class="message-label" x="695" y="1981" text-anchor="middle">Redirección con error; no se cambia el estado</text>
+  <text class="guard" x="790" y="2055">[Es otra cuenta]</text>
+  <path class="request" d="M905 2080 H1405"/><text class="message-label" x="1155" y="2071" text-anchor="middle">UPDATE users SET activo = !activo</text>
+  <path class="response" d="M1405 2110 H905"/><text class="message-label" x="1155" y="2101" text-anchor="middle">Estado actualizado</text>
+  <path class="response" d="M905 2145 H485"/><text class="message-label" x="695" y="2136" text-anchor="middle">302 al listado + mensaje de estado</text>
+  <path class="response" d="M485 2190 H150"/><text class="message-label" x="315" y="2181" text-anchor="middle">Mostrar listado actualizado</text>
+</svg>

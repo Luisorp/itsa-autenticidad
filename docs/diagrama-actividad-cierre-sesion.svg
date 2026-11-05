@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1250" height="1050" viewBox="0 0 1250 1050" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de actividad: cierre de sesión</title>
+  <desc id="desc">Actividades para cerrar la sesión de Administrador, Gestor o Usuario.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #161616; }
+      .title { font-size: 29px; font-weight: 700; }
+      .subtitle { font-size: 17px; fill: #444; }
+      .activity { fill: #fff; stroke: #333; stroke-width: 2; }
+      .activity-text { font-size: 17px; text-anchor: middle; dominant-baseline: middle; }
+      .flow { fill: none; stroke: #222; stroke-width: 1.8; marker-end: url(#arrow); }
+      .initial { fill: #222; }
+      .final-outer { fill: #fff; stroke: #222; stroke-width: 2; }
+      .final-inner { fill: #222; }
+    </style>
+  </defs>
+
+  <rect width="1250" height="1050" fill="#fff"/>
+  <text class="title" x="625" y="45" text-anchor="middle">DIAGRAMA DE ACTIVIDAD: CIERRE DE SESIÓN</text>
+  <text class="subtitle" x="625" y="76" text-anchor="middle">Flujo común para Administrador, Gestor y Usuario</text>
+
+  <circle class="initial" cx="625" cy="135" r="13"/>
+  <path class="flow" d="M625 148 V195"/>
+  <rect class="activity" x="420" y="195" width="410" height="75" rx="22"/>
+  <text class="activity-text" x="625" y="233">Seleccionar «Cerrar sesión»</text>
+
+  <path class="flow" d="M625 270 V330"/>
+  <rect class="activity" x="420" y="330" width="410" height="75" rx="22"/>
+  <text class="activity-text" x="625" y="368">Enviar solicitud POST /logout</text>
+
+  <path class="flow" d="M625 405 V465"/>
+  <rect class="activity" x="420" y="465" width="410" height="75" rx="22"/>
+  <text class="activity-text" x="625" y="503">Cerrar la autenticación del usuario</text>
+
+  <path class="flow" d="M625 540 V600"/>
+  <rect class="activity" x="420" y="600" width="410" height="75" rx="22"/>
+  <text class="activity-text" x="625" y="638">Invalidar los datos de la sesión</text>
+
+  <path class="flow" d="M625 675 V735"/>
+  <rect class="activity" x="420" y="735" width="410" height="75" rx="22"/>
+  <text class="activity-text" x="625" y="773">Regenerar el token de seguridad</text>
+
+  <path class="flow" d="M625 810 V870"/>
+  <rect class="activity" x="420" y="870" width="410" height="70" rx="22"/>
+  <text class="activity-text" x="625" y="905">Redirigir a la pantalla de acceso</text>
+
+  <path class="flow" d="M625 940 V975"/>
+  <circle class="final-outer" cx="625" cy="998" r="16"/>
+  <circle class="final-inner" cx="625" cy="998" r="9"/>
+</svg>

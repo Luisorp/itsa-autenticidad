@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+<defs><style>text{font-family:Arial,sans-serif;fill:#111}.b{fill:#fff;stroke:#111;stroke-width:1.6}</style></defs><rect x="12" y="12" width="1076" height="626" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="42" y="58" font-size="26" font-weight="700">Comparación</text><line x1="40" y1="78" x2="1060" y2="78" stroke="#111"/>
+<text x="45" y="115" font-size="16" font-weight="700">Tipo</text>
+<rect class="b" x="45" y="130" width="240" height="48"/><text x="165" y="160" text-anchor="middle" font-size="15">Repositorio interno</text>
+<rect class="b" x="300" y="130" width="240" height="48"/><text x="420" y="160" text-anchor="middle" font-size="15">Dos proyectos</text>
+<rect class="b" x="555" y="130" width="280" height="48"/><text x="695" y="160" text-anchor="middle" font-size="15">Crossref y OpenAlex</text>
+<text x="45" y="218" font-size="15">Proyecto a comparar</text><rect class="b" x="45" y="228" width="490" height="42"/><text x="58" y="254" font-size="14">Seleccionar proyecto</text>
+<text x="555" y="218" font-size="15">Segundo proyecto</text><rect class="b" x="555" y="228" width="490" height="42"/><text x="568" y="254" font-size="14">Seleccionar cuando corresponda</text>
+<rect class="b" x="45" y="292" width="150" height="42"/><text x="120" y="319" text-anchor="middle" font-size="15">Comparar</text>
+<line x1="40" y1="356" x2="1060" y2="356" stroke="#888"/><text x="45" y="391" font-size="18" font-weight="700">Resultados</text>
+<rect class="b" x="45" y="408" width="1010" height="170"/><line x1="45" y1="450" x2="1055" y2="450" stroke="#777"/><line x1="430" y1="408" x2="430" y2="578" stroke="#777"/><line x1="700" y1="408" x2="700" y2="578" stroke="#777"/>
+<text x="58" y="436" font-size="15" font-weight="700">Proyecto o publicación</text><text x="448" y="436" font-size="15" font-weight="700">Fuente</text><text x="720" y="436" font-size="15" font-weight="700">Similitud</text>
+<line x1="45" y1="492" x2="1055" y2="492" stroke="#aaa"/><line x1="45" y1="535" x2="1055" y2="535" stroke="#aaa"/>
+<text x="45" y="610" font-size="14">Ver coincidencias</text>
+</svg>

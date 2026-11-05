@@ -3,6 +3,7 @@
         <div>
             <h2>Resultados de similitud: {{ $proyecto->titulo }}</h2>
             <span class="result-modality"><i class="bi bi-mortarboard"></i> {{ $proyecto->modalidad_nombre }}</span>
+            <span class="result-modality">Gestión {{ $proyecto->anio }} · {{ $proyecto->periodo_academico_nombre }}</span>
         </div>
     </x-slot>
 

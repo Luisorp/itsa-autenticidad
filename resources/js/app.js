@@ -90,7 +90,6 @@ document.querySelectorAll('[data-catalog-filter-form]').forEach((form) => {
         if (!composing) submitSearch();
     });
 });
-
 document.querySelectorAll('[data-comparison-form]').forEach((form) => {
     const pickers = {
         a: form.querySelector('[data-project-picker="a"]'),
@@ -111,6 +110,7 @@ document.querySelectorAll('[data-comparison-form]').forEach((form) => {
         estudiante: picker.dataset.selectedStudent,
         carrera: picker.dataset.selectedCareer,
         anio: picker.dataset.selectedYear,
+        periodo_academico_nombre: picker.dataset.selectedPeriod,
     } : null;
 
     const updateHint = () => {
@@ -165,7 +165,7 @@ document.querySelectorAll('[data-comparison-form]').forEach((form) => {
             const title = document.createElement('strong');
             title.textContent = project.titulo;
             const meta = document.createElement('span');
-            meta.textContent = `${project.estudiante} · ${project.carrera} · ${project.anio}`;
+            meta.textContent = `${project.estudiante} · ${project.carrera} · ${project.anio} · ${project.periodo_academico_nombre || 'Sin especificar'}`;
             const mode = document.createElement('small');
             mode.textContent = project.modalidad_nombre;
             button.append(title, meta, mode);
@@ -379,104 +379,4 @@ document.querySelectorAll('[data-project-career]').forEach((careerSelect) => {
         });
         if (missingSelection) event.preventDefault();
     });
-});
-
-document.querySelectorAll('[data-external-search-form]').forEach((form) => {
-    const picker = form.querySelector('[data-external-project-picker]');
-    const input = picker?.querySelector('[data-external-project-search]');
-    const value = picker?.querySelector('[data-external-project-value]');
-    const results = picker?.querySelector('[data-external-project-results]');
-    const clear = picker?.querySelector('[data-external-project-clear]');
-    const searchUrl = form.dataset.projectSearchUrl;
-    if (!picker || !input || !value || !results || !clear || !searchUrl) return;
-
-    let selected = picker.dataset.selectedId ? {
-        id: picker.dataset.selectedId,
-        titulo: picker.dataset.selectedTitle,
-        estudiante: picker.dataset.selectedStudent,
-        carrera: picker.dataset.selectedCareer,
-    } : null;
-    let timer = null;
-    let controller = null;
-
-    const setSelected = (project) => {
-        selected = project;
-        value.value = project?.id || '';
-        input.value = project ? `${project.titulo} — ${project.estudiante}` : '';
-        clear.hidden = !project;
-        results.hidden = true;
-        picker.classList.remove('picker-error');
-    };
-
-    const renderResults = (projects) => {
-        results.replaceChildren();
-        if (projects.length === 0) {
-            const empty = document.createElement('div');
-            empty.className = 'project-result-empty';
-            empty.textContent = 'No se encontraron proyectos con texto disponible.';
-            results.append(empty);
-        }
-        projects.forEach((project) => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'project-result';
-            button.setAttribute('role', 'option');
-            const title = document.createElement('strong');
-            title.textContent = project.titulo;
-            const meta = document.createElement('span');
-            meta.textContent = `${project.estudiante} · ${project.carrera} · ${project.anio}`;
-            const mode = document.createElement('small');
-            mode.textContent = project.modalidad_nombre;
-            button.append(title, meta, mode);
-            button.addEventListener('click', () => setSelected(project));
-            results.append(button);
-        });
-        results.hidden = false;
-    };
-
-    const search = async () => {
-        controller?.abort();
-        controller = new AbortController();
-        const params = new URLSearchParams({ q: input.value.trim() });
-        results.hidden = false;
-        results.textContent = 'Buscando proyectos…';
-        try {
-            const response = await fetch(`${searchUrl}?${params}`, {
-                headers: { Accept: 'application/json' },
-                signal: controller.signal,
-            });
-            if (!response.ok) throw new Error('No fue posible buscar proyectos.');
-            renderResults((await response.json()).data || []);
-        } catch (error) {
-            if (error.name !== 'AbortError') {
-                results.textContent = 'No se pudo completar la búsqueda.';
-                results.hidden = false;
-            }
-        }
-    };
-
-    input.addEventListener('focus', search);
-    input.addEventListener('input', () => {
-        if (selected) {
-            const query = input.value;
-            setSelected(null);
-            input.value = query;
-        }
-        clearTimeout(timer);
-        timer = setTimeout(search, 250);
-    });
-    clear.addEventListener('click', () => {
-        setSelected(null);
-        input.focus();
-    });
-    document.addEventListener('click', (event) => {
-        if (!picker.contains(event.target)) results.hidden = true;
-    });
-    form.addEventListener('submit', (event) => {
-        const missing = !value.value;
-        picker.classList.toggle('picker-error', missing);
-        if (missing) event.preventDefault();
-    });
-
-    setSelected(selected);
 });

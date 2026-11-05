@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="1210" viewBox="0 0 1380 1210">
+<defs>
+  <marker id="includeArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+    <path d="M0 0L10 5L0 10Z" fill="#111"/>
+  </marker>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#111}
+    .use{fill:#fff;stroke:#111;stroke-width:2.4}
+    .assoc{fill:none;stroke:#111;stroke-width:2}
+    .include{fill:none;stroke:#333;stroke-width:1.7;stroke-dasharray:7 6;marker-end:url(#includeArrow)}
+    .actor{fill:none;stroke:#111;stroke-width:3}
+  </style>
+</defs>
+
+<rect x="360" y="28" width="970" height="1145" fill="#fff" stroke="#111" stroke-width="2.5"/>
+
+<g class="actor">
+  <circle cx="100" cy="475" r="20"/><path d="M100 495v65M62 520h76M100 560l-30 45M100 560l30 45"/>
+  <circle cx="240" cy="775" r="20"/><path d="M240 795v65M202 820h76M240 860l-30 45M240 860l30 45"/>
+</g>
+<text x="100" y="635" text-anchor="middle" font-size="18">Administrador</text>
+<text x="240" y="935" text-anchor="middle" font-size="18">Gestor</text>
+
+<path class="assoc" d="M138 520L436 305M278 820L436 335M138 520L436 755M278 820L436 785"/>
+
+<ellipse class="use" cx="610" cy="320" rx="180" ry="58"/>
+<text x="610" y="312" text-anchor="middle" font-size="23">
+  <tspan x="610">Comparar proyecto con el</tspan><tspan x="610" dy="25">repositorio institucional</tspan>
+</text>
+<ellipse class="use" cx="610" cy="770" rx="180" ry="58"/>
+<text x="610" y="762" text-anchor="middle" font-size="23">
+  <tspan x="610">Comparar dos proyectos</tspan><tspan x="610" dy="25">de modalidad compatible</tspan>
+</text>
+
+<ellipse class="use" cx="1080" cy="215" rx="220" ry="43"/>
+<text x="1080" y="210" text-anchor="middle" font-size="21">
+  <tspan x="1080">Validar proyecto activo y PDF</tspan><tspan x="1080" dy="21">con texto analizable</tspan>
+</text>
+<ellipse class="use" cx="1080" cy="320" rx="220" ry="43"/>
+<text x="1080" y="315" text-anchor="middle" font-size="21">
+  <tspan x="1080">Filtrar proyectos de la misma</tspan><tspan x="1080" dy="21">carrera y modalidad</tspan>
+</text>
+<ellipse class="use" cx="1080" cy="425" rx="220" ry="43"/>
+<text x="1080" y="420" text-anchor="middle" font-size="21">
+  <tspan x="1080">Comparar secciones válidas</tspan><tspan x="1080" dy="21">y calcular el porcentaje</tspan>
+</text>
+
+<ellipse class="use" cx="1080" cy="665" rx="220" ry="43"/>
+<text x="1080" y="660" text-anchor="middle" font-size="21">
+  <tspan x="1080">Validar texto y modalidad</tspan><tspan x="1080" dy="21">de ambos proyectos</tspan>
+</text>
+<ellipse class="use" cx="1080" cy="770" rx="220" ry="43"/>
+<text x="1080" y="765" text-anchor="middle" font-size="21">
+  <tspan x="1080">Extraer secciones y calcular</tspan><tspan x="1080" dy="21">la similitud textual</tspan>
+</text>
+<ellipse class="use" cx="1080" cy="875" rx="220" ry="43"/>
+<text x="1080" y="870" text-anchor="middle" font-size="21">
+  <tspan x="1080">Mostrar porcentaje y revisar</tspan><tspan x="1080" dy="21">fragmentos coincidentes</tspan>
+</text>
+
+<path class="include" d="M790 305L860 215"/><text x="810" y="250" font-size="17">«include»</text>
+<path class="include" d="M790 320H860"/><text x="802" y="312" font-size="17">«include»</text>
+<path class="include" d="M790 335L860 425"/><text x="810" y="390" font-size="17">«include»</text>
+<path class="include" d="M790 755L860 665"/><text x="810" y="700" font-size="17">«include»</text>
+<path class="include" d="M790 770H860"/><text x="802" y="762" font-size="17">«include»</text>
+<path class="include" d="M790 785L860 875"/><text x="810" y="840" font-size="17">«include»</text>
+</svg>

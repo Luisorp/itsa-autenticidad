@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mockup básico HU04: Mi perfil</title>
+  <desc id="desc">Propuesta sencilla de la pantalla Mi perfil con un formulario para actualizar nombre y correo y otro para cambiar la contraseña.</desc>
+  <defs><style>text{font-family:Arial,Helvetica,sans-serif}.nav{font-size:15px;fill:#e9f2ed}.muted{fill:#6b7770}.body{fill:#26342d}.small{font-size:13px}.label{font-size:14px;font-weight:700;fill:#34423a}.input{fill:#fff;stroke:#c9d2cc;stroke-width:1.4}.button{fill:#247447}.button-text{font-size:14px;font-weight:700;fill:#fff}.card{fill:#fff;stroke:#dce3de;stroke-width:1.5}.heading{font-size:22px;font-weight:700;fill:#23352b}.caption{font-size:14px;fill:#68766e}</style></defs>
+  <rect width="1440" height="900" fill="#f3f6f4"/><rect width="1440" height="68" fill="#174b35"/>
+  <text x="38" y="43" font-size="20" font-weight="700" fill="#fff">Sistema de proyectos de titulación</text><text x="1320" y="42" text-anchor="end" class="nav">Usuario  ▾</text>
+  <rect x="0" y="68" width="235" height="832" fill="#203b2d"/><text class="nav" x="32" y="125" font-size="17" font-weight="700">MENÚ</text><text class="nav" x="32" y="178">Panel principal</text><text class="nav" x="32" y="222">Proyectos</text><text class="nav" x="32" y="266">Mi perfil</text>
+  <text class="heading" x="285" y="130">Mi perfil</text><text class="caption" x="285" y="160">Actualiza los datos de tu cuenta o cambia tu contraseña.</text>
+  <rect class="card" x="285" y="195" width="520" height="610" rx="8"/><text class="heading" x="320" y="245" font-size="20">Datos de mi cuenta</text><text class="caption" x="320" y="275">Actualiza tu nombre y el correo de acceso.</text>
+  <text class="label" x="320" y="330">Nombre completo</text><rect class="input" x="320" y="345" width="450" height="48" rx="5"/><text class="muted" x="338" y="375" font-size="15">Nombre del usuario</text>
+  <text class="label" x="320" y="435">Correo de acceso</text><rect class="input" x="320" y="450" width="450" height="48" rx="5"/><text class="muted" x="338" y="480" font-size="15">usuario@instituto.edu</text>
+  <text class="caption" x="320" y="535">Si cambias el correo, úsalo para iniciar sesión.</text><rect class="button" x="320" y="575" width="170" height="48" rx="5"/><text class="button-text" x="405" y="605" text-anchor="middle">Guardar cambios</text>
+  <rect class="card" x="835" y="195" width="520" height="610" rx="8"/><text class="heading" x="870" y="245" font-size="20">Cambiar contraseña</text><text class="caption" x="870" y="275">Confirma la actual para proteger tu cuenta.</text>
+  <text class="label" x="870" y="330">Contraseña actual</text><rect class="input" x="870" y="345" width="450" height="48" rx="5"/><text class="muted" x="888" y="375" font-size="15">••••••••</text>
+  <text class="label" x="870" y="435">Nueva contraseña</text><rect class="input" x="870" y="450" width="450" height="48" rx="5"/><text class="muted" x="888" y="480" font-size="15">••••••••</text>
+  <text class="label" x="870" y="540">Confirmar nueva contraseña</text><rect class="input" x="870" y="555" width="450" height="48" rx="5"/><text class="muted" x="888" y="585" font-size="15">••••••••</text>
+  <text class="caption" x="870" y="640">Usa al menos 8 caracteres.</text><rect class="button" x="870" y="680" width="205" height="48" rx="5"/><text class="button-text" x="972" y="710" text-anchor="middle">Actualizar contraseña</text>
+  <text class="caption" x="285" y="850">Mockup referencial: los campos representan la pantalla de perfil existente.</text>
+</svg>

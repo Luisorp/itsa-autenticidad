@@ -80,9 +80,6 @@
                         <a href="{{ route('reportes.index') }}"><i class="bi bi-file-earmark-bar-graph"></i><span>Mis reportes</span></a>
                     @endif
                     @if(Auth::user()->esAdministrador())<a href="{{ route('usuarios.index') }}"><i class="bi bi-people"></i><span>Gestionar usuarios</span></a>@endif
-                    @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
-                        <a href="{{ route('crossref.index') }}"><i class="bi bi-search"></i><span>Búsqueda académica</span></a>
-                    @endif
                 </div>
             </section>
         </div>

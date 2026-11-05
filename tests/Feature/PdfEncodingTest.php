@@ -57,6 +57,7 @@ class PdfEncodingTest extends TestCase
             'carrera_id' => $carrera->id,
             'estudiante_id' => $estudiante->id,
             'anio' => 2026,
+            'periodo_academico' => 'semestre_i',
             'documento' => UploadedFile::fake()->create('unicode.pdf', 20, 'application/pdf'),
         ]];
     }

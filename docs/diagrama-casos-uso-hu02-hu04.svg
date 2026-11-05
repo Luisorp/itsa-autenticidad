@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Casos de uso de las historias HU02, HU03 y HU04</title>
+  <desc id="desc">Diagrama en blanco y negro. Administrador gestiona cuentas y carreras; Administrador, Gestor y Usuario actualizan su propio perfil y contraseña.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}
+      .title{font-size:30px;font-weight:700}
+      .system-title{font-size:21px;font-weight:700}
+      .actor-label{font-size:19px;font-weight:700}
+      .case-label{font-size:19px}
+      .boundary{fill:#fff;stroke:#111;stroke-width:2.5}
+      .use-case{fill:#fff;stroke:#111;stroke-width:2}
+      .actor-line{fill:none;stroke:#111;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .association{fill:none;stroke:#333;stroke-width:1.8}
+    </style>
+  </defs>
+  <rect width="1400" height="900" fill="#fff"/>
+  <text class="title" x="700" y="55" text-anchor="middle">CASOS DE USO — HU02, HU03 Y HU04</text>
+
+  <rect class="boundary" x="400" y="100" width="930" height="740" rx="2"/>
+  <text class="system-title" x="865" y="143" text-anchor="middle">Sistema de autenticidad de proyectos de titulación</text>
+
+  <g class="association">
+    <path d="M215 245 L565 250"/>
+    <path d="M215 245 L565 440"/>
+    <path d="M215 245 L565 650"/>
+    <path d="M215 505 L565 650"/>
+    <path d="M215 735 L565 650"/>
+  </g>
+
+  <g aria-label="Actor Administrador">
+    <circle cx="185" cy="185" r="20" class="actor-line"/>
+    <path d="M185 205 L185 260 M145 225 L225 225 M185 260 L150 305 M185 260 L220 305" class="actor-line"/>
+    <text class="actor-label" x="185" y="338" text-anchor="middle">Administrador</text>
+  </g>
+  <g aria-label="Actor Gestor">
+    <circle cx="185" cy="445" r="20" class="actor-line"/>
+    <path d="M185 465 L185 520 M145 485 L225 485 M185 520 L150 565 M185 520 L220 565" class="actor-line"/>
+    <text class="actor-label" x="185" y="598" text-anchor="middle">Gestor</text>
+  </g>
+  <g aria-label="Actor Usuario">
+    <circle cx="185" cy="675" r="20" class="actor-line"/>
+    <path d="M185 695 L185 750 M145 715 L225 715 M185 750 L150 795 M185 750 L220 795" class="actor-line"/>
+    <text class="actor-label" x="185" y="828" text-anchor="middle">Usuario</text>
+  </g>
+
+  <ellipse class="use-case" cx="930" cy="250" rx="365" ry="58"/>
+  <text class="case-label" x="930" y="257" text-anchor="middle">Gestionar cuentas y roles</text>
+
+  <ellipse class="use-case" cx="930" cy="440" rx="365" ry="58"/>
+  <text class="case-label" x="930" y="447" text-anchor="middle">Mantener carreras</text>
+
+  <ellipse class="use-case" cx="930" cy="650" rx="365" ry="68"/>
+  <text class="case-label" x="930" y="643" text-anchor="middle">
+    <tspan x="930" dy="0">Actualizar perfil</tspan>
+    <tspan x="930" dy="26">y contraseña</tspan>
+  </text>
+</svg>

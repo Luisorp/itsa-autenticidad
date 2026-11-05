@@ -1,0 +1,13 @@
+{
+    "verifiedAt": "2026-10-25T23:59:14+00:00",
+    "checks": {
+        "database_is_temporary_sqlite": true,
+        "successful_project_exists": true,
+        "uploaded_pdf_record_exists": true,
+        "uploaded_pdf_file_exists": true,
+        "pdf_text_extracted": true,
+        "missing_title_did_not_create_project": true,
+        "invalid_file_did_not_create_project": true,
+        "edit_was_persisted": true
+    }
+}

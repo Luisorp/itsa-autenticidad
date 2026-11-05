@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560">
+<defs><style>text{font-family:Arial,sans-serif;fill:#111}.outline{fill:#fff;stroke:#111;stroke-width:1.8}</style></defs>
+<rect width="960" height="560" fill="#fff"/>
+
+<rect x="12" y="12" width="936" height="536" fill="#fff" stroke="#111" stroke-width="2"/>
+<line x1="12" y1="76" x2="948" y2="76" stroke="#111" stroke-width="2"/>
+
+<text x="40" y="53" font-size="19" font-weight="700">Sistema de autenticidad</text>
+<rect class="outline" x="756" y="24" width="166" height="40" rx="3"/>
+<circle cx="779" cy="44" r="13" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="779" y="49" text-anchor="middle" font-size="13">U</text>
+<text x="802" y="49" font-size="15">Usuario</text>
+<path d="M900 41l7 7 7-7" fill="none" stroke="#111" stroke-width="1.8"/>
+
+<rect class="outline" x="756" y="77" width="166" height="54" rx="3"/>
+<path d="M780 96h15v17h-15m8-9h17m-6-6 6 6-6 6" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="812" y="109" font-size="15">Cerrar sesi&#243;n</text>
+</svg>

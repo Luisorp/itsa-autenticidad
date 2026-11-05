@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1580" viewBox="0 0 1500 1580" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de secuencia HU04: Actualizar perfil y contraseña</title>
+  <desc id="desc">Muestra la carga de la página de perfil y las dos acciones independientes disponibles: guardar nombre y correo o actualizar la contraseña actual.</desc>
+  <defs>
+    <style>text{font-family:Arial,Helvetica,sans-serif;fill:#111}.title{font-size:28px;font-weight:700}.participant{font-size:18px;font-weight:700}.label{font-size:14px}.section{font-size:16px;font-weight:700}.guard{font-size:14px;font-weight:700}.life{stroke:#777;stroke-width:1.5;stroke-dasharray:7 7}.msg{stroke:#222;stroke-width:1.8;marker-end:url(#arrow)}.reply{stroke:#555;stroke-width:1.5;stroke-dasharray:7 5;marker-end:url(#arrow)}.frame{fill:none;stroke:#111;stroke-width:2}.head{fill:#eee;stroke:#111;stroke-width:1.5}</style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#222"/></marker>
+  </defs>
+  <rect width="1500" height="1580" fill="#fff"/><text class="title" x="750" y="48" text-anchor="middle">HU04 — ACTUALIZAR PERFIL Y CONTRASEÑA</text>
+  <g>
+    <rect class="head" x="60" y="80" width="210" height="48" rx="5"/><text class="participant" x="165" y="110" text-anchor="middle">Usuario autenticado</text>
+    <rect class="head" x="390" y="80" width="220" height="48" rx="5"/><text class="participant" x="500" y="110" text-anchor="middle">Vista Perfil (Blade)</text>
+    <rect class="head" x="760" y="80" width="260" height="48" rx="5"/><text class="participant" x="890" y="110" text-anchor="middle">Controlador Laravel</text>
+    <rect class="head" x="1190" y="80" width="200" height="48" rx="5"/><text class="participant" x="1290" y="110" text-anchor="middle">Base de datos</text>
+    <path class="life" d="M165 128 V1510 M500 128 V1510 M890 128 V1510 M1290 128 V1510"/>
+  </g>
+  <rect class="frame" x="35" y="160" width="1430" height="225"/><rect class="head" x="35" y="160" width="360" height="34"/><text class="section" x="215" y="183" text-anchor="middle">Abrir página de perfil</text>
+  <path class="msg" d="M165 225 H500"/><text class="label" x="332" y="216" text-anchor="middle">Abrir “Mi perfil”</text>
+  <path class="msg" d="M500 270 H890"/><text class="label" x="695" y="261" text-anchor="middle">GET /profile</text>
+  <path class="msg" d="M890 305 H1290"/><text class="label" x="1090" y="296" text-anchor="middle">Consultar datos del usuario autenticado</text>
+  <path class="reply" d="M1290 340 H890"/><text class="label" x="1090" y="332" text-anchor="middle">Nombre y correo actuales</text>
+  <path class="reply" d="M890 365 H500"/><text class="label" x="695" y="357" text-anchor="middle">Mostrar formularios de perfil y contraseña</text>
+
+  <rect class="frame" x="35" y="420" width="1430" height="510"/><rect class="head" x="35" y="420" width="430" height="34"/><text class="section" x="250" y="443" text-anchor="middle">Opción A: actualizar nombre y correo</text>
+  <path class="msg" d="M165 490 H500"/><text class="label" x="332" y="481" text-anchor="middle">Editar nombre/correo y guardar</text>
+  <path class="msg" d="M500 535 H890"/><text class="label" x="695" y="526" text-anchor="middle">PATCH /profile</text>
+  <path class="msg" d="M890 580 H890"/><text class="label" x="945" y="573">Validar nombre requerido y correo único/válido</text>
+  <rect class="frame" x="78" y="620" width="1350" height="275"/><rect class="head" x="78" y="620" width="190" height="32"/><text class="section" x="173" y="642" text-anchor="middle">alt</text>
+  <text class="guard" x="100" y="677">[Datos inválidos]</text><path class="reply" d="M890 700 H500"/><text class="label" x="695" y="692" text-anchor="middle">Mostrar errores; no guardar</text>
+  <text class="guard" x="100" y="753">[Datos válidos]</text><path class="msg" d="M890 780 H1290"/><text class="label" x="1090" y="771" text-anchor="middle">Actualizar nombre/correo del usuario</text>
+  <text class="label" x="1090" y="808" text-anchor="middle">Si cambió el correo, limpiar email_verified_at</text>
+  <path class="reply" d="M1290 840 H890"/><text class="label" x="1090" y="832" text-anchor="middle">Cambios guardados</text>
+  <path class="reply" d="M890 875 H500"/><text class="label" x="695" y="867" text-anchor="middle">Confirmar actualización del perfil</text>
+
+  <rect class="frame" x="35" y="965" width="1430" height="510"/><rect class="head" x="35" y="965" width="430" height="34"/><text class="section" x="250" y="988" text-anchor="middle">Opción B: cambiar contraseña</text>
+  <path class="msg" d="M165 1035 H500"/><text class="label" x="332" y="1026" text-anchor="middle">Ingresar actual, nueva y confirmación</text>
+  <path class="msg" d="M500 1080 H890"/><text class="label" x="695" y="1071" text-anchor="middle">PUT /password</text>
+  <path class="msg" d="M890 1125 H890"/><text class="label" x="945" y="1118">Validar contraseña actual, nueva y confirmación</text>
+  <rect class="frame" x="78" y="1165" width="1350" height="275"/><rect class="head" x="78" y="1165" width="190" height="32"/><text class="section" x="173" y="1187" text-anchor="middle">alt</text>
+  <text class="guard" x="100" y="1222">[Validación fallida]</text><path class="reply" d="M890 1245 H500"/><text class="label" x="695" y="1237" text-anchor="middle">Mostrar error; conservar la contraseña actual</text>
+  <text class="guard" x="100" y="1298">[Validación correcta]</text><path class="msg" d="M890 1325 H1290"/><text class="label" x="1090" y="1316" text-anchor="middle">Guardar hash de la nueva contraseña</text>
+  <path class="reply" d="M1290 1360 H890"/><text class="label" x="1090" y="1352" text-anchor="middle">Contraseña actualizada</text>
+  <path class="reply" d="M890 1405 H500"/><text class="label" x="695" y="1397" text-anchor="middle">Confirmar cambio de contraseña</text>
+  <path class="reply" d="M500 1505 H165"/><text class="label" x="332" y="1497" text-anchor="middle">Mostrar resultado de la acción</text>
+</svg>

@@ -22,18 +22,6 @@ return [
         'key' => env('RESEND_API_KEY'),
     ],
 
-    'crossref' => [
-        'base_url' => env('CROSSREF_BASE_URL', 'https://api.crossref.org'),
-        'mailto' => env('CROSSREF_MAILTO'),
-        'user_agent' => env('CROSSREF_USER_AGENT', 'Sello-ITSa/1.0'),
-    ],
-
-    'openalex' => [
-        'base_url' => env('OPENALEX_BASE_URL', 'https://api.openalex.org'),
-        'api_key' => env('OPENALEX_API_KEY'),
-        'user_agent' => env('OPENALEX_USER_AGENT', 'Sello-ITSa/1.0'),
-    ],
-
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

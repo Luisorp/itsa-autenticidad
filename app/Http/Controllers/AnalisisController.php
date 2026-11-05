@@ -33,15 +33,17 @@ class AnalisisController extends Controller
 
         $termino = trim($validated['q'] ?? '');
         $query = ProyectoTitulacion::query()
-            ->select(['id', 'titulo', 'modalidad', 'carrera_id', 'estudiante_id', 'anio'])
+            ->select(['id', 'titulo', 'modalidad', 'carrera_id', 'estudiante_id', 'anio', 'periodo_academico'])
             ->where('activo', true)
             ->whereHas('documento', fn ($q) => $q->whereNotNull('contenido_extraido')->where('contenido_extraido', '!=', ''))
-            ->with(['estudiante:id,nombre', 'carrera:id,nombre,codigo']);
+            ->with(['estudiante:id,nombre,user_id', 'estudiante.cuenta:id,name,email', 'carrera:id,nombre,codigo']);
 
         if ($termino !== '') {
             $query->where(function ($q) use ($termino) {
                 $q->where('titulo', 'like', "%{$termino}%")
-                    ->orWhereHas('estudiante', fn ($estudiante) => $estudiante->where('nombre', 'like', "%{$termino}%"))
+                    ->orWhereHas('estudiante', fn ($estudiante) => $estudiante
+                        ->where('nombre', 'like', "%{$termino}%")
+                        ->orWhereHas('cuenta', fn ($cuenta) => $cuenta->where('name', 'like', "%{$termino}%")))
                     ->orWhereHas('carrera', function ($carrera) use ($termino) {
                         $carrera->where('nombre', 'like', "%{$termino}%")
                             ->orWhere('codigo', 'like', "%{$termino}%");
@@ -65,6 +67,7 @@ class AnalisisController extends Controller
             'estudiante' => $proyecto->estudiante?->nombre ?? 'Sin estudiante',
             'carrera' => $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? 'Sin carrera',
             'anio' => $proyecto->anio,
+            'periodo_academico_nombre' => $proyecto->periodo_academico_nombre,
         ]);
 
         return response()->json(['data' => $proyectos]);
@@ -120,8 +123,8 @@ class AnalisisController extends Controller
             $contenidoB
         );
 
-        $proyectoA->loadMissing(['estudiante', 'carrera']);
-        $proyectoB->loadMissing(['estudiante', 'carrera']);
+        $proyectoA->loadMissing(['estudiante.cuenta', 'carrera']);
+        $proyectoB->loadMissing(['estudiante.cuenta', 'carrera']);
 
         return view('analisis.index', compact('proyectoA', 'proyectoB', 'porcentaje', 'coincidencias', 'explicacion', 'alcanceA', 'alcanceB'));
     }
@@ -134,7 +137,7 @@ class AnalisisController extends Controller
 
         $proyecto = ProyectoTitulacion::where('activo', true)
             ->whereHas('documento', fn ($query) => $query->whereNotNull('contenido_extraido')->where('contenido_extraido', '!=', ''))
-            ->with(['estudiante', 'carrera'])
+            ->with(['estudiante.cuenta', 'carrera'])
             ->find((int) $id);
 
         return $proyecto && trim((string) $proyecto->documento?->contenido_extraido) !== ''

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="780" viewBox="0 0 1100 780">
+<defs><style>
+text{font-family:Arial,sans-serif;fill:#111}.panel{fill:#fff;stroke:#111;stroke-width:1.5}.grid{stroke:#777;stroke-width:1}.light{stroke:#bbb;stroke-width:1}
+</style></defs>
+<rect x="12" y="12" width="1076" height="756" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="42" y="56" font-size="26" font-weight="700">Comparar proyectos</text>
+<line x1="40" y1="76" x2="1060" y2="76" stroke="#111"/>
+<text x="45" y="112" font-size="15" font-weight="700">Proyecto A</text>
+<rect class="panel" x="45" y="124" width="440" height="42"/>
+<text x="60" y="151" font-size="14">[Buscar por título, estudiante o carrera]</text>
+<text x="550" y="153" text-anchor="middle" font-size="18" font-weight="700">VS</text>
+<text x="615" y="112" font-size="15" font-weight="700">Proyecto B</text>
+<rect class="panel" x="615" y="124" width="440" height="42"/>
+<text x="630" y="151" font-size="14">[Buscar proyecto de la misma modalidad]</text>
+<rect class="panel" x="45" y="188" width="190" height="42"/><text x="140" y="215" text-anchor="middle" font-size="14">Comparar documentos</text>
+
+<text x="45" y="275" font-size="16" font-weight="700">Contenido analizado</text>
+<rect class="panel" x="45" y="290" width="1010" height="66"/>
+<text x="62" y="317" font-size="14">Proyecto A: resumen, introducción, desarrollo y conclusiones.</text>
+<text x="62" y="340" font-size="14">Proyecto B: resumen, introducción, desarrollo y conclusiones.</text>
+
+<rect class="panel" x="45" y="378" width="1010" height="88"/>
+<text x="550" y="416" text-anchor="middle" font-size="27" font-weight="700">[Porcentaje] % de similitud</text>
+<text x="550" y="444" text-anchor="middle" font-size="14">Entre [Proyecto A] y [Proyecto B]</text>
+
+<text x="45" y="510" font-size="17" font-weight="700">Fragmentos con posibles coincidencias</text>
+<rect class="panel" x="45" y="526" width="485" height="148"/>
+<rect class="panel" x="570" y="526" width="485" height="148"/>
+<text x="62" y="554" font-size="14" font-weight="700">Proyecto A</text>
+<text x="587" y="554" font-size="14" font-weight="700">Proyecto B</text>
+<line class="light" x1="60" y1="566" x2="515" y2="566"/><line class="light" x1="585" y1="566" x2="1040" y2="566"/>
+<text x="62" y="596" font-size="14">[Fragmento coincidente del proyecto A]</text>
+<text x="587" y="596" font-size="14">[Fragmento coincidente del proyecto B]</text>
+<text x="62" y="636" font-size="13">[Porcentaje de coincidencia textual]</text>
+<text x="587" y="636" font-size="13">[Porcentaje de coincidencia textual]</text>
+<rect class="panel" x="45" y="704" width="105" height="38"/><text x="97" y="729" text-anchor="middle" font-size="14">Volver</text>
+</svg>

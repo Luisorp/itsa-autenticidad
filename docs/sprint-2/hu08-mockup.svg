@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="590" viewBox="0 0 1100 590">
+<defs><style>text{font-family:Arial,sans-serif;fill:#111}.b{fill:#fff;stroke:#111;stroke-width:1.5}.muted{fill:#555}</style></defs>
+<rect x="12" y="12" width="1076" height="566" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="45" y="58" font-size="27" font-weight="700">Buscar proyectos</text><line x1="40" y1="78" x2="1060" y2="78" stroke="#111"/>
+<text x="45" y="115" font-size="14">Título o estudiante</text>
+<rect class="b" x="45" y="125" width="239" height="36"/>
+<text x="302" y="115" font-size="14">Carrera</text>
+<rect class="b" x="302" y="125" width="239" height="36"/>
+<text x="559" y="115" font-size="14">Modalidad</text>
+<rect class="b" x="559" y="125" width="239" height="36"/>
+<text x="816" y="115" font-size="14">Año</text>
+<rect class="b" x="816" y="125" width="239" height="36"/>
+<rect class="b" x="45" y="184" width="145" height="38"/><text x="117" y="209" text-anchor="middle" font-size="14">Buscar</text>
+<rect class="b" x="205" y="184" width="145" height="38"/><text x="277" y="209" text-anchor="middle" font-size="14">Filtrar</text>
+<rect class="b" x="365" y="184" width="145" height="38"/><text x="437" y="209" text-anchor="middle" font-size="14">Limpiar</text>
+<rect class="b" x="45" y="250" width="1010" height="270"/>
+<text x="55" y="280" font-size="13" font-weight="700">Proyecto</text>
+<line x1="213" y1="250" x2="213" y2="520" stroke="#777"/>
+<text x="223" y="280" font-size="13" font-weight="700">Estudiante</text>
+<line x1="381" y1="250" x2="381" y2="520" stroke="#777"/>
+<text x="391" y="280" font-size="13" font-weight="700">Carrera</text>
+<line x1="549" y1="250" x2="549" y2="520" stroke="#777"/>
+<text x="559" y="280" font-size="13" font-weight="700">Modalidad</text>
+<line x1="717" y1="250" x2="717" y2="520" stroke="#777"/>
+<text x="727" y="280" font-size="13" font-weight="700">Año</text>
+<line x1="885" y1="250" x2="885" y2="520" stroke="#777"/>
+<text x="895" y="280" font-size="13" font-weight="700">PDF</text>
+<line x1="45" y1="298" x2="1055" y2="298" stroke="#aaa"/>
+<line x1="45" y1="345" x2="1055" y2="345" stroke="#aaa"/>
+<line x1="45" y1="392" x2="1055" y2="392" stroke="#aaa"/>
+<line x1="45" y1="439" x2="1055" y2="439" stroke="#aaa"/>
+</svg>

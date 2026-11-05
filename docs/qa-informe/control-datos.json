@@ -1,0 +1,12 @@
+{
+    "usuario_creado_una_vez": true,
+    "usuario_creado_gestor": true,
+    "confirmacion_invalida_no_creo_cuenta": true,
+    "correo_vacio_no_creo_cuenta": true,
+    "estudiante_sin_cuenta": true,
+    "proyecto_pendiente": true,
+    "archivo_pdf_existe": true,
+    "texto_pdf_extraido": true,
+    "un_reporte_registrado": true,
+    "base_aislada": true
+}

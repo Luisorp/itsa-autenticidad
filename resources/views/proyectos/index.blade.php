@@ -31,6 +31,7 @@
         <div class="card catalog-card"><div class="card-body">
             <form method="GET" action="{{ route('proyectos.index') }}" class="catalog-filters" data-catalog-filter-form>
                 <input type="hidden" name="vista" value="{{ $vista }}">
+                <div><label class="form-label" for="periodo_academico">Periodo académico</label><select id="periodo_academico" name="periodo_academico" class="form-select"><option value="">Todos</option>@foreach($periodosAcademicos as $valor => $nombre)<option value="{{ $valor }}" @selected($periodoAcademico === $valor)>{{ $nombre }}</option>@endforeach<option value="sin_especificar" @selected($periodoAcademico === 'sin_especificar')>Sin especificar</option></select></div>
                 <div class="catalog-search">
                     <label class="form-label" for="buscar">Buscar proyecto o estudiante</label>
                     <div class="input-group"><span class="input-group-text"><i class="bi bi-search"></i></span><input id="buscar" type="search" name="buscar" class="form-control" value="{{ request('buscar') }}" placeholder="Título o nombre del estudiante" data-catalog-search-input></div>
@@ -49,14 +50,14 @@
             </div>
 
             <div class="project-table-wrapper"><table class="table project-table align-middle">
-                <thead><tr><th>Proyecto</th><th>Modalidad</th><th>Carrera</th><th>Gestión</th><th>Análisis</th><th>Documento</th><th class="text-end">Acciones</th></tr></thead>
+                <thead><tr><th>Proyecto</th><th>Modalidad</th><th>Carrera</th><th>Gestión / periodo</th><th>Análisis</th><th>Documento</th><th class="text-end">Acciones</th></tr></thead>
                 <tbody>
                     @forelse($proyectos as $proyecto)
                         <tr class="{{ $proyecto->activo ? '' : 'inactive-record' }}">
                             <td><strong class="project-title">{{ $proyecto->titulo }}</strong><small class="project-owner"><i class="bi bi-person"></i> {{ $proyecto->estudiante?->nombre ?? 'Sin estudiante asignado' }}</small></td>
                             <td><span class="modality-badge">{{ $proyecto->modalidad_nombre }}</span></td>
                             <td>{{ $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? '—' }}</td>
-                            <td>{{ $proyecto->anio }}</td>
+                            <td>{{ $proyecto->anio }}<small class="d-block text-muted">{{ $proyecto->periodo_academico_nombre }}</small></td>
                             <td>@if($proyecto->estado === 'analizado')<span class="badge bg-success-subtle text-success-emphasis"><i class="bi bi-check-circle me-1"></i> Analizado</span>@else<span class="badge bg-warning-subtle text-warning-emphasis"><i class="bi bi-clock me-1"></i> Pendiente</span>@endif</td>
                             <td>@if($proyecto->documento)<a href="{{ route('proyectos.documento', $proyecto) }}" target="_blank" rel="noopener" class="document-link"><i class="bi bi-file-earmark-pdf"></i> Ver PDF</a>@else<span class="text-muted small">No disponible</span>@endif</td>
                             <td class="text-end">
@@ -78,7 +79,6 @@
                                         <ul class="dropdown-menu dropdown-menu-end project-actions">
                                     @if($proyecto->activo && in_array(auth()->user()->rol, ['administrador', 'gestor']))
                                         <li><a class="dropdown-item" href="{{ route('analisis.index', ['proyecto_a' => $proyecto->id]) }}"><i class="bi bi-intersect"></i> Comparar con otro proyecto</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('crossref.index', ['proyecto_id' => $proyecto->id]) }}"><i class="bi bi-globe2"></i> Comparar con publicaciones</a></li>
                                     @endif
                                     <li><a class="dropdown-item" href="{{ route('proyectos.resultados', $proyecto) }}"><i class="bi bi-bar-chart"></i> Ver resultados</a></li>
                                     @if(in_array(auth()->user()->rol, ['administrador', 'gestor']))<li><a class="dropdown-item" href="{{ route('proyectos.edit', $proyecto) }}"><i class="bi bi-pencil"></i> Editar datos</a></li>@endif
@@ -99,7 +99,8 @@
                             <div><strong>{{ $proyecto->titulo }}</strong><span><i class="bi bi-person"></i> {{ $proyecto->estudiante?->nombre ?? 'Sin estudiante asignado' }}</span></div>
                             @if($proyecto->estado === 'analizado')<span class="badge bg-success-subtle text-success-emphasis">Analizado</span>@else<span class="badge bg-warning-subtle text-warning-emphasis">Pendiente</span>@endif
                         </div>
-                        <div class="project-mobile-meta"><span>{{ $proyecto->modalidad_nombre }}</span><span>{{ $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? '—' }} · {{ $proyecto->anio }}</span></div>
+                        <div class="project-mobile-meta"><span>{{ $proyecto->modalidad_nombre }}</span><span>{{ $proyecto->carrera?->codigo ?? $proyecto->carrera?->nombre ?? '—' }}</span></div>
+                        <div class="small text-muted mb-2">Gestión {{ $proyecto->anio }} · {{ $proyecto->periodo_academico_nombre }}</div>
                         <div class="project-mobile-actions">
                             @if($proyecto->activo && in_array(auth()->user()->rol, ['administrador', 'gestor']))
                                 <form action="{{ route('proyectos.analizar', $proyecto) }}" method="POST">@csrf<button class="btn btn-primary" type="submit" title="Analizar contra el repositorio de la misma carrera y modalidad"><i class="bi bi-folder-check"></i> Analizar</button></form>
@@ -109,7 +110,6 @@
                                 <ul class="dropdown-menu dropdown-menu-end project-actions">
                                     @if($proyecto->activo && in_array(auth()->user()->rol, ['administrador', 'gestor']))
                                         <li><a class="dropdown-item" href="{{ route('analisis.index', ['proyecto_a' => $proyecto->id]) }}"><i class="bi bi-intersect"></i> Comparar con otro proyecto</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('crossref.index', ['proyecto_id' => $proyecto->id]) }}"><i class="bi bi-globe2"></i> Buscar publicaciones</a></li>
                                     @endif
                                     <li><a class="dropdown-item" href="{{ route('proyectos.resultados', $proyecto) }}"><i class="bi bi-bar-chart"></i> Ver resultados</a></li>
                                     @if($proyecto->documento)<li><a class="dropdown-item" href="{{ route('proyectos.reporte', $proyecto) }}"><i class="bi bi-file-earmark-arrow-down"></i> Descargar reporte</a></li><li><a class="dropdown-item" target="_blank" rel="noopener" href="{{ route('proyectos.documento', $proyecto) }}"><i class="bi bi-file-earmark-pdf"></i> Ver PDF</a></li>@endif

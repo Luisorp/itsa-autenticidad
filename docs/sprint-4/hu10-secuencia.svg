@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1380" viewBox="0 0 1500 1380">
+<defs><marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker><style>text{font-family:Arial,sans-serif;fill:#111}.box{fill:#fff;stroke:#111;stroke-width:2}.life{stroke:#666;stroke-width:1.5;stroke-dasharray:7 6}.msg{stroke:#111;stroke-width:2;marker-end:url(#arr)}.ret{stroke:#444;stroke-width:1.7;stroke-dasharray:7 5;marker-end:url(#arr)}.frame{fill:none;stroke:#111;stroke-width:2}</style></defs>
+<g font-size="18"><rect class="box" x="20" y="25" width="190" height="58"/><text x="115" y="61" text-anchor="middle">Persona autorizada</text><rect class="box" x="310" y="25" width="190" height="58"/><text x="405" y="61" text-anchor="middle">Navegador</text><rect class="box" x="610" y="25" width="210" height="58"/><text x="715" y="61" text-anchor="middle">Laravel</text><rect class="box" x="930" y="25" width="190" height="58"/><text x="1025" y="61" text-anchor="middle">Base de datos</text><rect class="box" x="1230" y="25" width="240" height="58"/><text x="1350" y="61" text-anchor="middle">PDF y almacenamiento</text></g>
+<path class="life" d="M115 83V1340M405 83V1340M715 83V1340M1025 83V1340M1350 83V1340"/>
+<g font-size="16">
+<path class="msg" d="M115 135H405"/><text x="260" y="125" text-anchor="middle">Solicitar reporte del proyecto</text>
+<path class="msg" d="M405 195H715"/><text x="560" y="185" text-anchor="middle">GET /proyectos/{id}/reporte</text>
+<path class="msg" d="M715 255H1025"/><text x="870" y="245" text-anchor="middle">Validar usuario, acceso, PDF y comparaciones</text>
+<path class="ret" d="M1025 315H715"/><text x="870" y="305" text-anchor="middle">Datos del proyecto y resultados</text>
+<path class="msg" d="M715 375H1350"/><text x="1032" y="365" text-anchor="middle">Generar PDF y guardarlo</text>
+<path class="ret" d="M1350 435H715"/><text x="1032" y="425" text-anchor="middle">Archivo PDF y ruta</text>
+<path class="msg" d="M715 495H1025"/><text x="870" y="485" text-anchor="middle">Registrar o actualizar reporte</text>
+<path class="ret" d="M1025 555H715"/><text x="870" y="545" text-anchor="middle">Registro confirmado</text>
+<path class="ret" d="M715 615H405"/><text x="560" y="605" text-anchor="middle">Responder con el PDF</text>
+<path class="ret" d="M405 675H115"/><text x="260" y="665" text-anchor="middle">Descargar reporte</text>
+<rect class="frame" x="285" y="715" width="1170" height="585"/><text x="300" y="743" font-size="17" font-weight="700">Consulta posterior del historial</text>
+<path class="msg" d="M115 775H405"/><text x="260" y="765" text-anchor="middle">Abrir reportes</text>
+<path class="msg" d="M405 825H715"/><text x="560" y="815" text-anchor="middle">GET /reportes</text>
+<path class="msg" d="M715 875H1025"/><text x="870" y="865" text-anchor="middle">Filtrar por permisos y consultar registros</text>
+<path class="ret" d="M1025 925H715"/><text x="870" y="915" text-anchor="middle">Lista disponible</text>
+<path class="ret" d="M715 975H405"/><text x="560" y="965" text-anchor="middle">Mostrar historial</text>
+<path class="msg" d="M115 1025H405"/><text x="260" y="1015" text-anchor="middle">Seleccionar Ver PDF</text>
+<path class="msg" d="M405 1075H715"/><text x="560" y="1065" text-anchor="middle">GET /reportes/{id}/archivo</text>
+<path class="msg" d="M715 1120H1350"/><text x="1032" y="1110" text-anchor="middle">Validar acceso y solicitar archivo existente</text>
+<path class="ret" d="M1350 1170H715"/><text x="1032" y="1160" text-anchor="middle">Devolver contenido PDF</text>
+<path class="ret" d="M715 1220H405"/><text x="560" y="1210" text-anchor="middle">Transmitir archivo PDF</text>
+<path class="ret" d="M405 1270H115"/><text x="260" y="1260" text-anchor="middle">Abrir reporte</text>
+</g></svg>

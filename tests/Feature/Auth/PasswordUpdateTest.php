@@ -5,12 +5,15 @@ namespace Tests\Feature\Auth;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
+#[TestDox('Actualización de contraseña')]
 class PasswordUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
+    #[TestDox('Permite cambiar la contraseña cuando los datos son válidos')]
     public function test_password_can_be_updated(): void
     {
         $user = User::factory()->create();
@@ -31,6 +34,7 @@ class PasswordUpdateTest extends TestCase
         $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
     }
 
+    #[TestDox('Rechaza el cambio si la confirmación de contraseña no coincide')]
     public function test_password_confirmation_must_match(): void
     {
         $user = User::factory()->create();
@@ -42,6 +46,7 @@ class PasswordUpdateTest extends TestCase
         $this->assertTrue(Hash::check('password', $user->fresh()->password));
     }
 
+    #[TestDox('Exige la contraseña actual correcta para realizar el cambio')]
     public function test_correct_password_must_be_provided_to_update_password(): void
     {
         $user = User::factory()->create();

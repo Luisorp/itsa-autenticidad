@@ -2,6 +2,8 @@
 
 Las funciones principales verificadas funcionan en esta instalación. Este informe documenta el alcance de la revisión para la exposición del 9 de octubre; no constituye una garantía de ausencia de errores en todos los escenarios posibles.
 
+**Actualización del alcance (5 de noviembre de 2026):** este registro conserva los resultados de la versión revisada el 8 de octubre. Después de esa comprobación se retiró del sistema la integración con Crossref y OpenAlex. Por tanto, las menciones a esas APIs, sus consultas y la cantidad de rutas corresponden al estado anterior y no describen la versión vigente. La comparación actual se limita al repositorio institucional.
+
 ## Resultados
 
 - Suite completa: **78 pruebas aprobadas, 493 aserciones**. Las pruebas utilizan SQLite en memoria y almacenamiento simulado; no la base principal.

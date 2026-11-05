@@ -28,11 +28,6 @@
                     <i class="bi bi-intersect"></i><span class="sidebar-link-text">Comparar</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('crossref.*') ? 'active' : '' }}" href="{{ route('crossref.index') }}">
-                    <i class="bi bi-search"></i><span class="sidebar-link-text">Búsqueda</span>
-                </a>
-            </li>
             <li class="sidebar-section-label"><span>Registro académico</span></li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('estudiantes.*') ? 'active' : '' }}" href="{{ route('estudiantes.index') }}">
@@ -88,7 +83,6 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end mobile-more-menu">
                 @if(Auth::user()->esAdministrador() || Auth::user()->esGestor())
-                    <li><a class="dropdown-item" href="{{ route('crossref.index') }}"><i class="bi bi-search"></i>Búsqueda</a></li>
                     <li><a class="dropdown-item" href="{{ route('estudiantes.index') }}"><i class="bi bi-mortarboard"></i>Estudiantes</a></li>
                     <li><a class="dropdown-item" href="{{ route('docentes.index') }}"><i class="bi bi-person-video3"></i>Docentes tutores</a></li>
                 @endif

@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1750" height="1000" viewBox="0 0 1750 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Caso de uso HU02: Gestión de usuarios y roles</title>
+  <desc id="desc">Diagrama detallado. El Administrador gestiona la lista de cuentas, crea y edita usuarios, activa o desactiva cuentas; los formularios validan datos antes de guardar y se impide desactivar la propia cuenta.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}
+      .page-title{font-size:30px;font-weight:700}
+      .system-title{font-size:21px;font-weight:700}
+      .actor-label{font-size:20px;font-weight:700}
+      .case-label{font-size:18px}
+      .relation-label{font-size:15px;font-weight:700}
+      .boundary{fill:#fff;stroke:#111;stroke-width:2.5}
+      .use-case{fill:#fff;stroke:#111;stroke-width:2}
+      .actor-line{fill:none;stroke:#111;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .association{fill:none;stroke:#333;stroke-width:1.8}
+      .relation{fill:none;stroke:#111;stroke-width:1.7;stroke-dasharray:8 6;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 z" fill="#111"/>
+    </marker>
+  </defs>
+
+  <rect width="1750" height="1000" fill="#fff"/>
+  <text class="page-title" x="875" y="48" text-anchor="middle">CASO DE USO HU02 — GESTIÓN DE USUARIOS Y ROLES</text>
+
+  <rect class="boundary" x="250" y="80" width="1460" height="860"/>
+  
+
+  <g aria-label="Asociación del Administrador con la gestión de usuarios">
+    <path class="association" d="M232 500 L310 500"/>
+  </g>
+
+  <g aria-label="Actor Administrador">
+    <circle cx="180" cy="405" r="21" class="actor-line"/>
+    <path d="M180 426 L180 510 M128 455 L232 455 M180 510 L140 565 M180 510 L220 565" class="actor-line"/>
+    <text class="actor-label" x="180" y="605" text-anchor="middle">Administrador</text>
+  </g>
+
+  <g aria-label="Relaciones include y extend">
+    <path class="relation" d="M540 453 L746 245"/>
+    <text class="relation-label" x="580" y="345">&lt;&lt;include&gt;&gt;</text>
+
+    <path class="relation" d="M700 400 L586 475"/>
+    <text class="relation-label" x="610" y="410">&lt;&lt;extend&gt;&gt;</text>
+
+    <path class="relation" d="M700 590 L578 550"/>
+    <text class="relation-label" x="612" y="590">&lt;&lt;extend&gt;&gt;</text>
+
+    <path class="relation" d="M700 780 L540 565"/>
+    <text class="relation-label" x="615" y="710">&lt;&lt;extend&gt;&gt;</text>
+
+    <path class="relation" d="M1092 385 L1265 305"/>
+    <text class="relation-label" x="1120" y="330">&lt;&lt;include&gt;&gt;</text>
+
+    <path class="relation" d="M1086 420 L1265 445"/>
+    <text class="relation-label" x="1120" y="450">&lt;&lt;include&gt;&gt;</text>
+
+    <path class="relation" d="M1098 580 L1265 565"/>
+    <text class="relation-label" x="1120" y="555">&lt;&lt;include&gt;&gt;</text>
+
+    <path class="relation" d="M1080 615 L1265 700"/>
+    <text class="relation-label" x="1120" y="675">&lt;&lt;include&gt;&gt;</text>
+
+    <path class="relation" d="M1265 835 L1086 800"/>
+    <text class="relation-label" x="1110" y="830">&lt;&lt;extend&gt;&gt;</text>
+  </g>
+
+  <g aria-label="Casos de uso">
+    <ellipse class="use-case" cx="460" cy="510" rx="150" ry="65"/>
+    <text class="case-label" x="460" y="503" text-anchor="middle">
+      <tspan x="460" dy="0">Gestionar usuarios</tspan>
+      <tspan x="460" dy="25">y roles</tspan>
+    </text>
+
+    <ellipse class="use-case" cx="900" cy="210" rx="200" ry="55"/>
+    <text class="case-label" x="900" y="217" text-anchor="middle">Consultar cuentas por rol</text>
+
+    <ellipse class="use-case" cx="900" cy="400" rx="200" ry="55"/>
+    <text class="case-label" x="900" y="407" text-anchor="middle">Crear cuenta y asignar rol</text>
+
+    <ellipse class="use-case" cx="900" cy="590" rx="200" ry="55"/>
+    <text class="case-label" x="900" y="597" text-anchor="middle">Editar datos, rol o carrera</text>
+
+    <ellipse class="use-case" cx="900" cy="780" rx="200" ry="55"/>
+    <text class="case-label" x="900" y="787" text-anchor="middle">Activar o desactivar cuenta</text>
+
+    <ellipse class="use-case" cx="1400" cy="300" rx="135" ry="48"/>
+    <text class="case-label" x="1400" y="294" text-anchor="middle">
+      <tspan x="1400" dy="0">Validar datos</tspan>
+      <tspan x="1400" dy="23">de la cuenta</tspan>
+    </text>
+
+    <ellipse class="use-case" cx="1400" cy="445" rx="135" ry="48"/>
+    <text class="case-label" x="1400" y="452" text-anchor="middle">Guardar cuenta</text>
+
+    <ellipse class="use-case" cx="1400" cy="565" rx="135" ry="48"/>
+    <text class="case-label" x="1400" y="572" text-anchor="middle">Validar cambios</text>
+
+    <ellipse class="use-case" cx="1400" cy="700" rx="135" ry="48"/>
+    <text class="case-label" x="1400" y="707" text-anchor="middle">Guardar cambios</text>
+
+    <ellipse class="use-case" cx="1400" cy="835" rx="135" ry="48"/>
+    <text class="case-label" x="1400" y="829" text-anchor="middle">
+      <tspan x="1400" dy="0">Rechazar desactivación</tspan>
+      <tspan x="1400" dy="23">de la propia cuenta</tspan>
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620">
+<defs><style>text{font-family:Arial,sans-serif;fill:#111}.card,.field,.button{fill:#fff;stroke:#111;stroke-width:2}</style></defs>
+<rect width="900" height="620" fill="#fff"/>
+<rect class="card" x="190" y="45" width="520" height="530" rx="4"/>
+
+<text x="450" y="112" text-anchor="middle" font-size="28" font-weight="700">Iniciar sesi&#243;n</text>
+
+<text x="250" y="180" font-size="18">Correo electr&#243;nico</text>
+<rect class="field" x="250" y="195" width="400" height="52" rx="3"/>
+
+<text x="250" y="293" font-size="18">Contrase&#241;a</text>
+<rect class="field" x="250" y="308" width="400" height="52" rx="3"/>
+
+<rect x="252" y="388" width="18" height="18" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<text x="280" y="403" font-size="16">Recordarme</text>
+
+<rect class="button" x="250" y="445" width="400" height="54" rx="3"/>
+<text x="450" y="479" text-anchor="middle" font-size="18" font-weight="700">Iniciar sesi&#243;n</text>
+</svg>

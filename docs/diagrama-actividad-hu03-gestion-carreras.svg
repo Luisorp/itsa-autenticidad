@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1580" viewBox="0 0 2200 1580" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de actividades HU03: Gestión de carreras</title>
+  <desc id="desc">El Administrador abre Carreras y elige consultar, registrar, editar o activar/desactivar. El sistema valida los datos de creación y edición, conserva el historial al desactivar y vuelve a mostrar el listado actualizado. No se elimina la carrera.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}
+      .title{font-size:29px;font-weight:700}
+      .activity{fill:#fff;stroke:#111;stroke-width:2}
+      .decision{fill:#fff;stroke:#111;stroke-width:2}
+      .flow{fill:none;stroke:#222;stroke-width:2;marker-end:url(#arrow)}
+      .node-label{font-size:17px}
+      .branch-label{font-size:15px;font-weight:700}
+      .initial{fill:#111}
+      .final-outer{fill:#fff;stroke:#111;stroke-width:2.5}
+      .final-inner{fill:#111}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 z" fill="#222"/>
+    </marker>
+  </defs>
+  <rect width="2200" height="1580" fill="#fff"/>
+  <text class="title" x="1100" y="45" text-anchor="middle">DIAGRAMA DE ACTIVIDADES — HU03: GESTIÓN DE CARRERAS</text>
+
+  <!-- Flujo común -->
+  <circle class="initial" cx="1100" cy="85" r="11"/>
+  <path class="flow" d="M1100 96 V115"/>
+  <rect class="activity" x="875" y="115" width="450" height="60" rx="18"/>
+  <text class="node-label" x="1100" y="152" text-anchor="middle">Administrador abre la sección Carreras</text>
+  <path class="flow" d="M1100 175 V195"/>
+  <rect class="activity" x="835" y="195" width="530" height="75" rx="18"/>
+  <text class="node-label" x="1100" y="225" text-anchor="middle">
+    <tspan x="1100" dy="0">El sistema verifica la sesión</tspan>
+    <tspan x="1100" dy="23">y el permiso de Administrador</tspan>
+  </text>
+  <path class="flow" d="M1100 270 V290"/>
+  <rect class="activity" x="820" y="290" width="560" height="75" rx="18"/>
+  <text class="node-label" x="1100" y="320" text-anchor="middle">
+    <tspan x="1100" dy="0">Mostrar carreras ordenadas por nombre,</tspan>
+    <tspan x="1100" dy="23">con paginación de 10 registros</tspan>
+  </text>
+  <path class="flow" d="M1100 365 V385"/>
+  <rect class="activity" x="890" y="385" width="420" height="60" rx="18"/>
+  <text class="node-label" x="1100" y="422" text-anchor="middle">Administrador selecciona una acción</text>
+  <path class="flow" d="M1100 445 V475"/>
+  <path class="decision" d="M1100 475 L1175 530 L1100 585 L1025 530 Z"/>
+  <text class="node-label" x="1100" y="536" text-anchor="middle">¿Qué acción?</text>
+
+  <!-- Salidas de la decisión -->
+  <path class="flow" d="M1025 530 H390 V605"/>
+  <text class="branch-label" x="680" y="520" text-anchor="middle">Registrar</text>
+  <path class="flow" d="M1100 585 V605"/>
+  <text class="branch-label" x="1120" y="600">Editar</text>
+  <path class="flow" d="M1175 530 H1810 V605"/>
+  <text class="branch-label" x="1500" y="520" text-anchor="middle">Activar / desactivar</text>
+
+  <!-- Rama: registrar una carrera -->
+  <rect class="activity" x="150" y="605" width="480" height="65" rx="18"/>
+  <text class="node-label" x="390" y="644" text-anchor="middle">Abrir formulario de nueva carrera</text>
+  <path class="flow" d="M390 670 V695"/>
+  <rect class="activity" x="130" y="695" width="520" height="90" rx="18"/>
+  <text class="node-label" x="390" y="726" text-anchor="middle">
+    <tspan x="390" dy="0">Ingresar nombre obligatorio</tspan>
+    <tspan x="390" dy="24">y código opcional</tspan>
+  </text>
+  <path class="flow" d="M390 785 V805"/>
+  <rect class="activity" x="130" y="805" width="520" height="90" rx="18"/>
+  <text class="node-label" x="390" y="835" text-anchor="middle">
+    <tspan x="390" dy="0">Validar formato, límites permitidos</tspan>
+    <tspan x="390" dy="24">y que nombre/código no estén duplicados</tspan>
+  </text>
+  <path class="flow" d="M390 895 V910"/>
+  <path class="decision" d="M390 910 L460 960 L390 1010 L320 960 Z"/>
+  <text class="node-label" x="390" y="966" text-anchor="middle">¿Válidos?</text>
+  <path class="flow" d="M320 960 H270 V1030"/>
+  <text class="branch-label" x="300" y="947" text-anchor="end">No</text>
+  <rect class="activity" x="70" y="1030" width="360" height="72" rx="18"/>
+  <text class="node-label" x="250" y="1059" text-anchor="middle">
+    <tspan x="250" dy="0">Mostrar errores</tspan>
+    <tspan x="250" dy="22">y corregir formulario</tspan>
+  </text>
+  <path class="flow" d="M70 1066 H35 V740 H130"/>
+  <text class="branch-label" x="475" y="947">Sí</text>
+  <path class="flow" d="M460 960 H510 V1030"/>
+  <rect class="activity" x="320" y="1030" width="380" height="72" rx="18"/>
+  <text class="node-label" x="510" y="1074" text-anchor="middle">Guardar nueva carrera</text>
+  <path class="flow" d="M510 1102 V1120"/>
+  <rect class="activity" x="140" y="1120" width="500" height="65" rx="18"/>
+  <text class="node-label" x="390" y="1160" text-anchor="middle">Mostrar confirmación de registro</text>
+
+  <!-- Rama: editar una carrera -->
+  <rect class="activity" x="850" y="605" width="500" height="65" rx="18"/>
+  <text class="node-label" x="1100" y="644" text-anchor="middle">Seleccionar una carrera y elegir Editar</text>
+  <path class="flow" d="M1100 670 V695"/>
+  <rect class="activity" x="830" y="695" width="540" height="90" rx="18"/>
+  <text class="node-label" x="1100" y="726" text-anchor="middle">
+    <tspan x="1100" dy="0">Mostrar datos actuales y permitir</tspan>
+    <tspan x="1100" dy="24">modificar nombre o código</tspan>
+  </text>
+  <path class="flow" d="M1100 785 V805"/>
+  <rect class="activity" x="830" y="805" width="540" height="90" rx="18"/>
+  <text class="node-label" x="1100" y="835" text-anchor="middle">
+    <tspan x="1100" dy="0">Validar datos y unicidad</tspan>
+    <tspan x="1100" dy="24">sin contar la carrera actual</tspan>
+  </text>
+  <path class="flow" d="M1100 895 V910"/>
+  <path class="decision" d="M1100 910 L1170 960 L1100 1010 L1030 960 Z"/>
+  <text class="node-label" x="1100" y="966" text-anchor="middle">¿Válidos?</text>
+  <path class="flow" d="M1030 960 H900 V1030"/>
+  <text class="branch-label" x="1015" y="947" text-anchor="end">No</text>
+  <rect class="activity" x="760" y="1030" width="300" height="72" rx="18"/>
+  <text class="node-label" x="910" y="1059" text-anchor="middle">
+    <tspan x="910" dy="0">Mostrar errores</tspan>
+    <tspan x="910" dy="22">y corregir datos</tspan>
+  </text>
+  <path class="flow" d="M760 1066 H740 V740 H830"/>
+  <text class="branch-label" x="1185" y="947">Sí</text>
+  <path class="flow" d="M1170 960 H1300 V1030"/>
+  <rect class="activity" x="1120" y="1030" width="360" height="72" rx="18"/>
+  <text class="node-label" x="1300" y="1074" text-anchor="middle">Guardar cambios de la carrera</text>
+  <path class="flow" d="M1300 1102 V1120"/>
+  <rect class="activity" x="1050" y="1120" width="500" height="65" rx="18"/>
+  <text class="node-label" x="1300" y="1160" text-anchor="middle">Mostrar confirmación de actualización</text>
+
+  <!-- Rama: activar o desactivar una carrera -->
+  <rect class="activity" x="1580" y="605" width="460" height="65" rx="18"/>
+  <text class="node-label" x="1810" y="644" text-anchor="middle">Elegir Activar o Desactivar</text>
+  <path class="flow" d="M1810 670 V700"/>
+  <rect class="activity" x="1580" y="700" width="460" height="80" rx="18"/>
+  <text class="node-label" x="1810" y="730" text-anchor="middle">
+    <tspan x="1810" dy="0">Cambiar estado de activa</tspan>
+    <tspan x="1810" dy="23">a inactiva o viceversa</tspan>
+  </text>
+  <path class="flow" d="M1810 780 V805"/>
+  <rect class="activity" x="1580" y="805" width="460" height="75" rx="18"/>
+  <text class="node-label" x="1810" y="835" text-anchor="middle">
+    <tspan x="1810" dy="0">Conservar la carrera y</tspan>
+    <tspan x="1810" dy="22">sus datos históricos</tspan>
+  </text>
+  <path class="flow" d="M1810 880 V905"/>
+  <rect class="activity" x="1580" y="905" width="460" height="65" rx="18"/>
+  <text class="node-label" x="1810" y="945" text-anchor="middle">Mostrar confirmación del cambio</text>
+
+  <!-- Unión de las alternativas -->
+  <path class="flow" d="M390 1185 V1285 H1030 V1350"/>
+  <path class="flow" d="M1300 1185 V1300 H1100"/>
+  <path class="flow" d="M1810 970 V1285 H1170 V1350"/>
+  <path class="decision" d="M1100 1300 L1170 1350 L1100 1400 L1030 1350 Z"/>
+  <path class="flow" d="M1100 1400 V1425"/>
+  <rect class="activity" x="850" y="1425" width="500" height="65" rx="18"/>
+  <text class="node-label" x="1100" y="1465" text-anchor="middle">Volver al listado de carreras actualizado</text>
+  <path class="flow" d="M1100 1490 V1520"/>
+  <circle class="final-outer" cx="1100" cy="1540" r="16"/>
+  <circle class="final-inner" cx="1100" cy="1540" r="9"/>
+</svg>

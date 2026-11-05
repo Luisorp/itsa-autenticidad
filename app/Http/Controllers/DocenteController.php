@@ -13,12 +13,15 @@ class DocenteController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Docente::with('carreras')->orderBy('nombre');
+        $query = Docente::with(['carreras', 'cuenta'])
+            ->orderByRaw('COALESCE((SELECT name FROM users WHERE users.id = docentes.user_id), docentes.nombre)');
         if ($request->filled('buscar')) {
             $termino = $request->string('buscar')->toString();
             $query->where(fn ($q) => $q->where('nombre', 'like', "%{$termino}%")
                 ->orWhere('codigo', 'like', "%{$termino}%")
-                ->orWhere('email', 'like', "%{$termino}%"));
+                ->orWhere('email', 'like', "%{$termino}%")
+                ->orWhereHas('cuenta', fn ($cuenta) => $cuenta->where('name', 'like', "%{$termino}%")
+                    ->orWhere('email', 'like', "%{$termino}%")));
         }
 
         $docentes = $query->paginate(15)->withQueryString();
@@ -39,6 +42,10 @@ class DocenteController extends Controller
         $validated = $this->validar($request);
         $carreraIds = $validated['carrera_ids'];
         unset($validated['carrera_ids']);
+        if (! empty($validated['user_id'])) {
+            $validated['nombre'] = null;
+            $validated['email'] = null;
+        }
 
         DB::transaction(function () use ($validated, $carreraIds) {
             $docente = Docente::create($validated);
@@ -66,6 +73,10 @@ class DocenteController extends Controller
         $validated = $this->validar($request, $docente);
         $carreraIds = $validated['carrera_ids'];
         unset($validated['carrera_ids']);
+        if (! empty($validated['user_id'])) {
+            $validated['nombre'] = null;
+            $validated['email'] = null;
+        }
 
         DB::transaction(function () use ($docente, $validated, $carreraIds) {
             $docente->update($validated);
@@ -86,7 +97,7 @@ class DocenteController extends Controller
     {
         return $request->validate([
             'codigo' => ['nullable', 'string', 'max:50', Rule::unique('docentes', 'codigo')->ignore($docente)],
-            'nombre' => ['required', 'string', 'max:255'],
+            'nombre' => ['required_without:user_id', 'nullable', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'max:255'],
             'carrera_ids' => ['required', 'array', 'min:1'],
             'carrera_ids.*' => ['integer', Rule::exists('carreras', 'id')],

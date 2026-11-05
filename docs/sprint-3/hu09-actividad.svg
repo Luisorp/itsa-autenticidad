@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1100" viewBox="0 0 1300 1100">
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+    <path d="M0 0L10 5L0 10Z" fill="#111"/>
+  </marker>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#111}
+    .node{fill:#fff;stroke:#111;stroke-width:2}
+    .flow{fill:none;stroke:#111;stroke-width:2;marker-end:url(#arrow)}
+    .start{fill:#111}
+    .final{fill:#fff;stroke:#111;stroke-width:3}
+  </style>
+</defs>
+
+<circle class="start" cx="650" cy="25" r="12"/>
+<path class="flow" d="M650 37V70"/>
+<rect class="node" x="460" y="70" width="380" height="58" rx="16"/>
+<text x="650" y="106" text-anchor="middle" font-size="18">Abrir la función de comparación</text>
+<path class="flow" d="M650 128V160"/>
+<path class="node" d="M650 160L750 215L650 270L550 215Z"/>
+<text x="650" y="210" text-anchor="middle" font-size="16">
+  <tspan x="650">¿Qué desea</tspan><tspan x="650" dy="20">comparar?</tspan>
+</text>
+
+<path class="flow" d="M550 215H300V290"/>
+<text x="400" y="205" font-size="15">Repositorio interno</text>
+<path class="flow" d="M750 215H1000V290"/>
+<text x="850" y="205" font-size="15">Dos proyectos</text>
+
+<rect class="node" x="40" y="290" width="520" height="65" rx="16"/>
+<text x="300" y="317" text-anchor="middle" font-size="17">
+  <tspan x="300">Seleccionar proyecto activo</tspan><tspan x="300" dy="22">con texto analizable</tspan>
+</text>
+<path class="flow" d="M300 355V380"/>
+<rect class="node" x="40" y="380" width="520" height="70" rx="16"/>
+<text x="300" y="408" text-anchor="middle" font-size="17">
+  <tspan x="300">Buscar proyectos de la misma</tspan><tspan x="300" dy="22">carrera y modalidad</tspan>
+</text>
+<path class="flow" d="M300 450V480"/>
+<path class="node" d="M300 465L400 540L300 615L200 540Z"/>
+<text x="300" y="535" text-anchor="middle" font-size="14">
+  <tspan x="300">¿Hay proyectos</tspan><tspan x="300" dy="19">compatibles?</tspan>
+</text>
+<path class="flow" d="M400 540H520V625"/>
+<text x="420" y="530" font-size="14">Sí</text>
+<path class="flow" d="M200 540H15V830H40"/>
+<text x="80" y="530" font-size="14">No</text>
+<rect class="node" x="40" y="625" width="520" height="70" rx="16"/>
+<text x="300" y="654" text-anchor="middle" font-size="17">
+  <tspan x="300">Calcular y guardar</tspan><tspan x="300" dy="22">los porcentajes de similitud</tspan>
+</text>
+<path class="flow" d="M300 695V725"/>
+<rect class="node" x="40" y="725" width="520" height="65" rx="16"/>
+<text x="300" y="764" text-anchor="middle" font-size="17">Ordenar resultados por similitud</text>
+<rect class="node" x="40" y="800" width="520" height="60" rx="16"/>
+<text x="300" y="836" text-anchor="middle" font-size="16">Informar que no hay proyectos comparables</text>
+<path class="flow" d="M560 757H600V880H330V925"/>
+<path class="flow" d="M300 860V875H270V925"/>
+<path class="node" d="M300 900L330 925L300 950L270 925Z"/>
+<path class="flow" d="M300 950V1000H635V1055"/>
+
+<rect class="node" x="740" y="290" width="520" height="65" rx="16"/>
+<text x="1000" y="317" text-anchor="middle" font-size="17">
+  <tspan x="1000">Seleccionar proyecto A</tspan><tspan x="1000" dy="22">y proyecto B</tspan>
+</text>
+<path class="flow" d="M1000 355V390"/>
+<path class="node" d="M1000 385L1100 465L1000 545L900 465Z"/>
+<text x="1000" y="450" text-anchor="middle" font-size="14">
+  <tspan x="1000">¿Están activos?</tspan><tspan x="1000" dy="18">¿Tienen texto?</tspan><tspan x="1000" dy="18">¿Misma modalidad?</tspan>
+</text>
+<path class="flow" d="M1100 465H1220V585"/>
+<text x="1115" y="455" font-size="14">Sí</text>
+<path class="flow" d="M900 465H710V870H740"/>
+<text x="850" y="455" font-size="14">No</text>
+<rect class="node" x="740" y="585" width="520" height="65" rx="16"/>
+<text x="1000" y="613" text-anchor="middle" font-size="17">
+  <tspan x="1000">Extraer secciones comparables</tspan><tspan x="1000" dy="22">y calcular la similitud textual</tspan>
+</text>
+<path class="flow" d="M1000 650V675"/>
+<rect class="node" x="740" y="675" width="520" height="65" rx="16"/>
+<text x="1000" y="703" text-anchor="middle" font-size="17">
+  <tspan x="1000">Identificar los fragmentos</tspan><tspan x="1000" dy="22">coincidentes</tspan>
+</text>
+<path class="flow" d="M1000 740V770"/>
+<rect class="node" x="740" y="770" width="520" height="65" rx="16"/>
+<text x="1000" y="809" text-anchor="middle" font-size="17">Mostrar porcentaje y coincidencias</text>
+<rect class="node" x="740" y="840" width="520" height="60" rx="16"/>
+<text x="1000" y="876" text-anchor="middle" font-size="16">Mostrar validación y volver al formulario</text>
+<path class="flow" d="M1260 802H1290V905H1000V920"/>
+<path class="flow" d="M1260 870H1280V945H1030"/>
+<path class="node" d="M1000 920L1030 945L1000 970L970 945Z"/>
+<path class="flow" d="M1000 970V1000H665V1055"/>
+
+<circle class="final" cx="650" cy="1060" r="14"/>
+<circle class="start" cx="650" cy="1060" r="7"/>
+</svg>

@@ -39,17 +39,9 @@
                     </select>
                     @error('rol')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Carrera</label>
-                    <select name="carrera_id" class="form-select @error('carrera_id') is-invalid @enderror">
-                        <option value="">Sin asignar</option>
-                        @foreach($carreras as $carrera)
-                            <option value="{{ $carrera->id }}" @selected(old('carrera_id') == $carrera->id)>{{ $carrera->nombre }}</option>
-                        @endforeach
-                    </select>
-                    @error('carrera_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
             </div>
+
+            <p class="form-text">La carrera se asigna en el perfil académico del estudiante o en las carreras del docente, no en la cuenta de acceso.</p>
 
             <button type="submit" class="btn btn-primary">Guardar</button>
             <a href="{{ route('usuarios.index') }}" class="btn btn-secondary">Cancelar</a>

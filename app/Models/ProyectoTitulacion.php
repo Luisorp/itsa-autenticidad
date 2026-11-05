@@ -13,6 +13,12 @@ class ProyectoTitulacion extends Model
         'trabajo_dirigido_externo' => 'Trabajo dirigido externo',
     ];
 
+    public const PERIODOS_ACADEMICOS = [
+        'anual' => 'Anual',
+        'semestre_i' => 'Semestre I',
+        'semestre_ii' => 'Semestre II',
+    ];
+
     protected $table = 'proyectos_titulacion';
 
     protected $fillable = [
@@ -23,6 +29,7 @@ class ProyectoTitulacion extends Model
         'estudiante_id',
         'tutor_id',
         'anio',
+        'periodo_academico',
         'estado',
         'activo',
     ];
@@ -35,6 +42,11 @@ class ProyectoTitulacion extends Model
     public function getModalidadNombreAttribute(): string
     {
         return self::MODALIDADES[$this->modalidad] ?? 'Modalidad no definida';
+    }
+
+    public function getPeriodoAcademicoNombreAttribute(): string
+    {
+        return self::PERIODOS_ACADEMICOS[$this->periodo_academico] ?? 'Sin especificar';
     }
 
     public function carrera()
@@ -57,8 +69,8 @@ class ProyectoTitulacion extends Model
         return $this->hasOne(Documento::class, 'proyecto_id');
     }
 
-    public function reportes()
+    public function reporte()
     {
-        return $this->hasMany(Reporte::class, 'proyecto_id');
+        return $this->hasOne(Reporte::class, 'proyecto_id');
     }
 }

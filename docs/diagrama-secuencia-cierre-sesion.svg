@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de secuencia: cierre de sesión</title>
+  <desc id="desc">Flujo de cierre de sesión para Administrador, Gestor o Usuario en la aplicación Laravel.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#222"/>
+    </marker>
+    <marker id="arrowOpen" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L9,5 L1,9" fill="none" stroke="#222" stroke-width="1.4"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #161616; }
+      .heading { font-size: 29px; font-weight: 700; }
+      .subheading { font-size: 17px; fill: #444; }
+      .participant { fill: #f5f5f5; stroke: #333; stroke-width: 1.8; }
+      .participant-text { font-size: 16px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+      .lifeline { stroke: #777; stroke-width: 1.4; stroke-dasharray: 8 7; }
+      .activation { fill: #e8e8e8; stroke: #555; stroke-width: 1.2; }
+      .call { stroke: #222; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
+      .reply { stroke: #333; stroke-width: 1.6; stroke-dasharray: 8 6; fill: none; marker-end: url(#arrowOpen); }
+      .message { font-size: 15px; text-anchor: middle; }
+      .actor-line { stroke: #222; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1500" height="900" fill="#fff"/>
+  <text class="heading" x="750" y="45" text-anchor="middle">DIAGRAMA DE SECUENCIA: CIERRE DE SESIÓN</text>
+  <text class="subheading" x="750" y="75" text-anchor="middle">Aplicación web Laravel</text>
+
+  <!-- Actor -->
+  <circle cx="100" cy="125" r="16" fill="#fff" stroke="#222" stroke-width="1.8"/>
+  <path class="actor-line" d="M100 141 V181 M77 154 H123 M100 181 L79 205 M100 181 L121 205"/>
+  <text class="participant-text" x="100" y="232"></text>
+  <text class="participant-text" x="100" y="254">Usuario</text>
+
+  <!-- Participantes -->
+  <rect class="participant" x="235" y="110" width="190" height="70" rx="4"/>
+  <text class="participant-text" x="330" y="145">Navegador</text>
+
+  <rect class="participant" x="500" y="110" width="260" height="70" rx="4"/>
+  <text class="participant-text" x="630" y="135">AuthenticatedSession</text>
+  <text class="participant-text" x="630" y="157">Controller</text>
+
+  <rect class="participant" x="835" y="110" width="200" height="70" rx="4"/>
+  <text class="participant-text" x="935" y="145">Laravel Auth</text>
+
+  <rect class="participant" x="1110" y="110" width="220" height="70" rx="4"/>
+  <text class="participant-text" x="1220" y="135">Sesión Laravel</text>
+  <text class="participant-text" x="1220" y="157">Token de seguridad</text>
+
+  <!-- Líneas de vida y activaciones -->
+  <path class="lifeline" d="M100 265 V805"/>
+  <path class="lifeline" d="M330 180 V805"/>
+  <path class="lifeline" d="M630 180 V805"/>
+  <path class="lifeline" d="M935 180 V805"/>
+  <path class="lifeline" d="M1220 180 V805"/>
+  <rect class="activation" x="323" y="325" width="14" height="390"/>
+  <rect class="activation" x="623" y="365" width="14" height="320"/>
+  <rect class="activation" x="928" y="405" width="14" height="65"/>
+  <rect class="activation" x="1213" y="525" width="14" height="105"/>
+
+  <!-- Secuencia del cierre -->
+  <path class="call" d="M125 300 H323"/>
+  <text class="message" x="225" y="290">Seleccionar «Cerrar sesión»</text>
+
+  <path class="call" d="M337 340 H623"/>
+  <text class="message" x="480" y="330">POST /logout</text>
+
+  <path class="call" d="M637 390 H928"/>
+  <text class="message" x="782" y="380">Auth::guard('web')->logout()</text>
+
+  <path class="reply" d="M928 440 H637"/>
+  <text class="message" x="782" y="430">Autenticación finalizada</text>
+
+  <path class="call" d="M637 490 H1213"/>
+  <text class="message" x="925" y="480">session()->invalidate()</text>
+
+  <path class="call" d="M637 540 H1213"/>
+  <text class="message" x="925" y="530">session()->regenerateToken()</text>
+
+  <path class="reply" d="M1213 600 H637"/>
+  <text class="message" x="925" y="590">Sesión invalidada y token renovado</text>
+
+  <path class="reply" d="M623 655 H337"/>
+  <text class="message" x="480" y="645">Redirigir a /</text>
+
+  <path class="reply" d="M323 705 H125"/>
+  <text class="message" x="225" y="695">Mostrar página inicial</text>
+</svg>

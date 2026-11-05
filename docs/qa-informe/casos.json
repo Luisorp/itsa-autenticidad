@@ -1,0 +1,270 @@
+[
+  [
+    "Acceso",
+    "Crítica",
+    "Cuenta administradora activa; navegador sin sesión.",
+    "admin.qa@example.com / Prueba-QA2026!",
+    "Comprobar el acceso con credenciales válidas.",
+    [
+      "Abrir /login.",
+      "Introducir el correo y la contraseña de prueba.",
+      "Pulsar Iniciar sesión.",
+      "Comprobar dashboard e identidad del usuario."
+    ],
+    "Redirige a /dashboard y muestra Administrador de prueba.",
+    "POST /login → /dashboard"
+  ],
+  [
+    "Acceso",
+    "Alta",
+    "Administrador autenticado.",
+    "Sesión creada en TC-001.",
+    "Verificar el cierre y la protección posterior del dashboard.",
+    [
+      "Abrir el menú de la cuenta.",
+      "Seleccionar Cerrar sesión.",
+      "Intentar abrir /dashboard nuevamente."
+    ],
+    "Regresa al acceso; el dashboard requiere autenticación.",
+    "POST /logout; GET /dashboard"
+  ],
+  [
+    "Acceso",
+    "Alta",
+    "Cuenta administradora activa; sesión cerrada.",
+    "admin.qa@example.com / Incorrecta2026!",
+    "Rechazar una contraseña incorrecta.",
+    [
+      "Abrir /login.",
+      "Escribir el correo existente y la contraseña incorrecta.",
+      "Pulsar Iniciar sesión.",
+      "Verificar el error y permanencia en /login."
+    ],
+    "Muestra error de credenciales y no permite entrar.",
+    "POST /login"
+  ],
+  [
+    "Acceso",
+    "Alta",
+    "Navegador en la pantalla de acceso.",
+    "Correo vacío; contraseña Prueba-QA2026!",
+    "Verificar la obligatoriedad del correo en el navegador.",
+    [
+      "Abrir /login.",
+      "Dejar vacío el correo e introducir contraseña.",
+      "Intentar iniciar sesión.",
+      "Comprobar la validación del campo obligatorio."
+    ],
+    "El navegador impide enviar el formulario; email presenta valueMissing.",
+    "GET /login; validación HTML required"
+  ],
+  [
+    "Acceso",
+    "Crítica",
+    "Cuenta inactiva preparada; sesión cerrada.",
+    "inactivo.qa@example.com / Prueba-QA2026!",
+    "Impedir un nuevo acceso de una cuenta desactivada.",
+    [
+      "Abrir /login.",
+      "Introducir las credenciales correctas de la cuenta inactiva.",
+      "Pulsar Iniciar sesión.",
+      "Comprobar el aviso de desactivación."
+    ],
+    "Rechaza el acceso y solicita contactar al administrador.",
+    "POST /login"
+  ],
+  [
+    "Usuarios",
+    "Alta",
+    "Administrador autenticado; carrera SIS activa.",
+    "Lucía Rojas (prueba); lucia.qa@example.com; rol gestor; clave y confirmación: Prueba-QA2026!",
+    "Crear una cuenta desde la administración del sistema.",
+    [
+      "Abrir Usuarios → Nuevo usuario.",
+      "Completar nombre, correo, contraseña y confirmación.",
+      "Elegir Gestor y Sistemas Informáticos.",
+      "Guardar y comprobar la lista de gestores."
+    ],
+    "Crea una cuenta activa y muestra Usuario creado correctamente.",
+    "POST /usuarios"
+  ],
+  [
+    "Usuarios",
+    "Alta",
+    "Administrador autenticado.",
+    "Registro incompleto; correo vacío; demás datos válidos de TC-006.",
+    "Validar que no se cree un usuario sin correo.",
+    [
+      "Abrir Nuevo usuario.",
+      "Completar los campos salvo el correo.",
+      "Guardar.",
+      "Comprobar el error asociado a Correo."
+    ],
+    "Rechaza el registro y marca el correo como obligatorio.",
+    "POST /usuarios"
+  ],
+  [
+    "Usuarios",
+    "Alta",
+    "Administrador autenticado.",
+    "confirmacion.qa@example.com; clave Prueba-QA2026!; confirmación Diferente2026!",
+    "Validar la coincidencia entre contraseña y confirmación.",
+    [
+      "Abrir Nuevo usuario.",
+      "Completar los datos con un correo nuevo.",
+      "Introducir contraseñas diferentes.",
+      "Guardar y comprobar la validación."
+    ],
+    "No crea la cuenta y muestra error de confirmación.",
+    "POST /usuarios"
+  ],
+  [
+    "Usuarios",
+    "Alta",
+    "La cuenta de TC-006 ya existe.",
+    "lucia.qa@example.com; nombre Duplicado de prueba; demás datos válidos.",
+    "Impedir dos cuentas con el mismo correo.",
+    [
+      "Abrir Nuevo usuario.",
+      "Introducir el correo registrado en TC-006.",
+      "Completar el resto y guardar.",
+      "Comprobar el error por correo duplicado."
+    ],
+    "Rechaza el registro y conserva una sola cuenta con ese correo.",
+    "POST /usuarios"
+  ],
+  [
+    "Permisos",
+    "Crítica",
+    "Cuenta activa con rol usuario.",
+    "usuario.qa@example.com / Prueba-QA2026!",
+    "Restringir el acceso directo a administración de cuentas.",
+    [
+      "Iniciar sesión como usuario.",
+      "Introducir /usuarios directamente en la dirección del navegador.",
+      "Observar la respuesta de autorización."
+    ],
+    "Devuelve 403 y no muestra la lista administrativa.",
+    "GET /usuarios"
+  ],
+  [
+    "Registro académico",
+    "Alta",
+    "Administrador autenticado; carrera SIS activa.",
+    "QA-002; Luis Mendoza (prueba); luis.qa@example.com; Sistemas Informáticos; gestión 2026.",
+    "Registrar un estudiante sin crear una cuenta de acceso.",
+    [
+      "Abrir Estudiantes → Registrar estudiante.",
+      "Completar código, nombre, correo, carrera y gestión.",
+      "Mantener No necesita iniciar sesión.",
+      "Guardar y verificar el padrón."
+    ],
+    "El estudiante aparece en el padrón sin una nueva cuenta de usuario.",
+    "POST /estudiantes"
+  ],
+  [
+    "Proyectos",
+    "Crítica",
+    "Administrador; estudiante y docente de prueba asociados a SIS.",
+    "Plataforma documental de prueba; proyecto_grado; Ana Pérez; Carlos Flores; 2026; carga-prueba.pdf.",
+    "Registrar un proyecto y extraer texto de un PDF real de prueba.",
+    [
+      "Abrir Proyectos → Registrar proyecto.",
+      "Completar título, modalidad, carrera, estudiante, tutor y año.",
+      "Adjuntar carga-prueba.pdf y guardar.",
+      "Comprobar proyecto, archivo y texto extraído en el entorno temporal."
+    ],
+    "Guarda proyecto y documento con texto extraído; estado pendiente_analisis.",
+    "POST /proyectos"
+  ],
+  [
+    "Comparación",
+    "Crítica",
+    "A y B activos, misma modalidad y contenido idéntico con secciones reconocibles.",
+    "Registro académico A (id 1) y Registro académico B (id 2).",
+    "Verificar porcentaje y evidencia textual para contenido idéntico.",
+    [
+      "Abrir Comparar proyectos.",
+      "Establecer Proyecto A y Proyecto B.",
+      "Enviar la comparación.",
+      "Comprobar porcentaje, secciones y tarjetas de coincidencias."
+    ],
+    "Presenta 100% de similitud y fragmentos coincidentes.",
+    "POST /analizar"
+  ],
+  [
+    "Comparación",
+    "Alta",
+    "Administrador; dos proyectos de modalidades distintas.",
+    "A: id 1, proyecto_grado. B: id 4, trabajo_dirigido_externo.",
+    "Comprobar la validación del servidor ante una combinación incompatible.",
+    [
+      "Abrir /analizar.",
+      "Preparar la petición con proyecto_a=1 y proyecto_b=4.",
+      "Enviar directamente el formulario para comprobar la regla del servidor.",
+      "Verificar el mensaje de modalidad."
+    ],
+    "Rechaza la comparación y exige la misma modalidad.",
+    "POST /analizar (validación directa)"
+  ],
+  [
+    "Comparación",
+    "Alta",
+    "Administrador; proyecto B con texto sin encabezados reconocibles.",
+    "A: id 1. B: Documento sin secciones, id 3.",
+    "Impedir un porcentaje engañoso cuando no hay contenido analizable.",
+    [
+      "Abrir Comparar proyectos.",
+      "Establecer A y Documento sin secciones como B.",
+      "Enviar la comparación.",
+      "Comprobar el mensaje del Proyecto B."
+    ],
+    "Solicita encabezados reconocibles; no calcula un resultado global.",
+    "POST /analizar"
+  ],
+  [
+    "Reportes",
+    "Alta",
+    "Administrador autenticado; proyecto A existente.",
+    "Registro académico A, id 1.",
+    "Verificar generación, descarga y registro del reporte PDF.",
+    [
+      "Abrir el catálogo de Proyectos.",
+      "Solicitar Reporte del proyecto A.",
+      "Verificar HTTP 200, application/pdf y firma %PDF-.",
+      "Abrir Reportes y comprobar el registro."
+    ],
+    "Entrega un PDF válido y registra su ubicación.",
+    "GET /proyectos/1/reporte; GET /reportes"
+  ],
+  [
+    "Respaldos",
+    "Crítica",
+    "Administrador; escenario con cuentas, estudiantes y documentos.",
+    "Registros ficticios del entorno; exportación SQL.",
+    "Verificar generación y descarga del respaldo de datos.",
+    [
+      "Abrir Respaldos.",
+      "Pulsar Generar nuevo respaldo.",
+      "Descargar el archivo SQL.",
+      "Comprobar tablas y aviso de copia separada de PDF."
+    ],
+    "Genera y descarga SQL con registros; explica la copia separada de archivos.",
+    "POST /respaldos/generar; GET de descarga"
+  ],
+  [
+    "Interfaz móvil",
+    "Media",
+    "Administrador autenticado; emulación móvil.",
+    "Resolución: 390 × 844 píxeles.",
+    "Comprobar que el dashboard cabe en una pantalla móvil.",
+    [
+      "Abrir /dashboard.",
+      "Establecer un viewport móvil de 390 × 844.",
+      "Comparar ancho del documento y ancho visible.",
+      "Revisar la captura del dashboard."
+    ],
+    "La pantalla se adapta sin desbordamiento horizontal.",
+    "GET /dashboard"
+  ]
+]

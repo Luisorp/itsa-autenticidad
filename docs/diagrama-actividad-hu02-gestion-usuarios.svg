@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2050" height="1500" viewBox="0 0 2050 1500" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de actividades HU02: Gestión de usuarios y roles</title>
+  <desc id="desc">El Administrador consulta el listado y puede crear, editar o activar y desactivar una cuenta. Los datos se validan; los errores permiten corregir el formulario y no se permite desactivar la propia cuenta.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#111}
+      .title{font-size:29px;font-weight:700}
+      .activity{fill:#fff;stroke:#111;stroke-width:2}
+      .decision{fill:#fff;stroke:#111;stroke-width:2}
+      .flow{fill:none;stroke:#222;stroke-width:2;marker-end:url(#arrow)}
+      .label{font-size:16px}
+      .node-label{font-size:17px}
+      .branch-label{font-size:15px;font-weight:700}
+      .initial{fill:#111}
+      .final-outer{fill:#fff;stroke:#111;stroke-width:2.5}
+      .final-inner{fill:#111}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 z" fill="#222"/>
+    </marker>
+  </defs>
+  <rect width="2050" height="1500" fill="#fff"/>
+  <text class="title" x="1025" y="45" text-anchor="middle">DIAGRAMA DE ACTIVIDADES — HU02: GESTIÓN DE USUARIOS Y ROLES</text>
+
+  <!-- Inicio y acceso al módulo -->
+  <circle class="initial" cx="1025" cy="90" r="11"/>
+  <path class="flow" d="M1025 101 V120"/>
+  <rect class="activity" x="810" y="120" width="430" height="60" rx="18"/>
+  <text class="node-label" x="1025" y="157" text-anchor="middle">Administrador abre Usuarios</text>
+  <path class="flow" d="M1025 180 V205"/>
+  <rect class="activity" x="760" y="205" width="530" height="70" rx="18"/>
+  <text class="node-label" x="1025" y="234" text-anchor="middle">
+    <tspan x="1025" dy="0">El sistema verifica autenticación</tspan>
+    <tspan x="1025" dy="23">y permiso de Administrador</tspan>
+  </text>
+  <path class="flow" d="M1025 275 V305"/>
+  <rect class="activity" x="740" y="305" width="570" height="76" rx="18"/>
+  <text class="node-label" x="1025" y="335" text-anchor="middle">
+    <tspan x="1025" dy="0">Mostrar cuentas agrupadas por rol,</tspan>
+    <tspan x="1025" dy="23">con conteos y paginación</tspan>
+  </text>
+  <path class="flow" d="M1025 381 V405"/>
+  <rect class="activity" x="825" y="405" width="400" height="60" rx="18"/>
+  <text class="node-label" x="1025" y="442" text-anchor="middle">Administrador selecciona una acción</text>
+  <path class="flow" d="M1025 465 V490"/>
+
+  <!-- Decisión de operación -->
+  <path class="decision" d="M1025 490 L1100 545 L1025 600 L950 545 Z"/>
+  <text class="node-label" x="1025" y="551" text-anchor="middle">¿Qué acción?</text>
+  <path class="flow" d="M950 545 H350 V625"/>
+  <text class="branch-label" x="625" y="535" text-anchor="middle">Crear</text>
+  <path class="flow" d="M1025 600 V625"/>
+  <text class="branch-label" x="1045" y="617">Editar</text>
+  <path class="flow" d="M1100 545 H1700 V625"/>
+  <text class="branch-label" x="1395" y="535" text-anchor="middle">Activar / desactivar</text>
+
+  <!-- Rama: crear usuario -->
+  <rect class="activity" x="170" y="625" width="360" height="62" rx="18"/>
+  <text class="node-label" x="350" y="663" text-anchor="middle">Abrir formulario de creación</text>
+  <path class="flow" d="M350 687 V710"/>
+  <rect class="activity" x="130" y="710" width="440" height="90" rx="18"/>
+  <text class="node-label" x="350" y="740" text-anchor="middle">
+    <tspan x="350" dy="0">Ingresar nombre, correo, contraseña,</tspan>
+    <tspan x="350" dy="23">rol y carrera opcional</tspan>
+  </text>
+  <path class="flow" d="M350 800 V825"/>
+  <rect class="activity" x="130" y="825" width="440" height="72" rx="18"/>
+  <text class="node-label" x="350" y="854" text-anchor="middle">
+    <tspan x="350" dy="0">Validar datos, correo único, contraseña</tspan>
+    <tspan x="350" dy="22">confirmada y carrera activa si se asigna</tspan>
+  </text>
+  <path class="flow" d="M350 897 V920"/>
+  <path class="decision" d="M350 920 L425 970 L350 1020 L275 970 Z"/>
+  <text class="node-label" x="350" y="976" text-anchor="middle">¿Válidos?</text>
+  <path class="flow" d="M275 970 H270 V1050"/>
+  <text class="branch-label" x="245" y="1012" text-anchor="end">No</text>
+  <rect class="activity" x="25" y="1050" width="245" height="78" rx="18"/>
+  <text class="node-label" x="147" y="1080" text-anchor="middle">
+    <tspan x="147" dy="0">Mostrar errores;</tspan>
+    <tspan x="147" dy="22">corregir formulario</tspan>
+  </text>
+  <path class="flow" d="M25 1089 H12 V755 H130"/>
+  <text class="branch-label" x="435" y="1012">Sí</text>
+  <path class="flow" d="M425 970 H445 V1050"/>
+  <rect class="activity" x="300" y="1050" width="340" height="78" rx="18"/>
+  <text class="node-label" x="470" y="1080" text-anchor="middle">
+    <tspan x="470" dy="0">Guardar cuenta con</tspan>
+    <tspan x="470" dy="22">contraseña protegida</tspan>
+  </text>
+  <path class="flow" d="M470 1128 V1145"/>
+  <rect class="activity" x="300" y="1145" width="340" height="62" rx="18"/>
+  <text class="node-label" x="470" y="1183" text-anchor="middle">Mostrar “Usuario creado”</text>
+
+  <!-- Rama: editar usuario -->
+  <rect class="activity" x="845" y="625" width="360" height="62" rx="18"/>
+  <text class="node-label" x="1025" y="663" text-anchor="middle">Abrir formulario de la cuenta</text>
+  <path class="flow" d="M1025 687 V710"/>
+  <rect class="activity" x="805" y="710" width="440" height="90" rx="18"/>
+  <text class="node-label" x="1025" y="740" text-anchor="middle">
+    <tspan x="1025" dy="0">Modificar nombre, correo,</tspan>
+    <tspan x="1025" dy="23">rol o carrera</tspan>
+  </text>
+  <path class="flow" d="M1025 800 V825"/>
+  <rect class="activity" x="805" y="825" width="440" height="72" rx="18"/>
+  <text class="node-label" x="1025" y="854" text-anchor="middle">
+    <tspan x="1025" dy="0">Validar datos y que el correo</tspan>
+    <tspan x="1025" dy="22">no esté duplicado</tspan>
+  </text>
+  <path class="flow" d="M1025 897 V920"/>
+  <path class="decision" d="M1025 920 L1100 970 L1025 1020 L950 970 Z"/>
+  <text class="node-label" x="1025" y="976" text-anchor="middle">¿Válidos?</text>
+  <path class="flow" d="M950 970 H940 V1050"/>
+  <text class="branch-label" x="920" y="1012" text-anchor="end">No</text>
+  <rect class="activity" x="790" y="1050" width="300" height="78" rx="18"/>
+  <text class="node-label" x="940" y="1080" text-anchor="middle">
+    <tspan x="940" dy="0">Mostrar errores;</tspan>
+    <tspan x="940" dy="22">no guardar cambios</tspan>
+  </text>
+  <path class="flow" d="M790 1089 H775 V755 H805"/>
+  <text class="branch-label" x="1110" y="1012">Sí</text>
+  <path class="flow" d="M1100 970 H1120 V1050"/>
+  <rect class="activity" x="1120" y="1050" width="360" height="78" rx="18"/>
+  <text class="node-label" x="1300" y="1080" text-anchor="middle">
+    <tspan x="1300" dy="0">Guardar actualización</tspan>
+    <tspan x="1300" dy="22">de la cuenta</tspan>
+  </text>
+  <path class="flow" d="M1300 1128 V1145"/>
+  <rect class="activity" x="1120" y="1145" width="360" height="62" rx="18"/>
+  <text class="node-label" x="1300" y="1183" text-anchor="middle">Mostrar “Usuario actualizado”</text>
+
+  <!-- Rama: activar o desactivar cuenta -->
+  <rect class="activity" x="1500" y="625" width="400" height="62" rx="18"/>
+  <text class="node-label" x="1700" y="663" text-anchor="middle">Elegir activar o desactivar cuenta</text>
+  <path class="flow" d="M1700 687 V720"/>
+  <path class="decision" d="M1700 720 L1780 775 L1700 830 L1620 775 Z"/>
+  <text class="node-label" x="1700" y="770" text-anchor="middle">
+    <tspan x="1700" dy="0">¿Es la cuenta</tspan>
+    <tspan x="1700" dy="20">del Administrador?</tspan>
+  </text>
+  <path class="flow" d="M1620 775 H1380 V910"/>
+  <text class="branch-label" x="1485" y="762" text-anchor="middle">Sí</text>
+  <rect class="activity" x="1200" y="910" width="360" height="78" rx="18"/>
+  <text class="node-label" x="1380" y="940" text-anchor="middle">
+    <tspan x="1380" dy="0">Rechazar operación</tspan>
+    <tspan x="1380" dy="22">y mostrar error</tspan>
+  </text>
+  <path class="flow" d="M1780 775 H1810 V910"/>
+  <text class="branch-label" x="1828" y="762">No</text>
+  <rect class="activity" x="1630" y="910" width="360" height="78" rx="18"/>
+  <text class="node-label" x="1810" y="940" text-anchor="middle">
+    <tspan x="1810" dy="0">Cambiar estado</tspan>
+    <tspan x="1810" dy="22">activo / inactivo</tspan>
+  </text>
+  <path class="flow" d="M1380 988 V1060 H1550"/>
+  <path class="flow" d="M1810 988 V1060 H1650"/>
+  <path class="decision" d="M1600 1020 L1650 1060 L1600 1100 L1550 1060 Z"/>
+  <path class="flow" d="M1600 1100 V1115"/>
+  <rect class="activity" x="1390" y="1115" width="420" height="62" rx="18"/>
+  <text class="node-label" x="1600" y="1153" text-anchor="middle">Mostrar error o confirmación</text>
+
+  <!-- Unión de resultados y fin -->
+  <path class="flow" d="M470 1207 V1260 H980"/>
+  <path class="flow" d="M1300 1207 V1260 H1070"/>
+  <path class="flow" d="M1600 1177 V1210 L1070 1260"/>
+  <path class="decision" d="M1025 1215 L1070 1260 L1025 1305 L980 1260 Z"/>
+  <path class="flow" d="M1025 1305 V1320"/>
+  <rect class="activity" x="790" y="1320" width="470" height="65" rx="18"/>
+  <text class="node-label" x="1025" y="1360" text-anchor="middle">Volver al listado actualizado</text>
+  <path class="flow" d="M1025 1385 V1412"/>
+  <circle class="final-outer" cx="1025" cy="1430" r="16"/>
+  <circle class="final-inner" cx="1025" cy="1430" r="9"/>
+</svg>

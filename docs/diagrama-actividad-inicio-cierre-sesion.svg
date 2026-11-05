@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1760" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de actividades unificado: iniciar y cerrar sesión</title>
+  <desc id="desc">Flujo de inicio de sesión, validación de credenciales y estado activo, uso de la aplicación y cierre seguro de sesión para Administrador, Gestor y Usuario.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,4 L0,8 z" fill="#3f5748"/></marker>
+    <style>
+      .bg{fill:#fff}.title{font:700 25px Arial,sans-serif;fill:#173c2c}.subtitle{font:14px Arial,sans-serif;fill:#53665a}
+      .lane{fill:#fff;stroke:#8ea092;stroke-width:1.2}.lanehead{fill:#e9f0eb;stroke:#8ea092;stroke-width:1.2}
+      .laneText{font:700 18px Arial,sans-serif;fill:#20382a;text-anchor:middle}
+      .activity{fill:#f7faf7;stroke:#506657;stroke-width:1.5}.activityText{font:17px Arial,sans-serif;fill:#20382a;text-anchor:middle}
+      .decision{fill:#f2f6f3;stroke:#506657;stroke-width:1.5}.decisionText{font:15px Arial,sans-serif;fill:#20382a;text-anchor:middle}
+      .flow{fill:none;stroke:#3f5748;stroke-width:1.7;marker-end:url(#arrow)}.branch{font:14px Arial,sans-serif;fill:#355342}
+      .start{fill:#253d2e}.endOuter{fill:#253d2e}.endInner{fill:#fff}.note{font:14px Arial,sans-serif;fill:#53665a;text-anchor:middle}
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="1760"/>
+  <text class="title" x="600" y="38" text-anchor="middle">DIAGRAMA DE ACTIVIDADES: INICIO Y CIERRE DE SESIÓN</text>
+  <text class="subtitle" x="600" y="64" text-anchor="middle">Flujo común para Administrador, Gestor y Usuario</text>
+  <rect class="lane" x="40" y="92" width="560" height="1623"/>
+  <rect class="lane" x="600" y="92" width="560" height="1623"/>
+  <rect class="lanehead" x="40" y="92" width="560" height="42"/>
+  <rect class="lanehead" x="600" y="92" width="560" height="42"/>
+  <text class="laneText" x="320" y="119">Persona usuaria</text>
+  <text class="laneText" x="880" y="119">Sistema</text>
+
+  <!-- Inicio -->
+  <circle class="start" cx="320" cy="168" r="12"/>
+  <path class="flow" d="M320 180 V204"/>
+  <rect class="activity" x="175" y="204" width="290" height="66" rx="18"/>
+  <text class="activityText" x="320" y="232"><tspan x="320">Abrir la pantalla</tspan><tspan x="320" dy="18">de inicio de sesión</tspan></text>
+  <path class="flow" d="M320 270 V297"/>
+  <rect class="activity" x="175" y="297" width="290" height="72" rx="18"/>
+  <text class="activityText" x="320" y="326"><tspan x="320">Ingresar correo</tspan><tspan x="320" dy="18">y contraseña</tspan></text>
+  <path class="flow" d="M465 333 H696"/>
+  <rect class="activity" x="696" y="294" width="368" height="78" rx="18"/>
+  <text class="activityText" x="880" y="326"><tspan x="880">Validar campos y comprobar</tspan><tspan x="880" dy="18">el límite de intentos</tspan></text>
+  <path class="flow" d="M880 372 V407"/>
+  <polygon class="decision" points="880,407 988,465 880,523 772,465"/>
+  <text class="decisionText" x="880" y="461"><tspan x="880">¿Datos válidos</tspan><tspan x="880" dy="16">y sin bloqueo?</tspan></text>
+
+  <!-- Entrada inválida / bloqueo -->
+  <path class="flow" d="M988 465 H1100 V561 H1064"/>
+  <text class="branch" x="1012" y="453">No</text>
+  <rect class="activity" x="696" y="530" width="368" height="68" rx="18"/>
+  <text class="activityText" x="880" y="558"><tspan x="880">Mostrar error de validación</tspan><tspan x="880" dy="18">o aviso de bloqueo temporal</tspan></text>
+  <path class="flow" d="M696 564 H642 V333 H465"/>
+  <text class="branch" x="500" y="550" text-anchor="middle">Corregir o reintentar</text>
+
+  <!-- Credenciales y cuenta -->
+  <path class="flow" d="M880 523 H1090 V671 H1064"/>
+  <text class="branch" x="1105" y="516">Sí</text>
+  <rect class="activity" x="696" y="634" width="368" height="74" rx="18"/>
+  <text class="activityText" x="880" y="664"><tspan x="880">Comprobar credenciales</tspan><tspan x="880" dy="18">y estado de la cuenta</tspan></text>
+  <path class="flow" d="M880 708 V739"/>
+  <polygon class="decision" points="880,739 988,797 880,855 772,797"/>
+  <text class="decisionText" x="880" y="793"><tspan x="880">¿Credenciales</tspan><tspan x="880" dy="16">correctas y activa?</tspan></text>
+
+  <path class="flow" d="M988 797 H1100 V908 H1064"/>
+  <text class="branch" x="1013" y="785">No</text>
+  <rect class="activity" x="696" y="875" width="368" height="68" rx="18"/>
+  <text class="activityText" x="880" y="903"><tspan x="880">Registrar intento fallido si corresponde</tspan><tspan x="880" dy="18">y mostrar el mensaje de acceso</tspan></text>
+  <path class="flow" d="M696 909 H642 V333 H465"/>
+  <text class="branch" x="500" y="895" text-anchor="middle">Volver al formulario</text>
+
+  <path class="flow" d="M880 855 H1090 V1020 H1064"/>
+  <text class="branch" x="1105" y="848">Sí</text>
+  <rect class="activity" x="696" y="983" width="368" height="74" rx="18"/>
+  <text class="activityText" x="880" y="1013"><tspan x="880">Limpiar intentos y regenerar</tspan><tspan x="880" dy="18">el identificador de sesión</tspan></text>
+  <path class="flow" d="M880 1057 V1091"/>
+  <rect class="activity" x="696" y="1091" width="368" height="68" rx="18"/>
+  <text class="activityText" x="880" y="1119"><tspan x="880">Redirigir al panel</tspan><tspan x="880" dy="18">correspondiente</tspan></text>
+  <path class="flow" d="M696 1125 H465 V1180"/>
+  <rect class="activity" x="175" y="1180" width="290" height="66" rx="18"/>
+  <path class="flow" d="M320 1246 V1272"/>
+  <text class="activityText" x="320" y="1208"><tspan x="320">Usar las funciones</tspan><tspan x="320" dy="18">permitidas por el rol</tspan></text>
+
+  <!-- Decidir cerrar sesión -->
+  <polygon class="decision" points="320,1272 430,1332 320,1392 210,1332"/>
+  <text class="decisionText" x="320" y="1328"><tspan x="320">¿Desea cerrar</tspan><tspan x="320" dy="16">la sesión?</tspan></text>
+  <path class="flow" d="M210 1332 H104 V1213 H175"/>
+  <text class="branch" x="130" y="1318">No</text>
+  <path class="flow" d="M320 1392 V1420"/>
+  <text class="branch" x="333" y="1410">Sí</text>
+  <rect class="activity" x="175" y="1420" width="290" height="62" rx="18"/>
+  <text class="activityText" x="320" y="1458">Seleccionar «Cerrar sesión»</text>
+  <path class="flow" d="M465 1451 H696"/>
+  <rect class="activity" x="696" y="1418" width="368" height="66" rx="18"/>
+  <text class="activityText" x="880" y="1446"><tspan x="880">Enviar POST /logout</tspan><tspan x="880" dy="18">y cerrar autenticación</tspan></text>
+  <path class="flow" d="M880 1484 V1511"/>
+  <rect class="activity" x="696" y="1511" width="368" height="68" rx="18"/>
+  <text class="activityText" x="880" y="1539"><tspan x="880">Invalidar sesión y regenerar</tspan><tspan x="880" dy="18">el token CSRF</tspan></text>
+  <path class="flow" d="M880 1579 V1606"/>
+  <rect class="activity" x="696" y="1606" width="368" height="54" rx="18"/>
+  <text class="activityText" x="880" y="1638">Redirigir a la página pública</text>
+  <path class="flow" d="M880 1660 V1680"/>
+  <circle class="endOuter" cx="880" cy="1692" r="12"/><circle class="endInner" cx="880" cy="1692" r="7"/>
+  <text class="note" x="600" y="1745">Fuente: elaboración propia, conforme al flujo de autenticación implementado en Laravel.</text>
+</svg>

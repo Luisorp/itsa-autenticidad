@@ -27,7 +27,8 @@
         <tr><td><strong>Modalidad:</strong></td><td>{{ $proyecto->modalidad_nombre }}</td></tr>
         <tr><td><strong>Estudiante:</strong></td><td>{{ $proyecto->estudiante->nombre }}</td></tr>
         <tr><td><strong>Carrera:</strong></td><td>{{ $proyecto->carrera->nombre }}</td></tr>
-        <tr><td><strong>Año:</strong></td><td>{{ $proyecto->anio }}</td></tr>
+        <tr><td><strong>Gestión:</strong></td><td>{{ $proyecto->anio }}</td></tr>
+        <tr><td><strong>Periodo académico:</strong></td><td>{{ $proyecto->periodo_academico_nombre }}</td></tr>
         <tr><td><strong>Docente tutor:</strong></td><td>{{ $proyecto->tutor->nombre ?? 'No asignado' }}</td></tr>
         <tr><td><strong>Fecha del reporte:</strong></td><td>{{ now()->format('d/m/Y H:i') }}</td></tr>
         <tr><td><strong>Generado por:</strong></td><td>{{ auth()->user()->name }}</td></tr>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1440" viewBox="0 0 1500 1440" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de actividades HU04: Actualizar perfil y contraseña</title>
+  <desc id="desc">El usuario autenticado abre su perfil y elige actualizar sus datos o cambiar la contraseña. Cada opción se valida y, si hay errores, permite corregir y volver a intentar.</desc>
+  <defs>
+    <style>text{font-family:Arial,Helvetica,sans-serif;fill:#111}.title{font-size:29px;font-weight:700}.activity{fill:#fff;stroke:#111;stroke-width:2}.decision{fill:#fff;stroke:#111;stroke-width:2}.flow{fill:none;stroke:#222;stroke-width:2;marker-end:url(#arrow)}.label{font-size:17px}.branch{font-size:15px;font-weight:700}.node{fill:#111;stroke:#111;stroke-width:2}</style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#222"/></marker>
+  </defs>
+  <rect width="1500" height="1440" fill="#fff"/><text class="title" x="750" y="48" text-anchor="middle">ACTIVIDADES — HU04: ACTUALIZAR PERFIL Y CONTRASEÑA</text>
+  <circle class="node" cx="750" cy="105" r="13"/><path class="flow" d="M750 118 V155"/>
+  <rect class="activity" x="545" y="155" width="410" height="65" rx="28"/><text class="label" x="750" y="195" text-anchor="middle">Abrir “Mi perfil” (sesión iniciada)</text>
+  <path class="flow" d="M750 220 V260"/><rect class="activity" x="545" y="260" width="410" height="65" rx="28"/><text class="label" x="750" y="300" text-anchor="middle">Mostrar datos y formularios disponibles</text>
+  <path class="flow" d="M750 325 V365"/><polygon class="decision" points="750,365 830,420 750,475 670,420"/><text class="label" x="750" y="415" text-anchor="middle">¿Qué desea</text><text class="label" x="750" y="438" text-anchor="middle">actualizar?</text>
+  <text class="branch" x="420" y="505" text-anchor="middle">Perfil</text><text class="branch" x="1085" y="505" text-anchor="middle">Contraseña</text>
+  <path class="flow" d="M670 420 H420 V545"/><path class="flow" d="M830 420 H1085 V545"/>
+  <rect class="activity" x="185" y="545" width="470" height="65" rx="28"/><text class="label" x="420" y="585" text-anchor="middle">Editar nombre o correo y guardar</text>
+  <rect class="activity" x="850" y="545" width="470" height="65" rx="28"/><text class="label" x="1085" y="585" text-anchor="middle">Ingresar contraseña actual y nueva</text>
+  <path class="flow" d="M420 610 V650"/><polygon class="decision" points="420,650 490,700 420,750 350,700"/><text class="label" x="420" y="706" text-anchor="middle">¿Datos válidos?</text>
+  <path class="flow" d="M1085 610 V650"/><polygon class="decision" points="1085,650 1155,700 1085,750 1015,700"/><text class="label" x="1085" y="706" text-anchor="middle">¿Datos válidos?</text>
+  <text class="branch" x="300" y="704" text-anchor="end">No</text><text class="branch" x="505" y="704">Sí</text>
+  <text class="branch" x="965" y="704" text-anchor="end">No</text><text class="branch" x="1170" y="704">Sí</text>
+  <path class="flow" d="M350 700 H245 V805"/><path class="flow" d="M1015 700 H920 V805"/>
+  <rect class="activity" x="75" y="805" width="340" height="75" rx="28"/><text class="label" x="245" y="838" text-anchor="middle">Mostrar errores y permitir</text><text class="label" x="245" y="861" text-anchor="middle">corregir los campos</text>
+  <rect class="activity" x="750" y="805" width="340" height="75" rx="28"/><text class="label" x="920" y="838" text-anchor="middle">Mostrar error y permitir</text><text class="label" x="920" y="861" text-anchor="middle">corregir los campos</text>
+  <path class="flow" d="M245 805 V580 H185"/><path class="flow" d="M920 805 V580 H850"/>
+  <path class="flow" d="M490 700 H600 V970"/><rect class="activity" x="390" y="970" width="420" height="70" rx="28"/><text class="label" x="600" y="1012" text-anchor="middle">Guardar nombre/correo actualizados</text>
+  <path class="flow" d="M1155 700 H1260 V970"/><rect class="activity" x="1050" y="970" width="420" height="70" rx="28"/><text class="label" x="1260" y="1012" text-anchor="middle">Guardar nueva contraseña cifrada</text>
+  <path class="flow" d="M600 1040 V1110 H750"/><path class="flow" d="M1260 1040 V1110 H750"/>
+  <rect class="activity" x="545" y="1110" width="410" height="65" rx="28"/><text class="label" x="750" y="1150" text-anchor="middle">Mostrar confirmación del cambio</text>
+  <path class="flow" d="M750 1175 V1230"/><circle cx="750" cy="1250" r="14" fill="#fff" stroke="#111" stroke-width="3"/><circle cx="750" cy="1250" r="8" fill="#111"/>
+  <text x="750" y="1310" text-anchor="middle" font-size="15" fill="#444">Si se modifica el correo, el sistema lo marca como no verificado.</text>
+</svg>

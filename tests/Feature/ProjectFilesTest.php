@@ -9,6 +9,7 @@ use App\Models\ProyectoTitulacion;
 use App\Models\Reporte;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -25,6 +26,57 @@ class ProjectFilesTest extends TestCase
             ->get(route('proyectos.edit', $proyecto))
             ->assertOk()
             ->assertSee($proyecto->titulo);
+    }
+
+    public function test_academic_period_is_required_and_can_filter_projects(): void
+    {
+        [$administrador, $proyecto] = $this->projectFixture();
+        $proyecto->update(['titulo' => 'Proyecto semestre I', 'periodo_academico' => 'semestre_i']);
+
+        $semestreII = $proyecto->replicate();
+        $semestreII->titulo = 'Proyecto semestre II';
+        $semestreII->periodo_academico = 'semestre_ii';
+        $semestreII->save();
+
+        $legado = $proyecto->replicate();
+        $legado->titulo = 'Proyecto sin periodo histórico';
+        $legado->periodo_academico = null;
+        $legado->save();
+
+        $this->actingAs($administrador)->get(route('proyectos.create'))
+            ->assertOk()->assertSee('Anual')->assertSee('Semestre I')->assertSee('Semestre II');
+
+        $this->get(route('proyectos.index', ['periodo_academico' => 'semestre_i']))
+            ->assertOk()->assertSee('Proyecto semestre I')
+            ->assertDontSee('Proyecto semestre II')->assertDontSee('Proyecto sin periodo histórico');
+
+        $this->get(route('proyectos.index', ['periodo_academico' => 'sin_especificar']))
+            ->assertOk()->assertSee('Proyecto sin periodo histórico')
+            ->assertDontSee('Proyecto semestre I');
+    }
+
+    public function test_new_project_requires_a_valid_academic_period(): void
+    {
+        [$administrador, $proyecto] = $this->projectFixture();
+
+        $this->actingAs($administrador)->from(route('proyectos.create'))->post(route('proyectos.store'), [
+            'titulo' => 'Proyecto sin periodo',
+            'modalidad' => 'proyecto_grado',
+            'carrera_id' => $proyecto->carrera_id,
+            'estudiante_id' => $proyecto->estudiante_id,
+            'anio' => 2026,
+            'documento' => UploadedFile::fake()->create('proyecto.pdf', 20, 'application/pdf'),
+        ])->assertRedirect(route('proyectos.create'))->assertSessionHasErrors('periodo_academico');
+
+        $this->actingAs($administrador)->from(route('proyectos.create'))->post(route('proyectos.store'), [
+            'titulo' => 'Proyecto con periodo inválido',
+            'modalidad' => 'proyecto_grado',
+            'carrera_id' => $proyecto->carrera_id,
+            'estudiante_id' => $proyecto->estudiante_id,
+            'anio' => 2026,
+            'periodo_academico' => 'trimestre',
+            'documento' => UploadedFile::fake()->create('proyecto.pdf', 20, 'application/pdf'),
+        ])->assertRedirect(route('proyectos.create'))->assertSessionHasErrors('periodo_academico');
     }
 
     public function test_authenticated_user_can_view_a_project_pdf(): void
@@ -79,6 +131,23 @@ class ProjectFilesTest extends TestCase
             ->assertHeader('content-type', 'application/pdf');
     }
 
+    public function test_database_allows_only_one_current_report_per_project(): void
+    {
+        [$administrador, $proyecto] = $this->projectFixture();
+        Reporte::create([
+            'proyecto_id' => $proyecto->id,
+            'generado_por' => $administrador->id,
+            'ruta_pdf' => 'reportes/primero.pdf',
+        ]);
+
+        $this->expectException(QueryException::class);
+        Reporte::create([
+            'proyecto_id' => $proyecto->id,
+            'generado_por' => $administrador->id,
+            'ruta_pdf' => 'reportes/duplicado.pdf',
+        ]);
+    }
+
     public function test_administrator_can_replace_a_missing_project_pdf(): void
     {
         Storage::fake('public');
@@ -98,6 +167,7 @@ class ProjectFilesTest extends TestCase
             'estudiante_id' => $proyecto->estudiante_id,
             'tutor_id' => null,
             'anio' => $proyecto->anio,
+            'periodo_academico' => $proyecto->periodo_academico,
             'documento' => UploadedFile::fake()->create('repuesto.pdf', 20, 'application/pdf'),
         ]);
 
@@ -193,7 +263,8 @@ class ProjectFilesTest extends TestCase
         $response->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $proyecto->id)
-            ->assertJsonPath('data.0.modalidad', 'proyecto_grado');
+            ->assertJsonPath('data.0.modalidad', 'proyecto_grado')
+            ->assertJsonPath('data.0.periodo_academico_nombre', 'Anual');
 
         $this->actingAs($administrador)->getJson(route('analisis.proyectos.buscar', [
             'modalidad' => 'trabajo_dirigido_externo',
@@ -380,7 +451,6 @@ class ProjectFilesTest extends TestCase
             'proyecto_a' => $project->id, 'proyecto_b' => $other->id,
         ])->assertSessionHasErrors(['proyecto_a', 'proyecto_b']);
         $this->post(route('proyectos.analizar', $project))->assertSessionHas('error');
-        $this->post(route('crossref.comparar'), ['proyecto_id' => $project->id])->assertSessionHasErrors('proyecto_id');
         $this->assertDatabaseCount('comparaciones', 0);
     }
 
@@ -398,7 +468,7 @@ class ProjectFilesTest extends TestCase
         $response = $this->actingAs($admin)->get(route('proyectos.reporte', $project));
         $response->assertOk()->assertHeader('content-type', 'application/pdf');
         $this->assertStringStartsWith('%PDF-', $response->getContent());
-        $reporte = $project->reportes()->firstOrFail();
+        $reporte = $project->reporte()->firstOrFail();
         Storage::disk('public')->assertExists($reporte->ruta_pdf);
         $this->assertSame($admin->id, $reporte->generado_por);
     }
@@ -434,10 +504,8 @@ class ProjectFilesTest extends TestCase
     {
         $carrera = Carrera::create(['nombre' => 'Sistemas', 'codigo' => 'SIS', 'activo' => true]);
         $administrador = User::factory()->create(['rol' => 'administrador', 'activo' => true]);
-        $usuario = User::factory()->create(['rol' => 'usuario', 'carrera_id' => $carrera->id, 'activo' => true]);
+        $usuario = User::factory()->create(['rol' => 'usuario', 'activo' => true]);
         $estudiante = Estudiante::create([
-            'nombre' => $usuario->name,
-            'email' => $usuario->email,
             'carrera_id' => $carrera->id,
             'user_id' => $usuario->id,
             'activo' => true,
@@ -448,6 +516,7 @@ class ProjectFilesTest extends TestCase
             'carrera_id' => $carrera->id,
             'estudiante_id' => $estudiante->id,
             'anio' => 2026,
+            'periodo_academico' => 'anual',
             'estado' => 'pendiente_analisis',
             'activo' => true,
         ]);

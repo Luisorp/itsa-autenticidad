@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="590" viewBox="0 0 760 590">
+<defs><marker id="f" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#111"/></marker><style>text{font-family:Arial,sans-serif;fill:#111}.n{fill:#fff;stroke:#111;stroke-width:2}.l{fill:none;stroke:#111;stroke-width:2;marker-end:url(#f)}.s{fill:#111}.e{fill:#fff;stroke:#111;stroke-width:3}</style></defs>
+<circle class="s" cx="350" cy="30" r="10"/><path class="l" d="M350 40V55"/>
+<rect class="n" x="195" y="55" width="310" height="44" rx="16"/>
+<text x="350" y="82" text-anchor="middle" font-size="15">Abrir catálogo de proyectos</text>
+<path class="l" d="M350 99V117"/>
+<rect class="n" x="195" y="117" width="310" height="44" rx="16"/>
+<text x="350" y="144" text-anchor="middle" font-size="15">Ingresar búsqueda y filtros</text>
+<path class="l" d="M350 161V179"/>
+<rect class="n" x="195" y="179" width="310" height="44" rx="16"/>
+<text x="350" y="206" text-anchor="middle" font-size="15">Consultar resultados permitidos</text>
+<path class="l" d="M350 223V241"/>
+<path class="n" d="M350 247L395 282L350 317L305 282Z"/>
+<text x="350" y="279" text-anchor="middle" font-size="13">¿Disponible?</text>
+<text x="270" y="335" font-size="13">No</text><path class="l" d="M305 282H155V360"/>
+<rect class="n" x="30" y="360" width="250" height="52" rx="14"/>
+<text x="155" y="382" text-anchor="middle" font-size="14">Mostrar lista vacía o archivo ausente</text><text x="155" y="401" text-anchor="middle" font-size="13">Corregir y volver</text>
+<circle class="e" cx="155" cy="455" r="12"/><circle class="s" cx="155" cy="455" r="6"/><path class="l" d="M155 412V443"/>
+<text x="414" y="335" font-size="13">Sí</text><path class="l" d="M395 282H555V330"/>
+<rect class="n" x="430" y="330" width="250" height="52" rx="14"/>
+<text x="555" y="352" text-anchor="middle" font-size="14">Mostrar listado y seleccionar PDF</text><text x="555" y="371" text-anchor="middle" font-size="13">Abrir documento asociado</text>
+<path class="l" d="M555 382V435"/><circle class="e" cx="555" cy="455" r="12"/><circle class="s" cx="555" cy="455" r="6"/>
+</svg>
